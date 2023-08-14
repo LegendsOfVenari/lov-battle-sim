@@ -13,12 +13,10 @@ class Akulaw(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        if self.energy >= 100:
-            damage = self.attack_damage
-            target.hp -= damage
-            target.apply_effect(Stagger())
-            print(f"{self.name} used its ability on {target.name}, dealing {damage:.2f} damage and staggering the target!")
-            self.energy -= 100
+        damage = self.attack_damage
+        target.hp -= damage
+        target.apply_effect(Stagger())
+        print(f"{self.name} used its ability on {target.name}, dealing {damage:.2f} damage and staggering the target!")
 
     def on_swap_in(self, enemy_team=None):
         super().on_swap_in()

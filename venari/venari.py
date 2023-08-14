@@ -22,6 +22,7 @@ class Venari:
         self.active_effects = []  # List to hold active effects
         self.action_performed = False  # New attribute
         self.ready_to_attack = False  # New attribute to track if Venari is ready to attack
+        self.swap_cooldown = 0  # Initially, no cooldown
 
     def level_up(self):
         """Calculates stats based on level and base stats."""
@@ -33,9 +34,10 @@ class Venari:
         self.hp = 10 * self.level + self.constitution * 15 + 100
 
     def apply_effect(self, effect):
-        """Apply a new effect to the Venari."""
-        self.active_effects.append(effect)
-        effect.on_apply(self)
+        # Ensure the effect is not already applied if it's not stackable
+        if not any(isinstance(e, type(effect)) for e in self.active_effects) or effect.stackable:
+            self.active_effects.append(effect)
+            effect.on_apply(self)
 
     def tick_effects(self):
         """Process all active effects for the Venari."""
@@ -69,10 +71,12 @@ class Venari:
 
     def use_ability(self, target):
         self.action_performed = True
-    
+        self.energy = 0
+
     def on_swap_in(self, enemy_team=None):
         self.action_performed = True
         self.attack_tick_counter = 0
+        self.swap_cooldown = 6
 
     def tick(self, is_point=True):
         """What the Venari does every tick."""
@@ -87,7 +91,10 @@ class Venari:
             if self.attack_tick_counter >= self.base_stats["Basic Attack Frequency"]:
                 self.ready_to_attack = True
                 print(f"{self.name}({self.level}) will attack on the next tick!")
-            
+        else:
+            if self.swap_cooldown > 0:
+                self.swap_cooldown -= 1
+
     def reset_action(self):
         self.action_performed = False
 

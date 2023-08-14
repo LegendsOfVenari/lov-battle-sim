@@ -2,6 +2,7 @@ class Effect:
     def __init__(self, duration):
         self.duration = duration
         self.expired = False
+        self.stackable = True
 
     def description(self):
         """Returns a human-readable description of the effect."""

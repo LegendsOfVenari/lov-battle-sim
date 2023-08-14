@@ -17,24 +17,23 @@ class Battle:
             del team[0]
             print(f"{team[0].name} is now the point Venari!")
             team[0].on_swap_in(enemy_team)
-            
-    def user_swap(self, team):
-        """Let the user swap the point Venari with one from the bench."""
-        if len(team) > 1:
-            print("\nChoose a Venari from the bench to swap with the point Venari:")
-            for i, venari in enumerate(team[1:], start=1):
-                print(f"{i}. {venari.name}({venari.level})")
-            
+
+    def user_swap(self, team, available_venari):
+        print("\nChoose a Venari from the bench to swap with the point Venari:")
+        for i, venari in enumerate(available_venari, start=1):
+            print(f"{i}. {venari.name}({venari.level})")
+        
+        choice = input("Enter the number of the Venari to swap in: ").strip()
+        while not choice.isdigit() or int(choice) < 1 or int(choice) > len(available_venari):
+            print("Invalid choice. Please select a valid Venari number.")
             choice = input("Enter the number of the Venari to swap in: ").strip()
-            while not choice.isdigit() or int(choice) < 1 or int(choice) >= len(team):
-                print("Invalid choice. Please select a valid Venari number.")
-                choice = input("Enter the number of the Venari to swap in: ").strip()
-            
-            chosen_venari = team.pop(int(choice))
-            team.insert(0, chosen_venari)
-            
-            # Call the on_swap_in method for the newly swapped in Venari
-            chosen_venari.on_swap_in(self.team2)
+        
+        chosen_venari = available_venari[int(choice) - 1]
+        team.remove(chosen_venari)
+        team.insert(0, chosen_venari)
+        
+        # Call the on_swap_in method for the newly swapped in Venari
+        chosen_venari.on_swap_in(self.team2)
 
     def tick(self):
         """Handle each tick of the battle."""
@@ -89,13 +88,19 @@ def interactive_battle_simulation(team1, team2):
                 team1[0].use_ability(team2[0])
 
         # User Decision for Swapping
-        decision_swap = input("\nDo you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
-        while decision_swap not in ["yes", "no"]:
-            print("Invalid choice. Please enter 'yes' or 'no'.")
-            decision_swap = input("Do you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
+        """Let the user swap the point Venari with one from the bench."""
+        available_venari = [venari for venari in team1[1:] if venari.swap_cooldown == 0]
+    
+        if not available_venari:
+            print("No Venari available for swapping due to cooldown!")
+        else:
+            decision_swap = input("\nDo you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
+            while decision_swap not in ["yes", "no"]:
+                print("Invalid choice. Please enter 'yes' or 'no'.")
+                decision_swap = input("Do you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
 
-        if decision_swap == "yes":
-            battle.user_swap(team1)
+            if decision_swap == "yes":
+                battle.user_swap(team1, available_venari)
         
         # AI Decision for Ability
         if team2[0].energy >= 100:

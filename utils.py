@@ -8,7 +8,8 @@ def display_team_status(team):
     
     for venari in team[1:]:
         next_attack_tick_bench = venari.base_stats["Basic Attack Frequency"] - (venari.attack_tick_counter % venari.base_stats["Basic Attack Frequency"])
-        print(f"{venari.name}({venari.level}) (Bench) - HP: {venari.hp:.2f}, Energy: {venari.energy}, Next Attack: {next_attack_tick_bench} ticks")
+        swap_cooldown_info = f", Swap Cooldown: {venari.swap_cooldown} ticks" if venari.swap_cooldown > 0 else ""
+        print(f"{venari.name}({venari.level}) (Bench) - HP: {venari.hp:.2f}, Energy: {venari.energy}, Next Attack: {next_attack_tick_bench} ticks{swap_cooldown_info}")
         if venari.active_effects:
             effects = ", ".join(effect.description() for effect in venari.active_effects)
             print(f"    Active Effects: {effects}")
