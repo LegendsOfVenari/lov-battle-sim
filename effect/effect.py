@@ -14,7 +14,8 @@ class Effect:
         pass
 
     def on_apply(self, venari):
-        self.count += 1
+        if self.stackable:
+            self.stack()
         """What happens when the effect is first applied."""
         pass
 
@@ -35,7 +36,7 @@ class Effect:
         self.count -= 1
 
         # If no more counts, remove the effect
-        if self.count == 0:
+        if self.count <= 0:
             venari.active_effects.remove(self)
 
     def tick(self):

@@ -1,6 +1,7 @@
 from utils import display_team_status
 from venari import Venari
 
+
 class Battle:
     def __init__(self, team1, team2):
         self.team1 = team1
@@ -11,7 +12,7 @@ class Battle:
         return all(venari.hp <= 0 for venari in self.team1) or all(venari.hp <= 0 for venari in self.team2)
 
     def auto_swap(self, team, enemy_team):
-        """Automatically swap point venari with the first bench venari if point venari reaches 0 HP."""
+        # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].hp <= 0 and len(team) > 1:
             print(f"{team[0].name} is defeated!")
             del team[0]
@@ -63,6 +64,7 @@ class Battle:
         self.auto_swap(self.team1, self.team2)
         self.auto_swap(self.team2, self.team1)
 
+
 def interactive_battle_simulation(team1, team2):
     battle = Battle(team1, team2)
     tick = 0
@@ -83,13 +85,18 @@ def interactive_battle_simulation(team1, team2):
             decision_ability = input(f"Do you want {team1[0].name} to use its ability? (yes/no): ").strip().lower()
             while decision_ability not in ["yes", "no"]:
                 print("Invalid choice. Please enter 'yes' or 'no'.")
-                decision_ability = input(f"Do you want {team1[0].name} to use its ability? (yes/no): ").strip().lower()
+                prompt = (f"Do you want {team1[0].name} "
+                          "to use its ability? (yes/no): ")
+                decision_ability = input(prompt).strip().lower()
             if decision_ability == "yes":
                 team1[0].use_ability(team2[0])
 
         # User Decision for Swapping
         """Let the user swap the point Venari with one from the bench."""
-        available_venari = [venari for venari in team1[1:] if venari.swap_cooldown == 0]
+        available_venari = [
+            venari for venari in team1[1:]
+            if venari.swap_cooldown == 0
+        ]
 
         if not available_venari:
             print("No Venari available for swapping due to cooldown!")

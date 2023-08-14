@@ -8,6 +8,7 @@ class Armor(Effect):
         self.magic_resist_boost = 0
 
     def on_apply(self, venari):
+        super().on_apply(venari)
         """Increase DEF and MAGIC RESIST by 50%."""
         self.defense_boost = 0.5 * venari.defense
         self.magic_resist_boost = 0.5 * venari.magic_resist

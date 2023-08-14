@@ -2,7 +2,7 @@ from .effect import Effect
 
 class Poison(Effect):
     def __init__(self):
-        super().__init__(6)  # Poison lasts for 6 ticks
+        super().__init__(0)  # Poison lasts for 6 ticks per each stack
 
     def description(self):
         return f"Poison ({self.count}) stacks ({self.duration} ticks)"

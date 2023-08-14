@@ -7,7 +7,7 @@ class Algala(Venari):
         super().basic_attack(target)
 
         # 20% chance of basic attacks applying stagger
-        target.apply_effect(Armor())
+        self.apply_effect(Armor())
         print(f"{self.name}({self.level})'s gained an armor stack!")
 
     def use_ability(self, target):

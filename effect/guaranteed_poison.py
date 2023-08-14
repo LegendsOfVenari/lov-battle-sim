@@ -11,6 +11,7 @@ class GuaranteedPoison(Effect):
         return f"Guaranteed Poison on next basic attack."
 
     def on_apply(self, venari):
+        super().on_apply(venari)
         # When applied, attach a one-time callback to the Venari's next attack
         original_basic_attack = venari.basic_attack
 
