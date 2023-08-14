@@ -2,15 +2,8 @@ import random
 from effect import Stagger
 from .battle_utils import calculate_basic_attack_damage, calculate_ability_damage, DamageType
 
+
 class Venari:
-    @property
-    def hp(self):
-        return self._hp
-
-    @hp.setter
-    def hp(self, value):
-        self._hp = max(0, value)
-
     def __init__(self, name, base_stats, level):
         self.name = name
         self.base_stats = base_stats
@@ -48,6 +41,11 @@ class Venari:
             effect.on_tick(self)
             effect.tick()
 
+        # Call on_remove for expired effects before removing them
+        for effect in self.active_effects:
+            if effect.expired:
+                effect.on_remove(self)
+
         # Remove expired effects
         self.active_effects = [effect for effect in self.active_effects if not effect.expired]
 
@@ -79,7 +77,7 @@ class Venari:
     def receive_damage(self, damage):
         """Handle receiving damage and interacting with active effects."""
         # Reduce HP
-        self.hp -= damage
+        self.hp = max(0, self.hp - damage)
 
         # Notify all active effects that damage was received
         for effect in self.active_effects:

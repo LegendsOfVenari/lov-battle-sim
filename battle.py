@@ -1,5 +1,5 @@
-from venari import Venari
 from utils import display_team_status
+from venari import Venari
 
 class Battle:
     def __init__(self, team1, team2):
@@ -22,16 +22,16 @@ class Battle:
         print("\nChoose a Venari from the bench to swap with the point Venari:")
         for i, venari in enumerate(available_venari, start=1):
             print(f"{i}. {venari.name}({venari.level})")
-        
+
         choice = input("Enter the number of the Venari to swap in: ").strip()
         while not choice.isdigit() or int(choice) < 1 or int(choice) > len(available_venari):
             print("Invalid choice. Please select a valid Venari number.")
             choice = input("Enter the number of the Venari to swap in: ").strip()
-        
+
         chosen_venari = available_venari[int(choice) - 1]
         team.remove(chosen_venari)
         team.insert(0, chosen_venari)
-        
+
         # Call the on_swap_in method for the newly swapped in Venari
         chosen_venari.on_swap_in(self.team2)
 
@@ -90,7 +90,7 @@ def interactive_battle_simulation(team1, team2):
         # User Decision for Swapping
         """Let the user swap the point Venari with one from the bench."""
         available_venari = [venari for venari in team1[1:] if venari.swap_cooldown == 0]
-    
+
         if not available_venari:
             print("No Venari available for swapping due to cooldown!")
         else:
@@ -101,16 +101,16 @@ def interactive_battle_simulation(team1, team2):
 
             if decision_swap == "yes":
                 battle.user_swap(team1, available_venari)
-        
+
         # AI Decision for Ability
         if team2[0].energy >= 100:
             team2[0].use_ability(team1[0])
-        
+
         # AI Decision for Swapping (simple logic: swap if HP is less than 30%)
         max_hp = 10 * team2[0].level + team2[0].constitution * 15 + 100
         if team2[0].hp < 0.3 * max_hp and len(team2) > 1:
             battle.auto_swap(team2, team1)
-        
+
         battle.tick()
 
     # Display the winner

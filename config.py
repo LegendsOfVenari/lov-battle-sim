@@ -11,13 +11,25 @@ aharas_base_stats = {
 }
 
 akulaw_base_stats = {
-    "Constitution": 65,
-    "Attack Damage": 85,
-    "Ability Power": 65,
-    "Defence": 60,
+    "Constitution": 89,
+    "Attack Damage": 89,
+    "Ability Power": 70,
+    "Defence": 86,
+    "Magic Resist": 88,
+    "Energy Gain Passively": 12,
+    "Basic Attack Energy Gain": 16,
+    "Basic Attack Frequency": 5,
+    "Basic Attack Damage": 45
+}
+
+algala_base_stats = {
+    "Constitution": 98,
+    "Attack Damage": 104,
+    "Ability Power": 34,
+    "Defence": 82,
     "Magic Resist": 60,
-    "Energy Gain Passively": 10,
-    "Basic Attack Energy Gain": 20,
-    "Basic Attack Frequency": 3,
+    "Energy Gain Passively": 8,
+    "Basic Attack Energy Gain": 10,
+    "Basic Attack Frequency": 5,
     "Basic Attack Damage": 35
 }

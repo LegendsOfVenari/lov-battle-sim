@@ -1,5 +1,6 @@
 from .effect import Effect
 
+
 class Armor(Effect):
     def __init__(self):
         super().__init__(None)

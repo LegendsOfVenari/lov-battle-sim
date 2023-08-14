@@ -33,7 +33,7 @@ class Effect:
 
     def remove_stack(self, venari):
         self.count -= 1
-            
+
         # If no more counts, remove the effect
         if self.count == 0:
             venari.active_effects.remove(self)

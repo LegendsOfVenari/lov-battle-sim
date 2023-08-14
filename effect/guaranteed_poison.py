@@ -1,6 +1,7 @@
 from .effect import Effect
 from .poison import Poison
 
+
 class GuaranteedPoison(Effect):
     def __init__(self):
         super().__init__(None)  # The effect doesn't expire based on ticks
@@ -8,7 +9,7 @@ class GuaranteedPoison(Effect):
 
     def description(self):
         return f"Guaranteed Poison on next basic attack."
-    
+
     def on_apply(self, venari):
         # When applied, attach a one-time callback to the Venari's next attack
         original_basic_attack = venari.basic_attack

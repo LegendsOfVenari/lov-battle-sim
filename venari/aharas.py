@@ -1,7 +1,8 @@
 import random
 from .venari import Venari
-from effect import Poison, Stagger, GuaranteedPoison
-from .battle_utils import calculate_basic_attack_damage, calculate_ability_damage, DamageType
+from effect import Poison, GuaranteedPoison
+from .battle_utils import calculate_ability_damage, DamageType
+
 
 class Aharas(Venari):
     def __init(self, name, base_stats, level):
