@@ -5,16 +5,7 @@ from effect import Stagger, DefenceDebuff, MagicResistDebuff
 class Akulaw(Venari):
     def basic_attack(self, target):
         super().basic_attack(target)
-    
-        damage = self.attack_damage
-        target.hp -= damage
-
-        # Energy gain from basic attack
-        self.energy += self.base_stats["Basic Attack Energy Gain"]
-        self.energy = min(self.energy, 100)
-
-        print(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
-    
+        
         # 20% chance of basic attacks applying stagger
         if random.random() < 0.2:
             target.apply_effect(Stagger())
