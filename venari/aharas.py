@@ -9,19 +9,19 @@ class Aharas(Venari):
 
     def basic_attack(self, target):
         super().basic_attack(target)
-        
+
         # 20% chance of basic attacks applying poison
         if not self.poison_applied and random.random() < 0.2:
             target.apply_effect(Poison())
+            self.poison_applied = True
             print(f"{self.name}({self.level})'s poison triggered!")
 
     def use_ability(self, target):
         super().use_ability(target)
         # Remove all poison stacks from the target and deal bonus damage
         poison_stacks = len([effect for effect in target.active_effects if isinstance(effect, Poison)])
-        damage = self.ability_power + (50 * poison_stacks)
-        damage = calculate_ability_damage(DamageType.AD, self, target, 20 + 50 * poison_stacks)
-        target.hp -= damage
+        damage = calculate_ability_damage(DamageType.AP, self, target, 20 + 50 * poison_stacks)
+        target.receive_damage(damage)
 
         # Remove poison effects
         target.active_effects = [effect for effect in target.active_effects if not isinstance(effect, Poison)]
@@ -32,7 +32,6 @@ class Aharas(Venari):
         """When Aharas is swapped in, its next basic attack applies poison."""
         super().on_swap_in()  # Call the base class's method to reset the attack tick counter
         self.apply_effect(GuaranteedPoison())
-        self.poison_applied = True
 
     def reset_action(self):
         super().reset_action()  # Call the base class's reset_action method to reset the action_performed flag

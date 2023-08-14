@@ -35,7 +35,10 @@ class Venari:
 
     def apply_effect(self, effect):
         # Ensure the effect is not already applied if it's not stackable
-        if not any(isinstance(e, type(effect)) for e in self.active_effects) or effect.stackable:
+        existing_effect = next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
+        if existing_effect and existing_effect.stackable:
+            existing_effect.stack()
+        else:
             self.active_effects.append(effect)
             effect.on_apply(self)
 
@@ -44,7 +47,7 @@ class Venari:
         for effect in self.active_effects:
             effect.on_tick(self)
             effect.tick()
-        
+
         # Remove expired effects
         self.active_effects = [effect for effect in self.active_effects if not effect.expired]
 
@@ -59,7 +62,7 @@ class Venari:
         hit_chance = random.randint(0, 100)
         if hit_chance <= self.accuracy:
             damage = calculate_basic_attack_damage(self, target, self.base_stats["Basic Attack Damage"])
-            target.hp -= damage
+            target.receive_damage(damage)
 
             # Energy gain from basic attack
             self.energy += self.base_stats["Basic Attack Energy Gain"]
@@ -72,6 +75,15 @@ class Venari:
     def use_ability(self, target):
         self.action_performed = True
         self.energy = 0
+
+    def receive_damage(self, damage):
+        """Handle receiving damage and interacting with active effects."""
+        # Reduce HP
+        self.hp -= damage
+
+        # Notify all active effects that damage was received
+        for effect in self.active_effects:
+            effect.on_damage_received(self, damage)
 
     def on_swap_in(self, enemy_team=None):
         self.action_performed = True
@@ -103,5 +115,5 @@ class Venari:
         for disrupt_effect in disruption_effects:
             if any(isinstance(effect, disrupt_effect) for effect in self.active_effects):
                 return (False, disrupt_effect.__name__)
-        
+
         return (True, None)

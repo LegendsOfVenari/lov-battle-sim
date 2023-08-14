@@ -16,10 +16,12 @@ class GuaranteedPoison(Effect):
         def new_basic_attack(target):
             venari.basic_attack = original_basic_attack  # Restore the original attack method
             original_basic_attack(target)  # Perform the original attack
-            
-            print(f"Guaranteed Poison!")
-            target.apply_effect(Poison())  # Apply the poison effect after the attack
-            
+
+            # Apply the poison effect ONLY if not already applied by Aharas' regular attack
+            if not getattr(venari, 'poison_applied', False):
+                print(f"Guaranteed Poison!")
+                target.apply_effect(Poison())
+
             # Remove the GuaranteedPoison effect after it's used
             venari.active_effects = [effect for effect in venari.active_effects if not isinstance(effect, GuaranteedPoison)]
 
