@@ -43,16 +43,22 @@ class Battle:
             for venari in self.team1[1:]:
                 venari.tick(is_point=False)  # Bench venari
 
-        if not self.team1[0].action_performed and self.team1[0].ready_to_attack:
+        can_attack_status, disrupt_effect_name = self.team1[0].can_attack()
+        if not self.team1[0].action_performed and self.team1[0].ready_to_attack and can_attack_status:
             self.team1[0].basic_attack(self.team2[0])
+        elif not can_attack_status:
+            print(f"{self.team1[0].name}({self.team1[0].level}) is disrupted by {disrupt_effect_name} and cannot attack!")
 
         if self.team2[0].hp > 0:
             self.team2[0].tick()  # Point venari
             for venari in self.team2[1:]:
                 venari.tick(is_point=False)  # Bench venari
 
-        if not self.team2[0].action_performed and self.team2[0].ready_to_attack:
+        can_attack_status, disrupt_effect_name = self.team2[0].can_attack()
+        if not self.team2[0].action_performed and self.team2[0].ready_to_attack and can_attack_status:
             self.team2[0].basic_attack(self.team1[0])
+        elif not can_attack_status:
+            print(f"{self.team2[0].name}({self.team2[0].level}) is disrupted by {disrupt_effect_name} and cannot attack!")
 
         # Auto swap Venari if needed
         self.auto_swap(self.team1, self.team2)

@@ -6,7 +6,8 @@ aharas_base_stats = {
     "Magic Resist": 64,
     "Energy Gain Passively": 10,
     "Basic Attack Energy Gain": 14,
-    "Basic Attack Frequency": 3
+    "Basic Attack Frequency": 3,
+    "Basic Attack Damage": 35
 }
 
 akulaw_base_stats = {
@@ -17,5 +18,6 @@ akulaw_base_stats = {
     "Magic Resist": 60,
     "Energy Gain Passively": 10,
     "Basic Attack Energy Gain": 20,
-    "Basic Attack Frequency": 3
+    "Basic Attack Frequency": 3,
+    "Basic Attack Damage": 35
 }

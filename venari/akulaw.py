@@ -5,18 +5,20 @@ from effect import Stagger, DefenceDebuff, MagicResistDebuff
 class Akulaw(Venari):
     def basic_attack(self, target):
         super().basic_attack(target)
-        is_staggered = any(isinstance(effect, Stagger) for effect in self.active_effects)
-        if not is_staggered:
-            damage = self.attack_damage
-            target.hp -= damage
-            self.energy += self.base_stats["Basic Attack Energy Gain"]
-            self.energy = min(self.energy, 100)
-            print(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
+    
+        damage = self.attack_damage
+        target.hp -= damage
 
-            # Akulaw's passive for staggering
-            if random.random() < 0.2:
-                target.apply_effect(Stagger())
-                print(f"{self.name}({self.level})'s stagger triggered!")
+        # Energy gain from basic attack
+        self.energy += self.base_stats["Basic Attack Energy Gain"]
+        self.energy = min(self.energy, 100)
+
+        print(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
+    
+        # 20% chance of basic attacks applying stagger
+        if random.random() < 0.2:
+            target.apply_effect(Stagger())
+            print(f"{self.name}({self.level})'s stagger triggered!")
 
     def use_ability(self, target):
         super().use_ability(target)
