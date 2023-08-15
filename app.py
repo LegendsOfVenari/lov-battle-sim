@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 from battle import Battle, ActionType
 from venari import Aharas, Akulaw, Algala, Venari
 from config import akulaw_base_stats, aharas_base_stats, algala_base_stats
+import os
 
 app = Flask(__name__)
 app.secret_key = "some_secret_key"
@@ -102,4 +103,4 @@ def initialize_teams():
     return team1, team2
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
