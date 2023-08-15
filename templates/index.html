@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn-based Battle Game</title>
+</head>
+<body>
+    <h1>Turn-based Battle Game</h1>
+    <h2>Tick: {{ tick }}</h2>
+
+    <section>
+        <h2>Player Team Status:</h2>
+
+        <!-- Point Venari -->
+        <div>
+            <h3>Point Venari:</h3>
+            <p>{{ team1_status[0].name }}({{ team1_status[0].level }}) - 
+            HP: {{ team1_status[0].hp }}, 
+            Energy: {{ team1_status[0].energy }},
+            Next Attack: {{ team1_status[0].next_attack }} ticks
+            Effects: 
+            {% for effect in team1_status[0].active_effects %}
+                {{ effect.name }}({{ effect.duration }}),
+            {% endfor %}
+            </p>
+            <!-- Ability Button for Point Venari -->
+            {% if team1_status[0].energy == 100 %}
+                <form method="post" style="display: inline;">
+                    <button type="submit" name="action" value="ability">Ability</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Bench Venari -->
+        <div>
+            <h3>Bench:</h3>
+            <ul>
+                {% for venari in team1_status[1:] %}
+                <li>
+                    {{ venari.name }}({{ venari.level }}) - 
+                    HP: {{ venari.hp }}, 
+                    Energy: {{ venari.energy }}, 
+                    Next Attack: {{ venari.next_attack }} ticks
+                    Effects: 
+                    {% for effect in venari.active_effects %}
+                        {{ effect.name }}({{ effect.duration }}),
+                    {% endfor %}
+                    <!-- Swap button -->
+                    {% if venari.swap_cooldown == 0 %}
+                        <form method="post" style="display: inline;">
+                            <button type="submit" name="action" value="swap_{{ loop.index0 }}">Swap</button>
+                        </form>
+                    {% else %}
+                        | Swap Cooldown: {{ venari.swap_cooldown }} ticks
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+
+    <section>
+        <h2>AI Team Status:</h2>
+        <ul>
+            {% for venari in team2_status %}
+            <li>
+                {{ venari.name }}({{ venari.level }}) - 
+                HP: {{ venari.hp }}, 
+                Energy: {{ venari.energy }}, 
+                Next Attack: {{ venari.next_attack }} ticks
+                {% for effect in venari.active_effects %}
+                    {{ effect.name }}({{ effect.duration }}),
+                {% endfor %}
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <!-- Next Tick Button -->
+        <div>
+            <form method="post">
+                <input type="submit" name="action" value="next_tick" /> Next Tick
+            </form>
+        </div>
+        <!-- Start New Game Button -->
+        <div>
+            <form method="post">
+                <input type="hidden" name="new_game" value="true">
+                <input type="submit" value="Start New Game">
+            </form>
+        </div>
+    </section>
+
+    <section>
+        <h2>Battle Log:</h2>
+        <div id="battle-log">
+            {% for message in messages|reverse %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+</html>

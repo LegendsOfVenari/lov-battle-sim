@@ -107,11 +107,3 @@ class Venari:
 
     def reset_action(self):
         self.action_performed = False
-
-    def can_attack(self):
-        disruption_effects = [Stagger]  # Add other disruption effects like Stun here
-        for disrupt_effect in disruption_effects:
-            if any(isinstance(effect, disrupt_effect) for effect in self.active_effects):
-                return (False, disrupt_effect.__name__)
-
-        return (True, None)

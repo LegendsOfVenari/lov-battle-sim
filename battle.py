@@ -1,11 +1,18 @@
 from utils import display_team_status
 from venari import Venari
+from enum import Enum
 
+class ActionType(Enum):
+    SWAP = "swap"
+    ABILITY = "ability"
+    NEXT_TICK = "next_tick"
 
 class Battle:
     def __init__(self, team1, team2):
         self.team1 = team1
         self.team2 = team2
+        self.action_queue = []
+        self.tick_count = 0
 
     def is_game_over(self):
         """Check if the game is over."""
@@ -37,91 +44,83 @@ class Battle:
         chosen_venari.on_swap_in(self.team2)
 
     def tick(self):
-        """Handle each tick of the battle."""
+        # Process the action queue
+        while self.action_queue:
+            action = self.action_queue.pop(0)
+            action()
+
         if self.team1[0].hp > 0:
             self.team1[0].tick()  # Point venari
             for venari in self.team1[1:]:
                 venari.tick(is_point=False)  # Bench venari
 
-        can_attack_status, disrupt_effect_name = self.team1[0].can_attack()
-        if not self.team1[0].action_performed and self.team1[0].ready_to_attack and can_attack_status:
+        if not self.team1[0].action_performed and self.team1[0].ready_to_attack:
             self.team1[0].basic_attack(self.team2[0])
-        elif not can_attack_status:
-            print(f"{self.team1[0].name}({self.team1[0].level}) is disrupted by {disrupt_effect_name} and cannot attack!")
 
         if self.team2[0].hp > 0:
             self.team2[0].tick()  # Point venari
             for venari in self.team2[1:]:
                 venari.tick(is_point=False)  # Bench venari
 
-        can_attack_status, disrupt_effect_name = self.team2[0].can_attack()
-        if not self.team2[0].action_performed and self.team2[0].ready_to_attack and can_attack_status:
+        if not self.team2[0].action_performed and self.team2[0].ready_to_attack:
             self.team2[0].basic_attack(self.team1[0])
-        elif not can_attack_status:
-            print(f"{self.team2[0].name}({self.team2[0].level}) is disrupted by {disrupt_effect_name} and cannot attack!")
+
+        self.tick_count += 1
 
         # Auto swap Venari if needed
         self.auto_swap(self.team1, self.team2)
         self.auto_swap(self.team2, self.team1)
 
+    def interactive_battle_simulation(self, action, swap_index=None):
+        game_messages = []
 
-def interactive_battle_simulation(team1, team2):
-    battle = Battle(team1, team2)
-    tick = 0
+        if self.is_game_over():
+            # If the game is already over, just return the game state and messages
+            return {
+                "team1_status": self.team1,
+                "team2_status": self.team2,
+                "messages": ["The game is already over."],
+                "tick_count": self.tick_count,
+            }
 
-    while not battle.is_game_over() and tick < 100:
-        tick += 1
-        print(f"\n--- Tick {tick} ---")
+        if action == ActionType.ABILITY:
+            if self.team1[0].energy >= 100:
+                self.action_queue.append(lambda: self.team1[0].use_ability(self.team2[0]))
+            else:
+                game_messages.append(f"{self.team1[0].name} does not have enough energy!")
 
-        # Display team status
-        print("\nPlayer Team Status:")
-        display_team_status(team1)
+        elif action == ActionType.SWAP and swap_index is not None:
+            venari_to_swap = self.team1[swap_index + 1]
+            if venari_to_swap and venari_to_swap.swap_cooldown == 0:
+                # Swap the point Venari with the chosen bench Venari
+                self.team1[0], self.team1[swap_index + 1] = self.team1[swap_index + 1], self.team1[0]
+                self.team1[0].on_swap_in(self.team2)
+                print(f"Swapped {self.team1[swap_index + 1].name} with {self.team1[0].name}!")
+            else:
+                print("Cannot swap this Venari due to cooldown or other issues.")
 
-        print("\nAI Team Status:")
-        display_team_status(team2)
+        elif action == ActionType.NEXT_TICK:
+            print("Moved to the next tick without any action.")
 
-        # User Decision for Ability
-        if team1[0].energy >= 100:
-            decision_ability = input(f"Do you want {team1[0].name} to use its ability? (yes/no): ").strip().lower()
-            while decision_ability not in ["yes", "no"]:
-                print("Invalid choice. Please enter 'yes' or 'no'.")
-                prompt = (f"Do you want {team1[0].name} "
-                          "to use its ability? (yes/no): ")
-                decision_ability = input(prompt).strip().lower()
-            if decision_ability == "yes":
-                team1[0].use_ability(team2[0])
+        # AI decisions (remain unchanged)
+        if self.team2[0].energy >= 100:
+            self.team2[0].use_ability(self.team1[0])
+        max_hp = 10 * self.team2[0].level + self.team2[0].constitution * 15 + 100
+        if self.team2[0].hp < 0.3 * max_hp and len(self.team2) > 1:
+            self.auto_swap(self.team2, self.team1)
 
-        # User Decision for Swapping
-        """Let the user swap the point Venari with one from the bench."""
-        available_venari = [
-            venari for venari in team1[1:]
-            if venari.swap_cooldown == 0
-        ]
+        # Execute actions in the queue
+        self.tick()
 
-        if not available_venari:
-            print("No Venari available for swapping due to cooldown!")
-        else:
-            decision_swap = input("\nDo you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
-            while decision_swap not in ["yes", "no"]:
-                print("Invalid choice. Please enter 'yes' or 'no'.")
-                decision_swap = input("Do you want to swap your point Venari with one from the bench? (yes/no): ").strip().lower()
+        # Determine winner (if game is over)
+        if all(venari.hp <= 0 for venari in self.team1):
+            game_messages.append("Team 2 (AI) Wins!")
+        elif all(venari.hp <= 0 for venari in self.team2):
+            game_messages.append("Team 1 (Player) Wins!")
 
-            if decision_swap == "yes":
-                battle.user_swap(team1, available_venari)
-
-        # AI Decision for Ability
-        if team2[0].energy >= 100:
-            team2[0].use_ability(team1[0])
-
-        # AI Decision for Swapping (simple logic: swap if HP is less than 30%)
-        max_hp = 10 * team2[0].level + team2[0].constitution * 15 + 100
-        if team2[0].hp < 0.3 * max_hp and len(team2) > 1:
-            battle.auto_swap(team2, team1)
-
-        battle.tick()
-
-    # Display the winner
-    if all(venari.hp <= 0 for venari in team1):
-        print("\nTeam 2 (AI) Wins!")
-    else:
-        print("\nTeam 1 (Player) Wins!")
+        return {
+            "team1_status": self.team1,
+            "team2_status": self.team2,
+            "messages": game_messages,
+            "tick_count": self.tick_count,
+        }

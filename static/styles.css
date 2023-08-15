@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px auto;
+    max-width: 800px;
+    background-color: #f3f4f6;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px 0;
+}
+
+button {
+    padding: 5px 15px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+}
+
+#battle-log {
+    max-height: 200px;
+    overflow-y: scroll;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
