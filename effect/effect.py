@@ -2,7 +2,7 @@ class Effect:
     def __init__(self, duration):
         self.duration = duration
         self.expired = False
-        
+
         self.stackable = True
         self.count = 0
 
