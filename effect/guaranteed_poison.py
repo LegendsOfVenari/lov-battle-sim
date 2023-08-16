@@ -4,14 +4,13 @@ from .poison import Poison
 
 class GuaranteedPoison(Effect):
     def __init__(self):
-        super().__init__(None)  # The effect doesn't expire based on ticks
-        self.stackable = False
+        super().__init__(False, None, 0)
 
     def description(self):
         return f"Guaranteed Poison on next basic attack."
 
     def on_apply(self, venari, messages):
-        super().on_apply(venari)
+        super().on_apply(venari, messages)
         # When applied, attach a one-time callback to the Venari's next attack
         original_basic_attack = venari.basic_attack
 

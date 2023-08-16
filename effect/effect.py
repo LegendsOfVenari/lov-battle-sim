@@ -1,10 +1,9 @@
 class Effect:
-    def __init__(self, duration):
+    def __init__(self, stackable, duration=None, count=0):
         self.duration = duration
-        self.expired = False
 
-        self.stackable = True
-        self.count = 0
+        self.stackable = stackable
+        self.count = count
 
     def description(self):
         """Returns a human-readable description of the effect."""
@@ -15,13 +14,12 @@ class Effect:
         if self.duration:
             self.duration -= 1
             if self.duration <= 0:
-                self.expired = True
-                messages.append(f"{venari.name}'s effect has expired.")
+                self.remove(venari, messages)
         pass
 
     def on_apply(self, venari, messages):
         if self.stackable:
-            self.stack()
+            self.stack(messages)
         """What happens when the effect is first applied."""
         pass
 
@@ -45,3 +43,8 @@ class Effect:
         if self.count <= 0:
             venari.active_effects.remove(self)
             messages.append(f"{venari.name}'s effect has expired.")
+
+    def remove(self, venari, messages):
+        self.on_remove(venari, messages)
+        venari.active_effects.remove(self)
+        messages.append(f"{venari.name}'s effect has expired.")

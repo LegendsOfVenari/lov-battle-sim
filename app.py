@@ -67,8 +67,9 @@ def index():
     print("Index route hit!")
 
     messages = []
+    print(request.form)  # Add this line
 
-    if 'game_started' not in session or request.form.get('new_game'):
+    if 'game_started' not in session or request.form.get('action') == ActionType.NEW_GAME.value:
         session['game_started'] = True
         team1, team2 = initialize_teams()
         session['team1'], session['team2'] = serialize_teams(team1, team2)

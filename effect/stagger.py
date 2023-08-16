@@ -2,12 +2,14 @@ from .effect import Effect
 
 class Stagger(Effect):
     def __init__(self):
-        super().__init__(None)
+        super().__init__(False, None, 0)
 
     def description(self):
         return f"Staggers the next basic attack."
 
     def on_apply(self, venari, messages):
+        super().on_apply(venari, messages)
+
         """Override the basic attack for the Venari to remove the Stagger effect after the attack."""
         # Store the original basic attack method
         original_basic_attack = venari.basic_attack

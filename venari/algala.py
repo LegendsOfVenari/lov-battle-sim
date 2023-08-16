@@ -11,7 +11,7 @@ class Algala(Venari):
         messages.append(f"{self.name}({self.level})'s gained an armor stack!")
 
     def use_ability(self, target, messages):
-        super().use_ability(target)
+        super().use_ability(target, messages)
 
         # Calculate the damage based on Algala's Attack Damage (AD)
         damage = calculate_ability_damage(DamageType.AD, self, target, 75)
@@ -29,13 +29,13 @@ class Algala(Venari):
             # Remove one Armor stack from Algala
             for effect in self.active_effects:
                 if isinstance(effect, Armor):
-                    effect.on_damage_received(self, damage)
+                    effect.on_damage_received(self, damage, messages)
                     messages.append(f"{self.name}'s Armor stack protected it from self-inflicted damage!")
                     break
 
     def on_swap_in(self, messages, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
-        super().on_swap_in()
+        super().on_swap_in(messages)
 
         # Calculate the missing health percentage
         max_hp = 10 * self.level + self.constitution * 15 + 100

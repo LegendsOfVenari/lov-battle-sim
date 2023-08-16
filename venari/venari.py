@@ -30,23 +30,14 @@ class Venari:
         # Ensure the effect is not already applied if it's not stackable
         existing_effect = next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
         if existing_effect and existing_effect.stackable:
-            existing_effect.stack(messages)
+            existing_effect.on_apply(self, messages)
         else:
             self.active_effects.append(effect)
-            effect.on_apply(self, messages)
 
     def tick_effects(self, messages):
         """Process all active effects for the Venari."""
         for effect in self.active_effects:
             effect.on_tick(self, messages)
-
-        # Call on_remove for expired effects before removing them
-        for effect in self.active_effects:
-            if effect.expired:
-                effect.on_remove(self)
-
-        # Remove expired effects
-        self.active_effects = [effect for effect in self.active_effects if not effect.expired]
 
     def basic_attack_damage(self):
         return ((((2 * self.level) / 5) * self.base_stats["Basic Attack Movestat"]) / 50) + self.attack_damage + (self.base_stats["Basic Attack Movestat"] / 10)
