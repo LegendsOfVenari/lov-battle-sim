@@ -29,7 +29,7 @@ def calculate_ability_damage(damage_type, attacker, target, base_damage):
     # Calculate reductions
     ap_reduction = target_magic_resist / (target_magic_resist + 300)
     ad_reduction = target_defense / (target_defense + 300)
-    
+
     # Calculate damage
     if damage_type == DamageType.AD:
         ad_multiplier = (((2 * attacker.level) / 5) * base_damage * 10) / 50

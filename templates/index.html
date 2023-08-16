@@ -76,7 +76,7 @@
                 Energy: {{ venari.energy }}, 
                 Next Attack: {{ venari.next_attack }} ticks
                 {% for effect in venari.active_effects %}
-                    {{ effect.name }}({{ effect.duration }}),
+                    {{ effect.description }}({{ effect.duration }}),
                 {% endfor %}
             </li>
             {% endfor %}
@@ -86,19 +86,19 @@
     <section>
         <!-- Next Tick Button -->
         <div>
-            <form method="post">
-                <input type="submit" name="action" value="next_tick" /> Next Tick
+            <form method="post" style="display: inline;">
+                <button type="submit" name="action" value="next_tick">Next Tick</button>
             </form>
         </div>
         <!-- Start New Game Button -->
+    </section>
+    <section>
         <div>
-            <form method="post">
-                <input type="hidden" name="new_game" value="true">
-                <input type="submit" value="Start New Game">
+            <form method="post" style="display: inline;">
+                <button type="submit" name="action" value="new_game">New Game</button>
             </form>
         </div>
     </section>
-
     <section>
         <h2>Battle Log:</h2>
         <div id="battle-log">

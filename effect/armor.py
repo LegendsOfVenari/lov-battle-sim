@@ -2,12 +2,12 @@ from .effect import Effect
 
 
 class Armor(Effect):
-    def __init__(self):
+    def __init__(self, defense_boost=0, magic_resist_boost=0):
         super().__init__(None)
-        self.defense_boost = 0
-        self.magic_resist_boost = 0
+        self.defense_boost = defense_boost
+        self.magic_resist_boost = magic_resist_boost
 
-    def on_apply(self, venari):
+    def on_apply(self, venari, messages):
         super().on_apply(venari)
         """Increase DEF and MAGIC RESIST by 50%."""
         self.defense_boost = 0.5 * venari.defense
@@ -16,15 +16,20 @@ class Armor(Effect):
         venari.defense += self.defense_boost
         venari.magic_resist += self.magic_resist_boost
 
+        messages.append(f"{venari.name} gained {self.defense_boost} defense and {self.magic_resist_boost} magic resist!")
+
     def on_remove(self, venari):
         """Revert the DEF and MAGIC RESIST buff."""
         venari.defense -= self.defense_boost
         venari.magic_resist -= self.magic_resist_boost
 
     def description(self):
-        """Override the description method for a more detailed description."""
         return f"Armor buff active, {self.count} stacks"
 
-    def on_damage_received(self, venari, damage):
+    def on_damage_received(self, venari, damage, messages):
         self.remove_stack(venari)
-        print(f"{venari.name} lost an Armor stack!")
+        messages.append(f"{venari.name} lost an Armor stack!")
+
+    def stack(self, messages):
+        super().stack(messages)
+        messages.append(f"{self.count} Armor stacks!")

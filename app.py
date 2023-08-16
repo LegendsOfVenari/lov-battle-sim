@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request, session
 from battle import Battle, ActionType
-from venari import Aharas, Akulaw, Algala, Venari
+from venari import Aharas, Akulaw, Algala
 from config import akulaw_base_stats, aharas_base_stats, algala_base_stats
 import os
 
 app = Flask(__name__)
 app.secret_key = "some_secret_key"
 
+
 def serialize_teams(team1, team2):
     serialized_team1 = [serialize_venari(venari) for venari in team1]
     serialized_team2 = [serialize_venari(venari) for venari in team2]
     return serialized_team1, serialized_team2
+
 
 def serialize_venari(venari):
     """Convert a Venari object into a serializable dictionary."""
@@ -24,10 +26,12 @@ def serialize_venari(venari):
         'active_effects': [effect.description() for effect in venari.active_effects]
     }
 
+
 def deserialize_teams(serialized_team1, serialized_team2):
     team1 = [deserialize_venari(data) for data in serialized_team1]
     team2 = [deserialize_venari(data) for data in serialized_team2]
     return team1, team2
+
 
 def deserialize_venari(data):
     """Convert a serialized dictionary into a Venari object."""
@@ -51,6 +55,13 @@ def deserialize_venari(data):
     # You'd need another deserialization function for effects if you want to restore them.
     return venari
 
+def deserialize_effect(data):
+    pass
+
+def serialize_effect(effect):
+    pass
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     print("Index route hit!")
@@ -64,7 +75,8 @@ def index():
         session['tick'] = 0
 
     team1, team2 = deserialize_teams(session['team1'], session['team2'])
-    battle = Battle(team1, team2)
+    tick_count = session['tick']
+    battle = Battle(team1, team2, tick_count)
 
     if request.method == 'POST':
         action = request.form.get('action')
@@ -77,6 +89,8 @@ def index():
             result = battle.interactive_battle_simulation(ActionType.SWAP, swap_index)
         elif action == ActionType.NEXT_TICK.value:
             result = battle.interactive_battle_simulation(ActionType.NEXT_TICK)
+        elif action == ActionType.NEW_GAME.value:
+            result = battle.interactive_battle_simulation(ActionType.NEW_GAME)
         else:
             result = None
 
@@ -88,6 +102,7 @@ def index():
     # Deserialize the teams for displaying in the template
     team1_status, team2_status = serialize_teams(team1, team2)
     return render_template('index.html', team1_status=team1_status, team2_status=team2_status, tick=session['tick'], messages=messages)
+
 
 def initialize_teams():
     team1 = [
@@ -101,6 +116,7 @@ def initialize_teams():
         Akulaw("Akulaw", akulaw_base_stats, 2)
     ]
     return team1, team2
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))

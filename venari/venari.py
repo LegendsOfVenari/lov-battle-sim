@@ -26,20 +26,19 @@ class Venari:
         self.magic_resist = ((2 * self.base_stats["Magic Resist"] * (self.level + 4)) / 100)
         self.hp = 10 * self.level + self.constitution * 15 + 100
 
-    def apply_effect(self, effect):
+    def apply_effect(self, effect, messages):
         # Ensure the effect is not already applied if it's not stackable
         existing_effect = next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
         if existing_effect and existing_effect.stackable:
-            existing_effect.stack()
+            existing_effect.stack(messages)
         else:
             self.active_effects.append(effect)
-            effect.on_apply(self)
+            effect.on_apply(self, messages)
 
-    def tick_effects(self):
+    def tick_effects(self, messages):
         """Process all active effects for the Venari."""
         for effect in self.active_effects:
-            effect.on_tick(self)
-            effect.tick()
+            effect.on_tick(self, messages)
 
         # Call on_remove for expired effects before removing them
         for effect in self.active_effects:
@@ -52,7 +51,7 @@ class Venari:
     def basic_attack_damage(self):
         return ((((2 * self.level) / 5) * self.base_stats["Basic Attack Movestat"]) / 50) + self.attack_damage + (self.base_stats["Basic Attack Movestat"] / 10)
 
-    def basic_attack(self, target):
+    def basic_attack(self, target, messages):
         self.action_performed = True
         self.ready_to_attack = False  # Reset the readiness flag after performing the attack
         self.attack_tick_counter = 0  # Reset the attack tick counter
@@ -66,11 +65,11 @@ class Venari:
             self.energy += self.base_stats["Basic Attack Energy Gain"]
             self.energy = min(self.energy, 100)
 
-            print(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
+            messages.append(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
         else:
-            print(f"{self.name}({self.level})'s attack missed {target.name}({target.level})!")
+            messages.append(f"{self.name}({self.level})'s attack missed {target.name}({target.level})!")
 
-    def use_ability(self, target):
+    def use_ability(self, target, messages):
         self.action_performed = True
         self.energy = 0
 
@@ -83,17 +82,21 @@ class Venari:
         for effect in self.active_effects:
             effect.on_damage_received(self, damage)
 
-    def on_swap_in(self, enemy_team=None):
+    def on_swap_in(self, messages, enemy_team=None):
         self.action_performed = True
         self.attack_tick_counter = 0
         self.swap_cooldown = 6
 
-    def tick(self, is_point=True):
+    def tick(self, messages, is_point=True):
         """What the Venari does every tick."""
         self.reset_action()
-        self.energy += self.base_stats["Energy Gain Passively"]
+
+        passive_energy_gain = self.base_stats["Energy Gain Passively"]
+        self.energy += passive_energy_gain
+        messages.append(f"{self.name}({self.level}) gained {passive_energy_gain} Energy passively")
+
         self.energy = min(self.energy, 100)
-        self.tick_effects()
+        self.tick_effects(messages)
 
         if is_point:
             # Update attack readiness only for the point Venari
