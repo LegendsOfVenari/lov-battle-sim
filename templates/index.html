@@ -26,11 +26,13 @@
             HP: {{ team1_status[0]['battle_stats']['hp'] }},
             Energy: {{ team1_status[0]['battle_handler']['energy'] }},
             Next Attack: {{ team1_status[0]['battle_handler']['attack_tick_counter'] }} ticks
-            Effects:
-            {% for effect in team1_status[0]['battle_handler']['active_effects'] %}
-                {{ effect['name'] }}({{ effect['duration'] }}),
-            {% endfor %}
             </p>
+            <div class="effects-container">
+                Effects:
+                {% for effect in team1_status[0]['battle_handler']['active_effects'] %}
+                    <p>{{ effect['name'] }}({{ effect['duration'] }}),</p>
+                {% endfor %}
+            </div>
             <!-- Ability Button for Point Venari -->
             {% if team1_status[0]['battle_handler']['energy'] == 100 %}
             <form method="post" style="display: inline;">
@@ -134,18 +136,18 @@
         var battleLog = document.getElementById("battle-log");
         battleLog.scrollTop = battleLog.scrollHeight;
 
-        // Clear the timeout if any form is submitted
-        var forms = document.getElementsByTagName('form');
-        for (var i = 0; i < forms.length; i++) {
-            forms[i].addEventListener("submit", function() {
-                clearTimeout(nextTickTimeout);
-            });
-        }
+        // // Clear the timeout if any form is submitted
+        // var forms = document.getElementsByTagName('form');
+        // for (var i = 0; i < forms.length; i++) {
+        //     forms[i].addEventListener("submit", function() {
+        //         clearTimeout(nextTickTimeout);
+        //     });
+        // }
 
-        // Set the timeout
-        nextTickTimeout = setTimeout(function() {
-            document.getElementById("next-tick-form").submit();
-        }, 3000);  // 3000 milliseconds = 3 seconds
+        // // Set the timeout
+        // nextTickTimeout = setTimeout(function() {
+        //     document.getElementById("next-tick-form").submit();
+        // }, 3000);  // 3000 milliseconds = 3 seconds
     });
     </script>
 </body>

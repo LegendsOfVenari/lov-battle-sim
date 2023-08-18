@@ -32,10 +32,16 @@ class BattleHandler:
         self.energy = min(self.energy, 100)
         self.messages.append(f"Gained {amount} Energy passively")
 
-    def remove_active_effect(self, effect_to_remove):
-        self.active_effects = [effect for effect in self.active_effects if not isinstance(effect, effect_to_remove)]
+    def remove_effect(self, effect_class):
+        self.active_effects = [effect for effect in self.active_effects if not isinstance(effect, effect_class)]
 
-    def find_effect(self, effect):
+    def has_effect(self, effect_class):
+        return next((e for e in self.active_effects if isinstance(e, effect_class)), None) is not None
+
+    def count_effects(self, effect_class):
+        return sum(1 for e in self.active_effects if isinstance(e, effect_class))
+
+    def find_effect_instance(self, effect):
         return next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
 
     @classmethod

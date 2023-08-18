@@ -3,13 +3,11 @@ import random
 from effect import Stagger, DefenceDebuff, MagicResistDebuff
 from config import DamageType
 
-class Akulaw(Venari):
-    def basic_attack(self, target):
-        super().basic_attack(target)
 
+class Akulaw(Venari):
     def on_basic_attack_hit(self, target):
         super().on_basic_attack_hit(target)
-         # 20% chance of basic attacks applying stagger
+        # 20% chance of basic attacks applying stagger
         if random.random() < 0.2:
             target.apply_effect(Stagger(self.messages))
             self.messages.append(f"{self.name}({self.level})'s stagger triggered!")

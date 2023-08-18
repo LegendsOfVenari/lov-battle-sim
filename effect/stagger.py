@@ -13,7 +13,7 @@ class Stagger(Effect):
     def modify_basic_attack(self, venari, target):
         self.messages.append(f"{venari.name}({venari.level}) has been staggered")
         # remove the effect after it's triggered
-        venari.battle_handler.remove_active_effect(Stagger)
+        venari.battle_handler.remove_effect(Stagger)
         return False  # Basic attack does not proceed
 
     def serialize(self):

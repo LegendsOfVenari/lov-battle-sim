@@ -40,3 +40,13 @@ button {
     background-color: #fff;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
+.effects-container {
+    max-height: 50px; /* Set a fixed height */
+    overflow-y: auto; /* This will add a scrollbar if the content inside exceeds the max-height */
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 3px;
+    background-color: #eaeaea;
+    margin-top: 5px;
+}
