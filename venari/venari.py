@@ -28,6 +28,7 @@ class Venari:
         hit_chance = random.randint(0, 100)
         if hit_chance <= self.battle_stats.accuracy:
             self.deal_auto_attack_damage(target)
+            self.on_basic_attack_hit(target)
             # Energy gain from basic attack
             self.battle_handler.gain_energy(self.base_stats["Basic Attack Energy Gain"])
             return True
@@ -58,14 +59,14 @@ class Venari:
 
     def apply_effect(self, effect):
         # Ensure the effect is not already applied if it's not stackable
-        existing_effect = self.battle_handler.find_effect(effect)
+        existing_effect = self.battle_handler.find_effect_instance(effect)
         if existing_effect and existing_effect.stackable:
             existing_effect.on_apply(self)
         else:
             self.battle_handler.active_effects.append(effect)
 
     def basic_attack_damage(self):
-        return ((((2 * self.level) / 5) * 
+        return ((((2 * self.level) / 5) *
                  self.base_stats["Basic Attack Movestat"]) / 50) + self.battle_stats.attack_damage + (self.base_stats["Basic Attack Movestat"] / 10)
 
     def deal_damage(self, target, base_damage, damage_type):
@@ -81,6 +82,10 @@ class Venari:
     def receive_damage(self, damage):
         # Reduce HP
         self.battle_handler.receive_damage(self, damage)
+
+    def on_basic_attack_hit(self, target):
+        print("BASIC ATTACK HIT")
+        pass
 
     def serialize_venari(venari):
         """Convert a Venari object into a serializable dictionary."""
