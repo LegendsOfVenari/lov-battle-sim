@@ -1,39 +1,38 @@
 import random
 from .venari import Venari
 from effect import Poison, GuaranteedPoison
-from .battle_utils import calculate_ability_damage, DamageType
+from config import DamageType
 
 
 class Aharas(Venari):
-    def __init(self, name, base_stats, level):
-        self.poison_applied = False
+    def basic_attack(self, target):
+        did_damage = super().basic_attack(target)
+        if did_damage:
+            # 20% chance of basic attacks applying poison
+            if self.battle_handler.find_effect(GuaranteedPoison) is not None:
+                self.battle_handler.remove_active_effect(GuaranteedPoison)
+                target.apply_effect(Poison(self.messages, 4))
+            elif random.random() < 0.2:
+                target.apply_effect(Poison(self.messages, 4))
+                self.messages.append(f"{self.name}({self.level})'s poison triggered!")
 
-    def basic_attack(self, target, messages):
-        super().basic_attack(target, messages)
-
-        # 20% chance of basic attacks applying poison
-        if not self.poison_applied and random.random() < 0.2:
-            target.apply_effect(Poison(), messages)
-            self.poison_applied = True
-            messages.append(f"{self.name}({self.level})'s poison triggered!")
-
-    def use_ability(self, target, messages):
+    def use_ability(self, target):
         super().use_ability(target)
         # Remove all poison stacks from the target and deal bonus damage
-        poison_stacks = len([effect for effect in target.active_effects if isinstance(effect, Poison)])
-        damage = calculate_ability_damage(DamageType.AP, self, target, 20 + 50 * poison_stacks)
-        target.receive_damage(damage)
+        poison_stacks = len([effect for effect in target.battle_handler.active_effects if isinstance(effect, Poison)])
+        self.deal_damage(target, 20 + 50 * poison_stacks, DamageType.AP)
 
         # Remove poison effects
-        target.active_effects = [effect for effect in target.active_effects if not isinstance(effect, Poison)]
+        target.battle_handler.active_effects = [effect for effect in target.battle_handler.active_effects if not isinstance(effect, Poison)]
 
-        messages.append(f"{self.name} used its ability on {target.name},consuming {poison_stacks} and dealing {damage:.2f} damage!")
+        self.messages.append(f"{self.name} used its ability on {target.name},consuming {poison_stacks}")
 
     def on_swap_in(self, messages, enemy_team=None):
-        """When Aharas is swapped in, its next basic attack applies poison."""
-        super().on_swap_in(messages)  # Call the base class's method to reset the attack tick counter
-        self.apply_effect(GuaranteedPoison(), messages)
+        # Call the base class's method to reset the attack tick counter
+        super().on_swap_in(messages)
 
-    def reset_action(self):
-        super().reset_action()  # Call the base class's reset_action method to reset the action_performed flag
-        self.poison_applied = False
+        # When Aharas is swapped in, its next basic attack applies poison.
+        self.apply_effect(GuaranteedPoison(messages))
+
+    def tick(self, is_point=True):
+        super().tick(is_point)

@@ -1,3 +1,5 @@
+from enum import Enum
+
 aharas_base_stats = {
     "Constitution": 70,
     "Attack Damage": 82,
@@ -33,3 +35,15 @@ algala_base_stats = {
     "Basic Attack Frequency": 5,
     "Basic Attack Damage": 35
 }
+
+venari_base_stats_map = {
+    'Aharas': aharas_base_stats,
+    'Akulaw': akulaw_base_stats,
+    'Algala': algala_base_stats
+}
+
+
+class DamageType(Enum):
+    AD = "ad"
+    AP = "ap"
+    TRUE_DAMAGE = "true_damage"

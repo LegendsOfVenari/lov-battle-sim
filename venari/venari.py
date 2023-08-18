@@ -1,103 +1,119 @@
 import random
-from effect import Stagger
-from .battle_utils import calculate_basic_attack_damage, calculate_ability_damage, DamageType
-
+import importlib
+from config import venari_base_stats_map
+from .battle_handler import BattleHandler
+from .battle_stats import BattleStats
 
 class Venari:
-    def __init__(self, name, base_stats, level):
+    def __init__(self, name, base_stats, level, messages, battle_handler=None, battle_stats=None):
+        # Static Values
         self.name = name
         self.base_stats = base_stats
         self.level = level
-        self.level_up()
-        self.energy = 0
-        self.accuracy = 100  # Start with 100% accuracy
-        self.attack_tick_counter = 0
-        self.active_effects = []  # List to hold active effects
-        self.action_performed = False  # New attribute
-        self.ready_to_attack = False  # New attribute to track if Venari is ready to attack
-        self.swap_cooldown = 0  # Initially, no cooldown
+        self.messages = messages
 
-    def level_up(self):
-        """Calculates stats based on level and base stats."""
-        self.constitution = ((2 * self.base_stats["Constitution"] * (self.level + 4)) / 100)
-        self.attack_damage = ((2 * self.base_stats["Attack Damage"] * (self.level + 4)) / 100)
-        self.ability_power = ((2 * self.base_stats["Ability Power"] * (self.level + 4)) / 100)
-        self.defense = ((2 * self.base_stats["Defence"] * (self.level + 4)) / 100)
-        self.magic_resist = ((2 * self.base_stats["Magic Resist"] * (self.level + 4)) / 100)
-        self.hp = 10 * self.level + self.constitution * 15 + 100
+        self.battle_stats = battle_stats or BattleStats(base_stats, level)
+        self.battle_handler = battle_handler or BattleHandler(messages)
 
-    def apply_effect(self, effect, messages):
-        # Ensure the effect is not already applied if it's not stackable
-        existing_effect = next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
-        if existing_effect and existing_effect.stackable:
-            existing_effect.on_apply(self, messages)
-        else:
-            self.active_effects.append(effect)
+    def ready_to_attack(self):
+        return self.battle_handler.ready_to_attack(self.base_stats["Basic Attack Frequency"])
 
-    def tick_effects(self, messages):
-        """Process all active effects for the Venari."""
-        for effect in self.active_effects:
-            effect.on_tick(self, messages)
-
-    def basic_attack_damage(self):
-        return ((((2 * self.level) / 5) * self.base_stats["Basic Attack Movestat"]) / 50) + self.attack_damage + (self.base_stats["Basic Attack Movestat"] / 10)
-
-    def basic_attack(self, target, messages):
-        self.action_performed = True
-        self.ready_to_attack = False  # Reset the readiness flag after performing the attack
-        self.attack_tick_counter = 0  # Reset the attack tick counter
+    def basic_attack(self, target):
+        self.battle_handler.attack_tick_counter = 0  # Reset the attack tick counter
+        for effect in self.battle_handler.active_effects:
+            should_proceed = effect.modify_basic_attack(self, target)
+            if not should_proceed:
+                return  # Stop the basic attack if any effect says to halt
 
         hit_chance = random.randint(0, 100)
-        if hit_chance <= self.accuracy:
-            damage = calculate_basic_attack_damage(self, target, self.base_stats["Basic Attack Damage"])
-            target.receive_damage(damage)
-
+        if hit_chance <= self.battle_stats.accuracy:
+            self.deal_auto_attack_damage(target)
             # Energy gain from basic attack
-            self.energy += self.base_stats["Basic Attack Energy Gain"]
-            self.energy = min(self.energy, 100)
-
-            messages.append(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
+            self.battle_handler.gain_energy(self.base_stats["Basic Attack Energy Gain"])
+            return True
         else:
-            messages.append(f"{self.name}({self.level})'s attack missed {target.name}({target.level})!")
+            self.messages.append(f"{self.name}({self.level})'s attack missed {target.name}({target.level})!")
+            return False
 
-    def use_ability(self, target, messages):
-        self.action_performed = True
-        self.energy = 0
+    def use_ability(self, target):
+        self.battle_handler.energy = 0
+
+    def on_swap_in(self, enemy_team=None):
+        self.battle_handler.attack_tick_counter = 0
+        self.battle_handler.swap_cooldown = 6
+
+    def tick_effects(self):
+        """Process all active effects for the Venari."""
+        for effect in self.battle_handler.active_effects:
+            effect.on_tick(self)
+
+    def tick(self, is_point=True):
+        """What the Venari does every tick."""
+
+        self.battle_handler.gain_energy(self.base_stats["Energy Gain Passively"])
+
+        self.tick_effects()
+
+        self.battle_handler.tick(is_point, self)
+
+    def apply_effect(self, effect):
+        # Ensure the effect is not already applied if it's not stackable
+        existing_effect = self.battle_handler.find_effect(effect)
+        if existing_effect and existing_effect.stackable:
+            existing_effect.on_apply(self)
+        else:
+            self.battle_handler.active_effects.append(effect)
+
+    def basic_attack_damage(self):
+        return ((((2 * self.level) / 5) * 
+                 self.base_stats["Basic Attack Movestat"]) / 50) + self.battle_stats.attack_damage + (self.base_stats["Basic Attack Movestat"] / 10)
+
+    def deal_damage(self, target, base_damage, damage_type):
+        damage = BattleHandler.calculate_damage(damage_type, self, target, base_damage)
+        self.messages.append(f"Dealt {damage}!")
+        target.receive_damage(damage)
+
+    def deal_auto_attack_damage(self, target):
+        damage = BattleHandler.calculate_basic_attack_damage(self, target, self.base_stats["Basic Attack Damage"])
+        self.messages.append(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
+        target.receive_damage(damage)
 
     def receive_damage(self, damage):
-        """Handle receiving damage and interacting with active effects."""
         # Reduce HP
-        self.hp = max(0, self.hp - damage)
+        self.battle_handler.receive_damage(self, damage)
 
-        # Notify all active effects that damage was received
-        for effect in self.active_effects:
-            effect.on_damage_received(self, damage)
+    def serialize_venari(venari):
+        """Convert a Venari object into a serializable dictionary."""
+        return {
+            'name': venari.name,
+            'base_stats': venari.base_stats,
+            'level': venari.level,
+            'battle_handler': venari.battle_handler.serialize(),
+            'battle_stats': venari.battle_stats.serialize(),
+        }
 
-    def on_swap_in(self, messages, enemy_team=None):
-        self.action_performed = True
-        self.attack_tick_counter = 0
-        self.swap_cooldown = 6
+    @classmethod
+    def deserialize_venari(cls, data, messages):
+        """Convert a serialized dictionary into a Venari object."""
+        name = data['name']
+        level = data['level']
 
-    def tick(self, messages, is_point=True):
-        """What the Venari does every tick."""
-        self.reset_action()
+        module = importlib.import_module("venari")
+        venari_class = getattr(module, name)
+        base_stats = venari_base_stats_map.get(name)
 
-        passive_energy_gain = self.base_stats["Energy Gain Passively"]
-        self.energy += passive_energy_gain
-        messages.append(f"{self.name}({self.level}) gained {passive_energy_gain} Energy passively")
-
-        self.energy = min(self.energy, 100)
-        self.tick_effects(messages)
-
-        if is_point:
-            # Update attack readiness only for the point Venari
-            self.attack_tick_counter += 1
-            if self.attack_tick_counter >= self.base_stats["Basic Attack Frequency"]:
-                self.ready_to_attack = True
-                print(f"{self.name}({self.level}) will attack on the next tick!")
+        serialized_battle_handler = data.get('battle_handler')
+        if serialized_battle_handler:
+            battle_handler = BattleHandler.deserialize(serialized_battle_handler, messages)
         else:
-            if self.swap_cooldown > 0:
-                self.swap_cooldown -= 1
+            battle_handler = BattleHandler(messages)
 
-    def reset_action(self):
-        self.action_performed = False
+        serialized_battle_stats = data.get('battle_stats')
+        if serialized_battle_stats:
+            battle_stats = BattleStats.deserialize(serialized_battle_stats)
+        else:
+            battle_stats = BattleStats(base_stats, level)
+
+        venari = venari_class(name, base_stats, level, messages, battle_handler, battle_stats)
+
+        return venari

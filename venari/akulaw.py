@@ -1,29 +1,29 @@
 from .venari import Venari
 import random
 from effect import Stagger, DefenceDebuff, MagicResistDebuff
-from .battle_utils import calculate_basic_attack_damage, calculate_ability_damage, DamageType
+from config import DamageType
 
 class Akulaw(Venari):
-    def basic_attack(self, target, messages):
-        super().basic_attack(target, messages)
+    def basic_attack(self, target):
+        super().basic_attack(target)
 
-        # 20% chance of basic attacks applying stagger
+    def on_basic_attack_hit(self, target):
+        super().on_basic_attack_hit(target)
+         # 20% chance of basic attacks applying stagger
         if random.random() < 0.2:
-            target.apply_effect(Stagger(), messages)
-            messages.append(f"{self.name}({self.level})'s stagger triggered!")
+            target.apply_effect(Stagger(self.messages))
+            self.messages.append(f"{self.name}({self.level})'s stagger triggered!")
 
-    def use_ability(self, target, messages):
-        super().use_ability(target, messages)
-        damage = calculate_ability_damage(DamageType.AD, self, target, 66)
-        target.receive_damage(damage)
+    def use_ability(self, target):
+        super().use_ability(target)
+        self.deal_damage(target, 66, DamageType.AD)
+        target.apply_effect(Stagger(self.messages))
+        self.messages.append(f"{self.name} used its ability on {target.name} and staggering the target!")
 
-        target.apply_effect(Stagger(), messages)
-        messages.append(f"{self.name} used its ability on {target.name}, dealing {damage:.2f} damage and staggering the target!")
-
-    def on_swap_in(self, messages, enemy_team=None):
-        super().on_swap_in(messages)
+    def on_swap_in(self, enemy_team=None):
+        super().on_swap_in()
         for enemy_venari in enemy_team:
-            enemy_venari.apply_effect(DefenceDebuff(10, 4), messages)
-            enemy_venari.apply_effect(MagicResistDebuff(10, 4), messages)
+            enemy_venari.apply_effect(DefenceDebuff(self.messages, 10, 4))
+            enemy_venari.apply_effect(MagicResistDebuff(self.messages, 10, 4))
 
-        messages.append(f"{self.name}({self.level}) applied Defence and Magic Resist debuffs to the entire enemy team!")
+        self.messages.append(f"{self.name}({self.level}) applied Defence and Magic Resist debuffs to the entire enemy team!")
