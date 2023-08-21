@@ -36,7 +36,6 @@ def index():
 
     if request.method == 'POST':
         action = request.form.get('action')
-        print(f"Received action: {action}")
 
         if action == ActionType.ABILITY.value:
             result = battle.interactive_battle_simulation(ActionType.ABILITY)
@@ -58,7 +57,6 @@ def index():
     # Deserialize the teams for displaying in the template
     team1_status, team2_status = serialize_teams(team1, team2)
     print(team1_status)
-
     return render_template('index.html', team1_status=team1_status, team2_status=team2_status, tick=session['tick'], messages=messages)
 
 

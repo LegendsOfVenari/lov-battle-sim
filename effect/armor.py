@@ -1,9 +1,11 @@
-from .effect import Effect
+from .stackable_effect import StackableEffect
 
 
-class Armor(Effect):
+class Armor(StackableEffect):
+    EFFECT_ID = "armor"
+
     def __init__(self, messages, defense_boost=0, magic_resist_boost=0, count=0):
-        super().__init__(True, messages, None, count)
+        super().__init__(messages, None, count)
         self.defense_boost = defense_boost
         self.magic_resist_boost = magic_resist_boost
 
@@ -27,8 +29,9 @@ class Armor(Effect):
         return f"Armor buff active, {self.count} stacks, currently gaining {self.defense_boost} Defense and {self.magic_resist_boost}"
 
     def on_damage_received(self, venari, damage):
-        self.remove_stack(venari)
-        self.messages.append(f"{venari.name} lost an Armor stack!")
+        if damage > 0:
+            self.remove_stack(venari)
+            self.messages.append(f"{venari.name} lost an Armor stack!")
 
     def stack(self):
         super().stack()
@@ -37,7 +40,6 @@ class Armor(Effect):
     def serialize(self):
         return {
             'name': self.__class__.__name__,
-            'stackable': self.stackable,
             'duration': self.duration,
             'count': self.count,
             'description': self.description(),

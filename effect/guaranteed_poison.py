@@ -3,25 +3,25 @@ from .poison import Poison
 
 
 class GuaranteedPoison(Effect):
-    def __init__(self, messages):
-        super().__init__(False, messages, None, 0)
+    EFFECT_ID = "guaranteed_poison"
+
+    def __init__(self, messages, duration=6):
+        super().__init__(messages)
 
     def description(self):
-        return f"Guaranteed Poison on next basic attack."
+        return f"The next basic attack in the next {self.duration} ticks will apply poison."
 
     def on_apply(self, venari):
         super().on_apply(venari)
-        self.messages.append(f"Guaranteed Poison!")
+        self.messages.append(f"Guaranteed Poison activated!")
 
     def serialize(self):
         return {
             'name': self.__class__.__name__,
-            'stackable': self.stackable,
-            'duration': self.duration,
-            'count': self.count,
-            'description': self.description()
+            'description': self.description(),
+            'duration': self.duration
         }
 
     @classmethod
     def deserialize(cls, data, messages):
-        return GuaranteedPoison(messages)
+        return GuaranteedPoison(messages, data["duration"])

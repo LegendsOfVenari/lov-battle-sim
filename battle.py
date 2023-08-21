@@ -22,19 +22,13 @@ class Battle:
     def auto_swap(self, team, enemy_team):
         # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].battle_stats.hp <= 0 and len(team) > 1:
-            print(f"{team[0].name} is defeated!")
             del team[0]
-            print(f"{team[0].name} is now the point Venari!")
             team[0].on_swap_in(enemy_team)
 
     def user_swap(self, team, available_venari):
-        print("\nChoose a Venari from the bench to swap with the point Venari:")
-        for i, venari in enumerate(available_venari, start=1):
-            print(f"{i}. {venari.name}({venari.level})")
 
         choice = input("Enter the number of the Venari to swap in: ").strip()
         while not choice.isdigit() or int(choice) < 1 or int(choice) > len(available_venari):
-            print("Invalid choice. Please select a valid Venari number.")
             choice = input("Enter the number of the Venari to swap in: ").strip()
 
         chosen_venari = available_venari[int(choice) - 1]

@@ -1,18 +1,18 @@
-from effect import Effect, Stagger
+from effect import Effect, Stagger, StackableEffect
 from config import DamageType
 
 class BattleHandler:
     def __init__(self, messages):
         self.energy = 0
         self.attack_tick_counter = 0
-        self.active_effects = []
+        self.active_effects = {}
         self.swap_cooldown = 0
         self.messages = messages
 
     def receive_damage(self, venari, damage):
         # Notify all active effects that damage was received
         venari.battle_stats.hp = max(0, venari.battle_stats.hp - damage)
-        for effect in self.active_effects:
+        for effect in self.active_effects.values():
             effect.on_damage_received(venari, damage)
 
     def ready_to_attack(self, basic_attack_frequency):
@@ -32,14 +32,38 @@ class BattleHandler:
         self.energy = min(self.energy, 100)
         self.messages.append(f"Gained {amount} Energy passively")
 
-    def remove_effect(self, effect_class):
-        self.active_effects = [effect for effect in self.active_effects if not isinstance(effect, effect_class)]
+    def remove_stack(self, effect):
+        effect_id = effect.EFFECT_ID
+        if effect_id in self.active_effects:
+            self.active_effects[effect_id].remove_stack()
 
-    def has_effect(self, effect_class):
-        return next((e for e in self.active_effects if isinstance(e, effect_class)), None) is not None
+    def remove_effect(self, effect):
+        effect_id = effect.EFFECT_ID
+        if effect_id in self.active_effects:
+            self.active_effects.pop(effect_id)
 
-    def count_effects(self, effect_class):
-        return sum(1 for e in self.active_effects if isinstance(e, effect_class))
+    def has_effect(self, effect):
+        effect_id = effect.EFFECT_ID
+        return effect_id in self.active_effects
+
+    def count_stacks(self, effect):
+        effect_id = effect.EFFECT_ID
+        if effect_id in self.active_effects:
+            return self.active_effects[effect_id].count
+        else:
+            return 0
+
+    def is_effect_stackable(self, effect):
+        return isinstance(effect, StackableEffect)
+
+    def apply_effect(self, effect, venari):
+        effect_id = effect.EFFECT_ID
+        if effect_id in self.active_effects:
+            existing_effect = self.active_effects[effect_id]
+            existing_effect.on_apply(venari)
+        else:
+            self.active_effects[effect_id] = effect
+            effect.on_apply(venari)
 
     def find_effect_instance(self, effect):
         return next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
@@ -81,7 +105,7 @@ class BattleHandler:
         return {
             'energy': self.energy,
             'attack_tick_counter': self.attack_tick_counter,
-            'active_effects': [effect.serialize() for effect in self.active_effects],
+            'active_effects': {key: effect.serialize() for key, effect in self.active_effects.items()},
             'swap_cooldown': self.swap_cooldown
         }
 
@@ -90,6 +114,6 @@ class BattleHandler:
         battleHandler = BattleHandler(messages)
         battleHandler.energy = data['energy']
         battleHandler.attack_tick_counter = data['attack_tick_counter']
-        battleHandler.active_effects = [Effect.deserialize(effect_data, messages) for effect_data in data['active_effects']]
+        battleHandler.active_effects = {key: Effect.deserialize(effect_data, messages) for key, effect_data in data['active_effects'].items()}
         battleHandler.swap_cooldown = data['swap_cooldown']
         return battleHandler

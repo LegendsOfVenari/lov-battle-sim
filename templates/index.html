@@ -12,33 +12,45 @@
     <title>Turn-based Battle Game</title>
 </head>
 <body>
-    <h1>Turn-based Battle Game</h1>
-    <h2>Tick: {{ tick }}</h2>
-
-    <section>
-        <h2>Player Team Status:</h2>
-
+    <div class="container">
+        <!-- Player Section -->
+        <div class="column">
         <!-- Point Venari -->
         <div>
             <h3>Point Venari:</h3>
             <p>
             {{ team1_status[0]['name'] }}({{ team1_status[0]['level'] }}) -
-            HP: {{ team1_status[0]['battle_stats']['hp'] }},
-            Energy: {{ team1_status[0]['battle_handler']['energy'] }},
-            Next Attack: {{ team1_status[0]['battle_handler']['attack_tick_counter'] }} ticks
+            Next Attack: {{ team1_status[0]['base_stats']['Basic Attack Frequency'] - team1_status[0]['battle_handler']['attack_tick_counter'] }} ticks
             </p>
+            <!-- HP Bar -->
+            <div class="hp-bar-container">
+                <!-- Calculate the width percentage of the HP bar based on current HP and max HP -->
+                <div class="hp-bar" style="width: {{ (team1_status[0]['battle_stats']['hp'] / team1_status[0]['battle_stats']['initial_hp']) * 100 }}%;"></div>
+                <div class="hp-text">
+                {{ team1_status[0]['battle_stats']['hp'] }} / {{ team1_status[0]['battle_stats']['initial_hp'] }}
+                </div>
+            </div>
+            <div class="energy-bar-container">
+                <div class="energy-bar" style="width: {{ team1_status[0]['battle_handler']['energy'] }}%;"></div>
+                <div class="energy-text">
+                    {{ team1_status[0]['battle_handler']['energy'] }} / 100
+                </div>
+            </div>
             <div class="effects-container">
-                Effects:
-                {% for effect in team1_status[0]['battle_handler']['active_effects'] %}
-                    <p>{{ effect['name'] }}({{ effect['duration'] }}),</p>
+                {% for effect in team1_status[0]['battle_handler']['active_effects'].values() %}
+                    <p>{{ effect['description'] }},</p>
                 {% endfor %}
             </div>
             <!-- Ability Button for Point Venari -->
-            {% if team1_status[0]['battle_handler']['energy'] == 100 %}
-            <form method="post" style="display: inline;">
-                <button type="submit" name="action" value="ability">Ability</button>
-            </form>
-            {% endif %}
+            <div class="button-container">
+                <form method="post" style="display: inline;">
+                    {% if team1_status[0]['battle_handler']['energy'] == 100 %}
+                        <button type="submit" name="action" value="ability">Ability</button>
+                    {% else %}
+                        <button disabled style="background-color: gray;">Ability</button>
+                    {% endif %}
+                </form>
+            </div>
         </div>
 
         <!-- Bench Venari -->
@@ -47,65 +59,110 @@
             <ul>
             {% for venari in team1_status[1:] %}
             <li>
-                {{ venari['name'] }}({{ venari['level'] }}) -
-                HP: {{ venari['battle_stats']['hp'] }},
-                Energy: {{ venari['battle_handler']['energy'] }},
-                Next Attack: {{ venari['battle_handler']['attack_tick_counter'] }} ticks
-                Effects:
-                {% for effect in venari['battle_handler']['active_effects'] %}
-                    {{ effect['name'] }}({{ effect['duration'] }}),
-                {% endfor %}
+                {{ venari['name'] }}({{ venari['level'] }})
+                <!-- HP Bar -->
+                <div class="hp-bar-container">
+                    <!-- Calculate the width percentage of the HP bar based on current HP and max HP -->
+                    <div class="hp-bar" style="width: {{ (venari['battle_stats']['hp'] / venari['battle_stats']['initial_hp']) * 100 }}%;"></div>
+                    <div class="hp-text">
+                        {{ venari['battle_stats']['hp'] }} / {{ venari['battle_stats']['initial_hp'] }}
+                    </div>
+                </div>
+                <!-- Energy Bar -->
+                <div class="energy-bar-container">
+                    <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
+                    <div class="energy-text">
+                        {{ venari['battle_handler']['energy'] }} / 100
+                    </div>
+                </div>
                 <!-- Swap button -->
                 {% if venari['battle_handler']['swap_cooldown'] == 0 %}
-                    <form method="post" style="display: inline;">
-                        <button type="submit" name="action" value="swap_{{ loop.index0 }}">Swap</button>
-                    </form>
+                    <div class="button-container">
+                        <form method="post" style="display: inline;">
+                            <button type="submit" name="action" value="swap_{{ loop.index0 }}">Swap</button>
+                        </form>
+                    </div>
                 {% else %}
-                    | Swap Cooldown: {{ venari['battle_handler']['swap_cooldown'] }} ticks
+                    <div class="button-container">
+                        <button disabled style="background-color: gray;">Swap Cooldown: {{ venari['battle_handler']['swap_cooldown'] }} ticks</button>
+                    </div>
                 {% endif %}
             </li>
+            <div class="effects-container">
+                {% for effect in venari['battle_handler']['active_effects'].values() %}
+                    {{ effect['description'] }},
+                {% endfor %}
+            </div>
             {% endfor %}
             </ul>
         </div>
-    </section>
-
-    <div>
-        <h3>AI Point Venari:</h3>
-        <p>
-        {{ team2_status[0]['name'] }}({{ team2_status[0]['level'] }}) -
-        HP: {{ team2_status[0]['battle_stats']['hp'] }},
-        Energy: {{ team2_status[0]['battle_handler']['energy'] }},
-        Next Attack: {{ team2_status[0]['battle_handler']['attack_tick_counter'] }} ticks
-        Effects:
-        {% for effect in team2_status[0]['battle_handler']['active_effects'] %}
-            {{ effect['name'] }}({{ effect['duration'] }}),
-        {% endfor %}
-        </p>
+            </section>
+        </div>
+    
+        <!-- AI Section -->
+        <div class="column">
+            <div>
+                <h3>AI Point Venari:</h3>
+                <p>
+                {{ team2_status[0]['name'] }}({{ team2_status[0]['level'] }}) -
+                Energy: {{ team2_status[0]['battle_handler']['energy'] }},
+                Next Attack: {{ team2_status[0]['base_stats']['Basic Attack Frequency'] - team2_status[0]['battle_handler']['attack_tick_counter'] }} ticks
+                </p>
+                <div class="hp-bar-container">
+                    <div class="hp-bar" style="width: {{ (team2_status[0]['battle_stats']['hp'] / team2_status[0]['battle_stats']['initial_hp']) * 100 }}%;"></div>
+                    <div class="hp-text">
+                        {{ team2_status[0]['battle_stats']['hp'] }} / {{ team2_status[0]['battle_stats']['initial_hp'] }}
+                    </div>
+                </div>
+                <!-- Energy Bar for AI Point Venari -->
+                <div class="energy-bar-container">
+                    <div class="energy-bar" style="width: {{ team2_status[0]['battle_handler']['energy'] }}%;"></div>
+                    <div class="energy-text">
+                    {{ team2_status[0]['battle_handler']['energy'] }} / 100
+                    </div>
+                </div>
+                <div class="effects-container">
+                    {% for effect in team2_status[0]['battle_handler']['active_effects'].values() %}
+                    {{ effect['description'] }},
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <h3>Bench:</h3>
+                <ul>
+                {% for venari in team2_status[1:] %}
+                <li>
+                    {{ venari['name'] }}({{ venari['level'] }})
+                    <!-- HP Bar -->
+                    <div class="hp-bar-container">
+                        <!-- Calculate the width percentage of the HP bar based on current HP and max HP -->
+                        <div class="hp-bar" style="width: {{ (venari['battle_stats']['hp'] / venari['battle_stats']['initial_hp']) * 100 }}%;"></div>
+                        <div class="hp-text">
+                            {{ venari['battle_stats']['hp'] }} / {{ venari['battle_stats']['initial_hp'] }}
+                        </div>
+                    </div>
+                    <!-- Energy Bar -->
+                    <div class="energy-bar-container">
+                        <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
+                        <div class="energy-text">
+                            {{ venari['battle_handler']['energy'] }} / 100
+                        </div>
+                    </div>
+                </li>
+                <div class="effects-container">
+                    {% for effect in venari['battle_handler']['active_effects'].values() %}
+                        {{ effect['name'] }}({{ effect['duration'] }}),
+                    {% endfor %}
+                </div>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-
-    <!-- Bench Venari -->
-    <div>
-        <h3>Bench:</h3>
-        <ul>
-        {% for venari in team2_status[1:] %}
-        <li>
-            {{ venari['name'] }}({{ venari['level'] }}) -
-            HP: {{ venari['battle_stats']['hp'] }},
-            Energy: {{ venari['battle_handler']['energy'] }},
-            Next Attack: {{ venari['battle_handler']['attack_tick_counter'] }} ticks
-            Effects:
-            {% for effect in venari['battle_handler']['active_effects'] %}
-                {{ effect['name'] }}({{ effect['duration'] }}),
-            {% endfor %}
-        </li>
-        {% endfor %}
-        </ul>
-    </div>
-    </section>
 
     <section>
         <!-- Next Tick Button -->
-        <div>
+        <div class="button-container">
             <form id="next-tick-form" method="post" style="display: inline;">
                 <input type="hidden" name="action" value="next_tick" />
                 <button type="submit" name="action" value="next_tick">Next Tick</button>
@@ -114,7 +171,7 @@
         <!-- Start New Game Button -->
     </section>
     <section>
-        <div>
+        <div class="button-container">
             <form method="post" style="display: inline;">
                 <button type="submit" name="action" value="new_game">New Game</button>
             </form>

@@ -2,10 +2,8 @@ class BattleStats:
     def __init__(self, base_stats=None, level=None, hp=None,
                  constitution=None, attack_damage=None,
                  ability_power=None, defense=None,
-                 magic_resist=None, accuracy=None):
-        print(type(level))
-
-        # If specific stats values are provided (deserialization scenario), use them.
+                 magic_resist=None, accuracy=None,
+                 initial_hp=None, dodge_chance=None):
         if hp is not None:
             self.hp = hp
             self.constitution = constitution
@@ -14,7 +12,8 @@ class BattleStats:
             self.defense = defense
             self.magic_resist = magic_resist
             self.accuracy = accuracy
-        # Else, if base stats and level are provided, compute them.
+            self.initial_hp = initial_hp
+            self.dodge_chance = dodge_chance
         elif base_stats is not None and level is not None:
             self.constitution = ((2 * base_stats["Constitution"] * (level + 4)) / 100)
             self.attack_damage = ((2 * base_stats["Attack Damage"] * (level + 4)) / 100)
@@ -23,6 +22,8 @@ class BattleStats:
             self.magic_resist = ((2 * base_stats["Magic Resist"] * (level + 4)) / 100)
             self.hp = 10 * level + self.constitution * 15 + 100
             self.accuracy = 100
+            self.initial_hp = self.hp
+            self.dodge_chance = 0
         # If neither set of parameters are provided, raise an error.
         else:
             raise ValueError("Must provide either base stats and level, or individual stat values.")
@@ -35,7 +36,9 @@ class BattleStats:
             'ability_power': self.ability_power,
             'defense': self.defense,
             'magic_resist': self.magic_resist,
-            'accuracy': self.accuracy
+            'accuracy': self.accuracy,
+            'initial_hp': self.initial_hp,
+            'dodge_chance': self.dodge_chance
         }
 
     @classmethod
@@ -46,4 +49,6 @@ class BattleStats:
                    ability_power=data['ability_power'],
                    defense=data['defense'],
                    magic_resist=data['magic_resist'],
-                   accuracy=data['accuracy'])
+                   accuracy=data['accuracy'],
+                   initial_hp=data['initial_hp'],
+                   dodge_chance=data['dodge_chance'])

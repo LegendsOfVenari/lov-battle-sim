@@ -1,11 +1,13 @@
 from .effect import Effect
 
 class Stagger(Effect):
-    def __init__(self, messages):
-        super().__init__(False, messages, None, 0)
+    EFFECT_ID = "stagger"
+
+    def __init__(self, messages, duration=3):
+        super().__init__(messages, duration)
 
     def description(self):
-        return f"Staggers the next basic attack."
+        return f"Staggers the next basic attack for the next 3 ticks."
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -19,12 +21,10 @@ class Stagger(Effect):
     def serialize(self):
         return {
             'name': self.__class__.__name__,
-            'stackable': self.stackable,
-            'duration': self.duration,
-            'count': self.count,
-            'description': self.description()
+            'description': self.description(),
+            'duration': self.duration
         }
 
     @classmethod
     def deserialize(cls, data, messages):
-        return Stagger(messages)
+        return Stagger(messages, data["duration"])

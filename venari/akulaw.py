@@ -21,7 +21,8 @@ class Akulaw(Venari):
     def on_swap_in(self, enemy_team=None):
         super().on_swap_in()
         for enemy_venari in enemy_team:
-            enemy_venari.apply_effect(DefenceDebuff(self.messages, 10, 4))
-            enemy_venari.apply_effect(MagicResistDebuff(self.messages, 10, 4))
+            print(enemy_venari)
+            enemy_venari.apply_effect(DefenceDebuff(self.messages, 4, 10))
+            enemy_venari.apply_effect(MagicResistDebuff(self.messages, 4, 10))
 
         self.messages.append(f"{self.name}({self.level}) applied Defence and Magic Resist debuffs to the entire enemy team!")

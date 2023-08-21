@@ -20,13 +20,13 @@ class Venari:
 
     def basic_attack(self, target):
         self.battle_handler.attack_tick_counter = 0  # Reset the attack tick counter
-        for effect in self.battle_handler.active_effects:
+        for effect in self.battle_handler.active_effects.values():
             should_proceed = effect.modify_basic_attack(self, target)
             if not should_proceed:
                 return  # Stop the basic attack if any effect says to halt
 
         hit_chance = random.randint(0, 100)
-        if hit_chance <= self.battle_stats.accuracy:
+        if hit_chance <= self.battle_stats.accuracy - self.battle_stats.dodge_chance:
             self.deal_auto_attack_damage(target)
             self.on_basic_attack_hit(target)
             # Energy gain from basic attack
@@ -45,7 +45,7 @@ class Venari:
 
     def tick_effects(self):
         """Process all active effects for the Venari."""
-        for effect in self.battle_handler.active_effects:
+        for effect in self.battle_handler.active_effects.values():
             effect.on_tick(self)
 
     def tick(self, is_point=True):
@@ -58,12 +58,7 @@ class Venari:
         self.battle_handler.tick(is_point, self)
 
     def apply_effect(self, effect):
-        # Ensure the effect is not already applied if it's not stackable
-        existing_effect = self.battle_handler.find_effect_instance(effect)
-        if existing_effect and existing_effect.stackable:
-            existing_effect.on_apply(self)
-        else:
-            self.battle_handler.active_effects.append(effect)
+        self.battle_handler.apply_effect(effect, self)
 
     def basic_attack_damage(self):
         return ((((2 * self.level) / 5) *

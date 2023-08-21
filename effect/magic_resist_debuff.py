@@ -2,16 +2,16 @@ from .effect import Effect
 
 
 class MagicResistDebuff(Effect):
+    EFFECT_ID = "magic_resist_debuff"
+
     def __init__(self, messages, duration, reduction_percent, reduction_amount=0):
-        super().__init__(False, messages, duration, 0)
+        super().__init__(messages, duration)
         # Convert the percentage to a factor
         self.reduction_percent = reduction_percent
         self.reduction_amount = 0
 
     def description(self):
-        reduction_factor = self.reduction_percent / 100
-        reduction_percentage = round(100 * (1 - reduction_factor), 1)
-        return f"Magic Resist Debuff (-{reduction_percentage}%, {self.duration} ticks)"
+        return f"Magic Resist Debuff ({self.reduction_percent}%, {self.duration} ticks)"
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -30,9 +30,7 @@ class MagicResistDebuff(Effect):
     def serialize(self):
         return {
             'name': self.__class__.__name__,
-            'stackable': self.stackable,
             'duration': self.duration,
-            'count': self.count,
             'description': self.description(),
             'reduction_percent': self.reduction_percent,
             'reduction_amount': self.reduction_amount
