@@ -12,7 +12,7 @@ class BattleHandler:
     def receive_damage(self, venari, damage):
         # Notify all active effects that damage was received
         venari.battle_stats.hp = max(0, venari.battle_stats.hp - damage)
-        for effect in self.active_effects.values():
+        for effect in list(self.active_effects.values()):
             effect.on_damage_received(venari, damage)
 
     def ready_to_attack(self, basic_attack_frequency):
@@ -32,10 +32,10 @@ class BattleHandler:
         self.energy = min(self.energy, 100)
         self.messages.append(f"Gained {amount} Energy passively")
 
-    def remove_stack(self, effect):
+    def remove_stack(self, effect, venari):
         effect_id = effect.EFFECT_ID
         if effect_id in self.active_effects:
-            self.active_effects[effect_id].remove_stack()
+            self.active_effects[effect_id].remove_stack(venari)
 
     def remove_effect(self, effect):
         effect_id = effect.EFFECT_ID

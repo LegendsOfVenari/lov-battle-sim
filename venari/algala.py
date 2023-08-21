@@ -25,7 +25,7 @@ class Algala(Venari):
             self.messages.append(f"{self.name} took damage from its own charge!")
         else:
             # Remove one Armor stack from Algala
-            self.battle_handler.remove_stack(Armor)
+            self.battle_handler.remove_stack(Armor, self)
             self.messages.append(f"{self.name}'s Armor stack protected it from self-inflicted damage!")
 
     def on_swap_in(self, enemy_team=None):

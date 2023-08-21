@@ -20,7 +20,7 @@ class Venari:
 
     def basic_attack(self, target):
         self.battle_handler.attack_tick_counter = 0  # Reset the attack tick counter
-        for effect in self.battle_handler.active_effects.values():
+        for effect in list(self.battle_handler.active_effects.values()):
             should_proceed = effect.modify_basic_attack(self, target)
             if not should_proceed:
                 return  # Stop the basic attack if any effect says to halt
@@ -45,7 +45,7 @@ class Venari:
 
     def tick_effects(self):
         """Process all active effects for the Venari."""
-        for effect in self.battle_handler.active_effects.values():
+        for effect in list(self.battle_handler.active_effects.values()):
             effect.on_tick(self)
 
     def tick(self, is_point=True):
