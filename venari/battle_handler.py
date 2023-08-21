@@ -32,22 +32,18 @@ class BattleHandler:
         self.energy = min(self.energy, 100)
         self.messages.append(f"Gained {amount} Energy passively")
 
-    def remove_stack(self, effect, venari):
-        effect_id = effect.EFFECT_ID
+    def remove_stack(self, effect_id, venari):
         if effect_id in self.active_effects:
             self.active_effects[effect_id].remove_stack(venari)
 
-    def remove_effect(self, effect):
-        effect_id = effect.EFFECT_ID
+    def remove_effect(self, effect_id):
         if effect_id in self.active_effects:
             self.active_effects.pop(effect_id)
 
-    def has_effect(self, effect):
-        effect_id = effect.EFFECT_ID
+    def has_effect(self, effect_id):
         return effect_id in self.active_effects
 
-    def count_stacks(self, effect):
-        effect_id = effect.EFFECT_ID
+    def count_stacks(self, effect_id):
         if effect_id in self.active_effects:
             return self.active_effects[effect_id].count
         else:
@@ -57,7 +53,7 @@ class BattleHandler:
         return isinstance(effect, StackableEffect)
 
     def apply_effect(self, effect, venari):
-        effect_id = effect.EFFECT_ID
+        effect_id = effect.get_id()
         if effect_id in self.active_effects:
             existing_effect = self.active_effects[effect_id]
             existing_effect.on_apply(venari)

@@ -28,6 +28,9 @@ class BattleStats:
         else:
             raise ValueError("Must provide either base stats and level, or individual stat values.")
 
+    def hp_percentage(self):
+        return self.hp / self.initial_hp
+
     def serialize(self):
         return {
             'hp': self.hp,

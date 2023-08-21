@@ -1,28 +1,20 @@
 from .stackable_effect import StackableEffect
-from config import DamageType
 
 
-class Poison(StackableEffect):
+class Unique(StackableEffect):
 
-    def __init__(self, messages, initial_duration=8, duration=8, count=0):
+    def __init__(self, messages, effect_id, initial_duration, duration, count=0):
         super().__init__(messages, initial_duration, duration, count)
+        self.effect_id = effect_id
 
     def description(self):
-        return f"Poison ({self.count}) stacks ({self.duration} ticks)"
-
-    def on_tick(self, venari):
-        super().on_tick(venari)
-        damage = 0.1 * venari.battle_stats.hp  # 10% of current HP in true damage
-        venari.deal_damage(venari, damage, DamageType.TRUE_DAMAGE)
-        self.messages.append(f"{venari.name} took {damage:.2f} poison damage!")
-
-    def stack(self):
-        super().stack()
+        return f"Unique ({self.id}): {self.count} stacks, ({self.duration} ticks)"
 
     def serialize(self):
         return {
             'name': self.__class__.__name__,
             'description': self.description(),
+            'effect_id': self.effect_id,
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count
@@ -30,12 +22,12 @@ class Poison(StackableEffect):
 
     @classmethod
     def deserialize(cls, data, messages):
-
-        return Poison(messages,
+        return Unique(messages,
+                      data["effect_id"],
                       data["initial_duration"],
                       data["duration"],
                       data["count"])
 
     @classmethod
     def get_id(cls):
-        return "poison"
+        return cls.effect_id

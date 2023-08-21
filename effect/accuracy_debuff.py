@@ -1,7 +1,7 @@
 from .effect import Effect
 
 
-class DefenceDebuff(Effect):
+class AccuracyDebuff(Effect):
 
     def __init__(self, messages, duration, reduction_percent, reduction_amount=0):
         super().__init__(messages, duration)
@@ -10,20 +10,20 @@ class DefenceDebuff(Effect):
         self.reduction_amount = reduction_amount
 
     def description(self):
-        return f"Defence Debuff ({self.reduction_percent}%, {self.duration} ticks)"
+        return f"Accuracy Debuff ({self.reduction_percent}%, {self.duration} ticks)"
 
     def on_apply(self, venari):
         super().on_apply(venari)
         # Reduce defence (armor) by the specified percentage
         reduction_factor = self.reduction_percent / 100
         reduction_amount = venari.battle_stats.defense * reduction_factor
-        venari.battle_stats.defense = max(venari.battle_stats.defense - reduction_amount, 0)
-        self.messages.append(f"{venari.name}'s defence was reduced by {round(reduction_amount, 1)}")
+        venari.battle_stats.accuracy = max(venari.battle_stats.defense - reduction_amount, 0)
+        self.messages.append(f"{venari.name}'s accuracy was reduced by {round(reduction_amount, 1)}")
 
     def on_remove(self, venari):
         # Restore the defence (armor)
         venari.battle_stats.defense += self.reduction_amount
-        self.messages.append(f"{venari.name}'s defence was restored by {round(self.reduction_amount, 1)}")
+        self.messages.append(f"{venari.name}'s accuracy was restored by {round(self.reduction_amount, 1)}")
 
     def serialize(self):
         return {
@@ -36,11 +36,11 @@ class DefenceDebuff(Effect):
 
     @classmethod
     def deserialize(cls, data, messages):
-        return DefenceDebuff(messages,
+        return AccuracyDebuff(messages,
                              data["duration"],
                              data["reduction_percent"],
                              data["reduction_amount"])
 
     @classmethod
-    def get_id(cls):
-        return "defence_debuff"
+    def id(cls):
+        return "accuracy_debuff"

@@ -2,7 +2,6 @@ from .effect import Effect
 
 
 class DodgeBuff(Effect):
-    EFFECT_ID = "dodge_buff"
 
     def __init__(self, boost_amount, messages, duration):
         super().__init__(messages, duration)
@@ -31,3 +30,7 @@ class DodgeBuff(Effect):
     @classmethod
     def deserialize(cls, data, messages):
         return DodgeBuff(data["boost_amount"], messages, duration=data["duration"])
+
+    @classmethod
+    def get_id(cls):
+        return "dodge_buff"

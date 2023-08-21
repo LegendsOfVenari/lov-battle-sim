@@ -2,8 +2,6 @@ from .stackable_effect import StackableEffect
 
 
 class Armor(StackableEffect):
-    EFFECT_ID = "armor"
-
     def __init__(self, messages, defense_boost=0, magic_resist_boost=0, count=0):
         super().__init__(messages, None, count)
         self.defense_boost = defense_boost
@@ -30,7 +28,7 @@ class Armor(StackableEffect):
 
     def on_damage_received(self, venari, damage):
         if damage > 0:
-            venari.battle_handler.remove_stack(venari)
+            venari.battle_handler.remove_stack(Armor.id(), venari)
             self.messages.append(f"{venari.name} lost an Armor stack!")
 
     def stack(self):
@@ -50,3 +48,7 @@ class Armor(StackableEffect):
     @classmethod
     def deserialize(cls, data, messages):
         return Armor(messages, data["defense_boost"], data["magic_resist_boost"], data["count"])
+
+    @classmethod
+    def get_id(cls):
+        return "armor"

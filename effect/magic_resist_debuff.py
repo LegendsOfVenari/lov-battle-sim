@@ -2,7 +2,6 @@ from .effect import Effect
 
 
 class MagicResistDebuff(Effect):
-    EFFECT_ID = "magic_resist_debuff"
 
     def __init__(self, messages, duration, reduction_percent, reduction_amount=0):
         super().__init__(messages, duration)
@@ -42,3 +41,7 @@ class MagicResistDebuff(Effect):
                                  data["duration"],
                                  data["reduction_percent"],
                                  data["reduction_amount"])
+
+    @classmethod
+    def get_id(cls):
+        return "magic_resist_debuff"

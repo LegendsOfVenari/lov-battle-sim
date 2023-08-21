@@ -16,9 +16,9 @@ class Venari:
         self.battle_handler = battle_handler or BattleHandler(messages)
 
     def ready_to_attack(self):
-        return self.battle_handler.ready_to_attack(self.base_stats["Basic Attack Frequency"])
+        return self.battle_handler.ready_to_attack(self.base_stats["Basic Attack Frequency"])        
 
-    def basic_attack(self, target):
+    def basic_attack(self, target, auto_attack_buff=0):
         self.battle_handler.attack_tick_counter = 0  # Reset the attack tick counter
         for effect in list(self.battle_handler.active_effects.values()):
             should_proceed = effect.modify_basic_attack(self, target)
@@ -27,12 +27,13 @@ class Venari:
 
         hit_chance = random.randint(0, 100)
         if hit_chance <= self.battle_stats.accuracy - self.battle_stats.dodge_chance:
-            self.deal_auto_attack_damage(target)
+            self.deal_auto_attack_damage(target, auto_attack_buff)
             self.on_basic_attack_hit(target)
             # Energy gain from basic attack
             self.battle_handler.gain_energy(self.base_stats["Basic Attack Energy Gain"])
             return True
         else:
+            self.on_target_miss(target)
             self.messages.append(f"{self.name}({self.level})'s attack missed {target.name}({target.level})!")
             return False
 
@@ -69,8 +70,8 @@ class Venari:
         self.messages.append(f"Dealt {damage}!")
         target.receive_damage(damage)
 
-    def deal_auto_attack_damage(self, target):
-        damage = BattleHandler.calculate_basic_attack_damage(self, target, self.base_stats["Basic Attack Damage"])
+    def deal_auto_attack_damage(self, target, auto_attack_buff):
+        damage = BattleHandler.calculate_basic_attack_damage(self, target, self.base_stats["Basic Attack Damage"] + auto_attack_buff)
         self.messages.append(f"{self.name}({self.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
         target.receive_damage(damage)
 
@@ -80,6 +81,9 @@ class Venari:
 
     def on_basic_attack_hit(self, target):
         print("BASIC ATTACK HIT")
+        pass
+
+    def on_target_miss(self, target):
         pass
 
     def serialize_venari(venari):

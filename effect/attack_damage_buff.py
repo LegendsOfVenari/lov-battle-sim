@@ -2,8 +2,6 @@ from .effect import Effect
 
 
 class AttackDamageBuff(Effect):
-    EFFECT_ID = "attack_damage_buff"
-
     def __init__(self, boost_amount, messages):
         super().__init__(messages, None)
         self.boost_amount = boost_amount
@@ -31,3 +29,7 @@ class AttackDamageBuff(Effect):
     @classmethod
     def deserialize(cls, data, messages):
         return AttackDamageBuff(data["boost_amount"], messages)
+
+    @classmethod
+    def get_id(cls):
+        return "attack_damage_buff"

@@ -1,7 +1,6 @@
 from .effect import Effect
 
 class Stagger(Effect):
-    EFFECT_ID = "stagger"
 
     def __init__(self, messages, duration=3):
         super().__init__(messages, duration)
@@ -15,7 +14,7 @@ class Stagger(Effect):
     def modify_basic_attack(self, venari, target):
         self.messages.append(f"{venari.name}({venari.level}) has been staggered")
         # remove the effect after it's triggered
-        venari.battle_handler.remove_effect(Stagger)
+        venari.battle_handler.remove_effect(Stagger.get_id())
         return False  # Basic attack does not proceed
 
     def serialize(self):
@@ -28,3 +27,7 @@ class Stagger(Effect):
     @classmethod
     def deserialize(cls, data, messages):
         return Stagger(messages, data["duration"])
+
+    @classmethod
+    def get_id(cls):
+        return "stagger"
