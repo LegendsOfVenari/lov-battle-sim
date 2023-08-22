@@ -6,6 +6,7 @@ class Poison(StackableEffect):
 
     def __init__(self, messages, initial_duration=8, duration=8, count=0):
         super().__init__(messages, initial_duration, duration, count)
+        self.effect_id = "poison"
 
     def description(self):
         return f"Poison ({self.count}) stacks ({self.duration} ticks)"
@@ -36,6 +37,3 @@ class Poison(StackableEffect):
                       data["duration"],
                       data["count"])
 
-    @classmethod
-    def get_id(cls):
-        return "poison"

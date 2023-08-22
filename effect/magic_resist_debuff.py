@@ -8,6 +8,7 @@ class MagicResistDebuff(Effect):
         # Convert the percentage to a factor
         self.reduction_percent = reduction_percent
         self.reduction_amount = 0
+        self.effect_id = "magic_resist_debuff"
 
     def description(self):
         return f"Magic Resist Debuff ({self.reduction_percent}%, {self.duration} ticks)"
@@ -41,7 +42,3 @@ class MagicResistDebuff(Effect):
                                  data["duration"],
                                  data["reduction_percent"],
                                  data["reduction_amount"])
-
-    @classmethod
-    def get_id(cls):
-        return "magic_resist_debuff"

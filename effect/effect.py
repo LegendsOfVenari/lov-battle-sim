@@ -6,7 +6,7 @@ class Effect:
     def __init__(self, messages, duration=None):
         self.messages = messages
         self.duration = duration
-        self.id = "none"
+        self.effect_id = "none"
 
     def description(self):
         """Returns a human-readable description of the effect."""
@@ -37,7 +37,7 @@ class Effect:
 
     def remove(self, venari):
         self.on_remove(venari)
-        venari.battle_handler.remove_effect(self.get_id())
+        venari.battle_handler.remove_effect(self.effect_id)
         self.messages.append(f"{venari.name}'s effect has expired.")
 
     def serialize(self):
@@ -52,6 +52,3 @@ class Effect:
 
         return effect_class.deserialize(data, messages)
 
-    @classmethod
-    def get_id(cls):
-        return None
