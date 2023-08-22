@@ -5,6 +5,7 @@ class AttackDamageBuff(Effect):
     def __init__(self, boost_amount, messages):
         super().__init__(messages, None)
         self.boost_amount = boost_amount
+        self.effect_id = "attack_damage_buff"
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -16,7 +17,7 @@ class AttackDamageBuff(Effect):
         venari.battle_stats.attack_damage -= self.boost_amount
 
     def description(self):
-        return f"Increased Attack Damage by {self.boost_amount}."
+        return f"Attack Damage Buff ({self.boost_amount}) AD."
 
     def serialize(self):
         return {
@@ -29,7 +30,3 @@ class AttackDamageBuff(Effect):
     @classmethod
     def deserialize(cls, data, messages):
         return AttackDamageBuff(data["boost_amount"], messages)
-
-    @classmethod
-    def get_id(cls):
-        return "attack_damage_buff"

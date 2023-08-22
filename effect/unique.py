@@ -12,9 +12,9 @@ class Unique(StackableEffect):
 
     def serialize(self):
         return {
+            'effect_id': self.effect_id,
             'name': self.__class__.__name__,
             'description': self.description(),
-            'effect_id': self.effect_id,
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count
@@ -28,6 +28,3 @@ class Unique(StackableEffect):
                       data["duration"],
                       data["count"])
 
-    @classmethod
-    def get_id(cls):
-        return cls.effect_id

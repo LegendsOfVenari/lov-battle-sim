@@ -8,6 +8,7 @@ class DefenceDebuff(Effect):
         # Convert the percentage to a factor
         self.reduction_percent = reduction_percent
         self.reduction_amount = reduction_amount
+        self.effect_id = "defence_debuff"
 
     def description(self):
         return f"Defence Debuff ({self.reduction_percent}%, {self.duration} ticks)"
@@ -41,6 +42,3 @@ class DefenceDebuff(Effect):
                              data["reduction_percent"],
                              data["reduction_amount"])
 
-    @classmethod
-    def get_id(cls):
-        return "defence_debuff"

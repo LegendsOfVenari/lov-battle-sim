@@ -8,6 +8,7 @@ class AccuracyDebuff(Effect):
         # Convert the percentage to a factor
         self.reduction_percent = reduction_percent
         self.reduction_amount = reduction_amount
+        self.effect_id = "accuracy_debuff"
 
     def description(self):
         return f"Accuracy Debuff ({self.reduction_percent}%, {self.duration} ticks)"
@@ -40,7 +41,3 @@ class AccuracyDebuff(Effect):
                              data["duration"],
                              data["reduction_percent"],
                              data["reduction_amount"])
-
-    @classmethod
-    def id(cls):
-        return "accuracy_debuff"

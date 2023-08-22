@@ -35,8 +35,9 @@ class Aharas(Venari):
     def on_swap_in(self, enemy_team=None):
         """Apply a 50% dodge buff for 5 ticks when Aharas is swapped in."""
         super().on_swap_in()
-        if not self.battle_handler.has_effect(DodgeBuff.get_id()):
-            self.apply_effect(DodgeBuff(50, self.messages, 5))
+        dodgeBuff = DodgeBuff(50, self.messages, 5)
+        if not self.battle_handler.has_effect(dodgeBuff):
+            self.apply_effect(dodgeBuff)
 
     def tick(self, is_point=True):
         """Override the base tick method."""

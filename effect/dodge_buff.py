@@ -6,6 +6,7 @@ class DodgeBuff(Effect):
     def __init__(self, boost_amount, messages, duration):
         super().__init__(messages, duration)
         self.boost_amount = boost_amount
+        self.effect_id = "dodge_buff"
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -17,7 +18,7 @@ class DodgeBuff(Effect):
         venari.battle_stats.dodge_chance -= self.boost_amount
 
     def description(self):
-        return f"{self.boost_amount}% Dodge Chance [{self.duration} ticks]"
+        return f"{self.boost_amount}% Dodge [{self.duration} ticks]"
 
     def serialize(self):
         return {
@@ -31,6 +32,3 @@ class DodgeBuff(Effect):
     def deserialize(cls, data, messages):
         return DodgeBuff(data["boost_amount"], messages, duration=data["duration"])
 
-    @classmethod
-    def get_id(cls):
-        return "dodge_buff"

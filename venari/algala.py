@@ -5,7 +5,13 @@ from config import DamageType
 
 class Algala(Venari):
     def basic_attack(self, target):
-        super().basic_attack(target)
+        super().basic_attack(target)\
+
+    def armor(self):
+        return Armor(self.messages)
+
+    def attack_damage_buff(self):
+        return AttackDamageBuff(10, self.messages)
 
     def on_basic_attack_hit(self, target):
         super().on_basic_attack_hit(target)
@@ -20,12 +26,12 @@ class Algala(Venari):
         self.messages.append(f"{self.name} charged recklessly at {target.name}!")
 
         # Check if Algala has an Armor stack to decide if self-damage is applied
-        if not self.battle_handler.has_effect(Armor.get_id()):
+        if not self.battle_handler.has_effect(self.armor()):
             self.deal_damage(self, 75, DamageType.AD)  # Algala takes the same amount of damage
             self.messages.append(f"{self.name} took damage from its own charge!")
         else:
             # Remove one Armor stack from Algala
-            self.battle_handler.remove_stack(Armor.get_id(), self)
+            self.battle_handler.remove_stack(self.armor(), self)
             self.messages.append(f"{self.name}'s Armor stack protected it from self-inflicted damage!")
 
     def on_swap_in(self, enemy_team=None):
@@ -40,8 +46,8 @@ class Algala(Venari):
         if bonus_factor > 0:
             self.apply_effect(AttackDamageBuff(10 * bonus_factor, self.messages))
             for _ in range(int(bonus_factor)):
-                self.apply_effect(Armor(self.messages))
+                self.apply_effect(self.armor())
             self.messages.append(f"{self.name} gains {bonus_factor} Armor due to its missing health!")
 
     def on_swap_out(self):
-        self.battle_handler.remove_effect(AttackDamageBuff.get_id())
+        self.battle_handler.remove_effect(self.attack_damage_buff())

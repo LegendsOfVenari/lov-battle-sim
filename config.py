@@ -36,10 +36,23 @@ algala_base_stats = {
     "Basic Attack Damage": 35
 }
 
+meeka_base_stats = {
+    "Constitution": 95,
+    "Attack Damage": 70,
+    "Ability Power": 64,
+    "Defence": 64,
+    "Magic Resist": 65,
+    "Energy Gain Passively": 10,
+    "Basic Attack Energy Gain": 14,
+    "Basic Attack Frequency": 3,
+    "Basic Attack Damage": 35
+}
+
 venari_base_stats_map = {
     'Aharas': aharas_base_stats,
     'Akulaw': akulaw_base_stats,
-    'Algala': algala_base_stats
+    'Algala': algala_base_stats,
+    'Meeka': meeka_base_stats
 }
 
 

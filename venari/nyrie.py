@@ -3,7 +3,7 @@ from effect import Unique, AccuracyDebuff
 from config import DamageType
 
 
-class Meeka(Venari):
+class Nyrie(Venari):
     def basic_attack(self, target):
         effect = self.get_opportunist_effect()
         if self.battle_handler.has_effect(effect):

@@ -4,9 +4,10 @@ class Stagger(Effect):
 
     def __init__(self, messages, duration=3):
         super().__init__(messages, duration)
+        self.effect_id = "stagger"
 
     def description(self):
-        return f"Staggers the next basic attack for the next 3 ticks."
+        return f"Stagger, {self.duration} ticks)"
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -26,8 +27,6 @@ class Stagger(Effect):
 
     @classmethod
     def deserialize(cls, data, messages):
-        return Stagger(messages, data["duration"])
+        return Stagger(messages,
+                       data["duration"])
 
-    @classmethod
-    def get_id(cls):
-        return "stagger"

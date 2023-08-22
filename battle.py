@@ -11,6 +11,8 @@ class Battle:
     def __init__(self, team1, team2, tick_count, messages):
         self.team1 = team1
         self.team2 = team2
+        self.team1_arena_effects = {}
+        self.team2_arena_effects = {}
         self.messages = messages
         self.action_queue = []
         self.tick_count = tick_count
@@ -19,24 +21,22 @@ class Battle:
         """Check if the game is over."""
         return all(venari.battle_stats.hp <= 0 for venari in self.team1) or all(venari.battle_stats.hp <= 0 for venari in self.team2)
 
-    def auto_swap(self, team, enemy_team):
+    def add_arena_effect(self, arena_effect, team):
+        if team == self.team1:
+            self.team1_arena_effects[arena_effect.effect_id] = arena_effect
+        elif team == self.team2:
+            self.team2_arena_effects[arena_effect.effect_id] = arena_effect
+
+    def trigger_arena_effect_swap_in(self, venari, arena_effects):
+        for arena_effect in list(arena_effects.values()):
+            arena_effect.on_swap_in(venari)
+
+    def auto_swap(self, team, enemy_team, traps):
         # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].battle_stats.hp <= 0 and len(team) > 1:
             del team[0]
             team[0].on_swap_in(enemy_team)
-
-    def user_swap(self, team, available_venari):
-
-        choice = input("Enter the number of the Venari to swap in: ").strip()
-        while not choice.isdigit() or int(choice) < 1 or int(choice) > len(available_venari):
-            choice = input("Enter the number of the Venari to swap in: ").strip()
-
-        chosen_venari = available_venari[int(choice) - 1]
-        team.remove(chosen_venari)
-        team.insert(0, chosen_venari)
-
-        # Call the on_swap_in method for the newly swapped in Venari
-        chosen_venari.on_swap_in(self.team2)
+            self.trigger_arena_effect_swap_in(team[0], traps)
 
     def tick(self):
         # Process the action queue
@@ -44,6 +44,14 @@ class Battle:
             action = self.action_queue.pop(0)
             action()
 
+        # Trigger auras
+        for arena_effect in list(self.team1_arena_effects.values()):
+            arena_effect.on_tick(self.team1, self.team2)
+
+        for arena_effect in list(self.team1_arena_effects.values()):
+            arena_effect.on_tick(self.team2, self.team1)
+
+        # Remove any expired auras
         if self.team1[0].battle_stats.hp > 0:
             self.team1[0].tick()  # Point venari
             for venari in self.team1[1:]:
@@ -61,8 +69,8 @@ class Battle:
             self.team2[0].basic_attack(self.team1[0])
 
         # Auto swap Venari if needed
-        self.auto_swap(self.team1, self.team2)
-        self.auto_swap(self.team2, self.team1)
+        self.auto_swap(self.team1, self.team2, self.team1_arena_effects)
+        self.auto_swap(self.team2, self.team1, self.team2_arena_effects)
         self.tick_count += 1
 
     def interactive_battle_simulation(self, action, swap_index=None):
@@ -102,13 +110,17 @@ class Battle:
                 "tick_count": 0,
             }
 
-        # AI decisions (remain unchanged)
+        # AI decisions
         if self.team2[0].battle_handler.energy >= 100:
             self.team2[0].use_ability(self.team1[0])
 
-        max_hp = 10 * self.team2[0].level + self.team2[0].battle_stats.constitution * 15 + 100
-        if self.team2[0].battle_stats.hp < 0.3 * max_hp and len(self.team2) > 1:
-            self.auto_swap(self.team2, self.team1)
+        elif len(self.team2) > 1 and self.team2[1].battle_handler.swap_cooldown == 0:
+            self.team2[0], self.team2[1] = self.team2[1], self.team2[0]
+            self.team2[0].on_swap_in(self.team1)
+
+        elif len(self.team2) > 2 and self.team2[2].battle_handler.swap_cooldown == 0:
+            self.team2[0], self.team2[2] = self.team2[2], self.team2[0]
+            self.team2[0].on_swap_in(self.team1)
 
         # Execute actions in the queue
         self.tick()
@@ -124,4 +136,5 @@ class Battle:
             "team2_status": self.team2,
             "messages": self.messages,
             "tick_count": self.tick_count,
+            "team1_arena_effects": self.team1_arena_effects,
         }
