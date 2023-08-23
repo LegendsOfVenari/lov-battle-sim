@@ -29,11 +29,15 @@ def index():
         session['tick'] = 0
         session['messages'] = messages
         session['game_started'] = True
+        session['team1_arena_effects'] = {}
+        session['team2_arena_effects'] = {}
     else:
         messages = session.get('messages', [])  # Defaults to an empty list if 'messages' is not found
         team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
         tick_count = session['tick']
         battle = Battle(team1, team2, tick_count, messages)
+        session['team1_arena_effects'] = session.get('team1_arena_effects', {})
+        session['team2_arena_effects'] = session.get('team2_arena_effects', {})
 
     for venari in team1:
         venari.battle = battle
@@ -60,10 +64,10 @@ def index():
             session['tick'] = result["tick_count"]
             session['team1'], session['team2'] = serialize_teams(result['team1_status'], result['team2_status'])
             session['team1_arena_effects'] = result['team1_arena_effects']
+            session['team2_arena_effects'] = result['team2_arena_effects']
 
     # Deserialize the teams for displaying in the template
     team1_status, team2_status = serialize_teams(team1, team2)
-    print(team1_status)
     return render_template('index.html', team1_status=team1_status, team2_status=team2_status, tick=session['tick'], messages=messages)
 
 

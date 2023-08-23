@@ -2,7 +2,7 @@ import random
 import importlib
 from config import venari_base_stats_map
 from .battle_handler import BattleHandler
-from .battle_stats import BattleStats
+from stats import BattleStats, BaseStats
 
 class Venari:
     def __init__(self, name, base_stats, level, messages, isPlayerVenari, battle=None, battle_handler=None, battle_stats=None):
@@ -41,17 +41,26 @@ class Venari:
     def apply_effect(self, effect):
         self.battle_handler.apply_effect(effect, self)
 
-    def deal_damage(self, target, base_damage, damage_type):
-        self.battle_handler.deal_damage(self, target, base_damage, damage_type)
+    def deal_damage(self, target, base_damage, damage_type, accuracy):
+        self.battle_handler.deal_damage(self,
+                                        target,
+                                        base_damage,
+                                        damage_type,
+                                        accuracy)
 
     def ready_to_attack(self):
-        return self.battle_handler.ready_to_attack(self.base_stats["Basic Attack Frequency"])
+        return self.battle_handler.ready_to_attack(
+            self.base_stats.basic_attack_frequency
+        )
 
     def receive_damage(self, damage):
         self.battle_handler.receive_damage(self, damage)
 
     def heal(self, amount):
         self.battle_handler.heal(self, amount)
+
+    def gain_energy(self, amount):
+        self.battle_handler.gain_energy(amount)
 
     # Callback methods
 
@@ -70,12 +79,20 @@ class Venari:
     def tick_effects(self):
         """Process all active effects for the Venari."""
         for effect in list(self.battle_handler.active_effects.values()):
-            effect.on_tick(self)
+             # Remove any expired effects
+            if effect.expired:
+                effect.on_remove(self)
+                self.battle_handler.active_effects.pop(effect.effect_id)
+            else:
+                effect.on_tick(self)
+                if effect.expired:
+                    effect.on_remove(self)
+                    self.battle_handler.active_effects.pop(effect.effect_id)
 
     def tick(self, is_point=True):
         """What the Venari does every tick."""
 
-        self.battle_handler.gain_energy(self.base_stats["Energy Gain Passively"])
+        self.battle_handler.gain_energy(self.base_stats.passive_energy_gain)
 
         self.tick_effects()
 
@@ -87,7 +104,7 @@ class Venari:
         """Convert a Venari object into a serializable dictionary."""
         return {
             'name': venari.name,
-            'base_stats': venari.base_stats,
+            'base_stats': venari.base_stats.serialize(),
             'level': venari.level,
             'isPlayerVenari': venari.isPlayerVenari,
             'battle_handler': venari.battle_handler.serialize(),
@@ -107,7 +124,10 @@ class Venari:
 
         serialized_battle_handler = data.get('battle_handler')
         if serialized_battle_handler:
-            battle_handler = BattleHandler.deserialize(serialized_battle_handler, messages)
+            battle_handler = BattleHandler.deserialize(
+                serialized_battle_handler,
+                messages
+            )
         else:
             battle_handler = BattleHandler(messages)
 

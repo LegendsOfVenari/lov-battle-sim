@@ -2,8 +2,8 @@ from .effect import Effect
 
 
 class StackableEffect(Effect):
-    def __init__(self, messages, initial_duration=None, duration=None, count=0):
-        super().__init__(messages, duration)
+    def __init__(self, messages, initial_duration=None, duration=None, count=0, expired=False):
+        super().__init__(messages, duration, expired)
         self.count = count
         self.initial_duration = initial_duration
 
@@ -17,7 +17,7 @@ class StackableEffect(Effect):
         self.count -= 1
         # If no more counts, remove the effect
         if self.count <= 0:
-            self.remove(venari)
+            self.remove()
 
     def on_tick(self, venari):
         """What the effect does on each tick."""
@@ -28,4 +28,4 @@ class StackableEffect(Effect):
                     self.count -= 1
                     self.duration = self.initial_duration
                 else:
-                    self.remove(venari)
+                    self.remove()

@@ -22,13 +22,13 @@ class Aharas(Venari):
         super().use_ability(target)
 
         # Calculate bonus damage based on poison stacks
-        poison_stacks = target.battle_handler.count_stacks(Poison.get_id())
+        poison_stacks = target.battle_handler.count_stacks(Poison(self.messages))
         print(poison_stacks)
         bonus_damage = 20 + 50 * poison_stacks
-        self.deal_damage(target, bonus_damage, DamageType.AP)
+        self.deal_damage(target, bonus_damage, DamageType.AP, 100)
 
         # Remove poison effects
-        target.battle_handler.remove_effect(Poison.get_id())
+        target.battle_handler.remove_effect(Poison(self.messages))
 
         self.messages.append(f"{self.name} used its ability on {target.name}, consuming {poison_stacks} poison stacks.")
 

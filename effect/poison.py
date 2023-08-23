@@ -4,8 +4,8 @@ from config import DamageType
 
 class Poison(StackableEffect):
 
-    def __init__(self, messages, initial_duration=8, duration=8, count=0):
-        super().__init__(messages, initial_duration, duration, count)
+    def __init__(self, messages, initial_duration=8, duration=8, count=0, expired=False):
+        super().__init__(messages, initial_duration, duration, count, expired)
         self.effect_id = "poison"
 
     def description(self):
@@ -14,7 +14,7 @@ class Poison(StackableEffect):
     def on_tick(self, venari):
         super().on_tick(venari)
         damage = 0.1 * venari.battle_stats.hp  # 10% of current HP in true damage
-        venari.deal_damage(venari, damage, DamageType.TRUE_DAMAGE)
+        venari.deal_damage(venari, damage, DamageType.TRUE_DAMAGE, 100)
         self.messages.append(f"{venari.name} took {damage:.2f} poison damage!")
 
     def stack(self):
@@ -26,7 +26,8 @@ class Poison(StackableEffect):
             'description': self.description(),
             'initial_duration': self.initial_duration,
             'duration': self.duration,
-            'count': self.count
+            'count': self.count,
+            'expired': self.expired
         }
 
     @classmethod
@@ -35,5 +36,6 @@ class Poison(StackableEffect):
         return Poison(messages,
                       data["initial_duration"],
                       data["duration"],
-                      data["count"])
+                      data["count"],
+                      data["expired"])
 

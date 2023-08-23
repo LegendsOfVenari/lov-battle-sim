@@ -8,7 +8,7 @@ class ActionType(Enum):
     NEW_GAME = "new_game"
 
 class Battle:
-    def __init__(self, team1, team2, tick_count, messages):
+    def __init__(self, team1, team2, tick_count, messages, team1_arena_effects=None, team2_arena_effects=None):
         self.team1 = team1
         self.team2 = team2
         self.team1_arena_effects = {}
@@ -52,6 +52,7 @@ class Battle:
             arena_effect.on_tick(self.team2, self.team1)
 
         # Remove any expired auras
+
         if self.team1[0].battle_stats.hp > 0:
             self.team1[0].tick()  # Point venari
             for venari in self.team1[1:]:
@@ -83,6 +84,8 @@ class Battle:
                 "team2_status": self.team2,
                 "messages": ["The game is already over."],
                 "tick_count": self.tick_count,
+                "team1_arena_effects": self.team1_arena_effects,
+                "team2_arena_effects": self.team2_arena_effects
             }
 
         if action == ActionType.ABILITY:
@@ -108,6 +111,8 @@ class Battle:
                 "team2_status": self.team2,
                 "messages": ["Starting a new game."],
                 "tick_count": 0,
+                "team1_arena_effects": self.team1_arena_effects,
+                "team2_arena_effects": self.team2_arena_effects
             }
 
         # AI decisions
@@ -137,4 +142,5 @@ class Battle:
             "messages": self.messages,
             "tick_count": self.tick_count,
             "team1_arena_effects": self.team1_arena_effects,
+            "team2_arena_effects": self.team2_arena_effects
         }

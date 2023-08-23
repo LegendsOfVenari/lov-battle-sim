@@ -3,8 +3,8 @@ from .effect import Effect
 
 class DodgeBuff(Effect):
 
-    def __init__(self, boost_amount, messages, duration):
-        super().__init__(messages, duration)
+    def __init__(self, boost_amount, messages, duration, expired=False):
+        super().__init__(messages, duration, expired)
         self.boost_amount = boost_amount
         self.effect_id = "dodge_buff"
 
@@ -25,10 +25,13 @@ class DodgeBuff(Effect):
             'name': self.__class__.__name__,
             'duration': self.duration,
             'description': self.description(),
-            'boost_amount': self.boost_amount
+            'boost_amount': self.boost_amount,
+            'expired': self.expired
         }
 
     @classmethod
     def deserialize(cls, data, messages):
-        return DodgeBuff(data["boost_amount"], messages, duration=data["duration"])
-
+        return DodgeBuff(data["boost_amount"],
+                         messages,
+                         data["duration"],
+                         data["expired"])

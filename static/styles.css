@@ -42,8 +42,8 @@ button {
 }
 
 .effects-container {
-    min-height: 50px;
-    max-height: 50px; /* Set a fixed height */
+    min-height: 100px;
+    max-height: 100px; /* Set a fixed height */
     overflow-y: auto; /* This will add a scrollbar if the content inside exceeds the max-height */
     border: 1px solid #ccc;
     padding: 5px;
@@ -130,4 +130,11 @@ button {
     z-index: 2; /* To ensure text is above the bar */
     font-weight: bold; /* Bold text for better readability */
     color: #333; /* Darker text color for contrast */
+}
+
+.avatar {
+    width: 50px; /* Adjust as needed */
+    height: 50px;
+    border-radius: 50%; /* Makes the image circular */
+    margin-right: 10px; /* Spacing, adjust as needed */
 }

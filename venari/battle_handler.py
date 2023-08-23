@@ -31,18 +31,23 @@ class BattleHandler:
             # Call Back
             attacker.on_basic_attack_hit(target)
             # Basic Attack Energy Gain
-            self.gain_energy(attacker.base_stats["Basic Attack Energy Gain"])
+            self.gain_energy(attacker.base_stats.basic_attack_energy_gain)
             return True
         else:
             attacker.on_target_miss(target)
             self.messages.append(f"{attacker.name}({attacker.level})'s attack missed {target.name}({target.level})!")
             return False
 
-    def deal_damage(self, attacker, target, base_damage, damage_type):
+    def deal_damage(self, attacker, target, base_damage, damage_type, accuracy):
         """Calculates and deals damage from the attacker to the target."""
-        damage = self._calculate_damage(damage_type, attacker, target, base_damage)
-        self.messages.append(f"Dealt {damage} Damage!")
-        target.receive_damage(damage)
+        hit_chance = random.randint(0, 100)
+        if hit_chance <= accuracy - attacker.battle_stats.dodge_chance:
+            damage = self._calculate_damage(damage_type, attacker, target, base_damage)
+            self.messages.append(f"Dealt {damage} Damage!")
+            target.receive_damage(damage)
+        else:
+            attacker.on_target_miss(target)
+            self.messages.append(f"{attacker.name}({attacker.level})'s ability missed {target.name}({target.level})!")
 
     def receive_damage(self, venari, damage):
         # Notify all active effects that damage was received
@@ -51,13 +56,13 @@ class BattleHandler:
             effect.on_damage_received(venari, damage)
 
     def _deal_auto_attack_damage(self, attacker, target, auto_attack_buff):
-        damage = self._calculate_basic_attack_damage(attacker, target, attacker.base_stats["Basic Attack Damage"] + auto_attack_buff)
+        damage = self._calculate_basic_attack_damage(attacker, target, attacker.base_stats.basic_attack_damage + auto_attack_buff)
         self.messages.append(f"{attacker.name}({attacker.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")
         target.receive_damage(damage)
 
     def _calculate_basic_attack_damage(self, attacker, target, base_damage):
-        attacker_attack_damage = ((2 * attacker.base_stats["Attack Damage"]) * (attacker.level + 4)) / 100
-        target_defense = ((2 * target.base_stats["Defence"]) * (target.level + 4)) / 100
+        attacker_attack_damage = ((2 * attacker.base_stats.attack_damage) * (attacker.level + 4)) / 100
+        target_defense = ((2 * target.base_stats.defence) * (target.level + 4)) / 100
 
         ad_reduction = target_defense / (target_defense + 300)
 
@@ -98,7 +103,7 @@ class BattleHandler:
     def tick(self, is_point, venari):
         if is_point:
             self.attack_tick_counter += 1
-            if self.attack_tick_counter >= venari.base_stats["Basic Attack Frequency"]:
+            if self.attack_tick_counter >= venari.base_stats.basic_attack_frequency:
                 self.messages.append(f"Will attack on the next tick!")
         else:
             if self.swap_cooldown > 0:
@@ -125,11 +130,14 @@ class BattleHandler:
         if effect in self.active_effects:
             self.active_effects[effect_id].remove_stack(venari)
 
-    def remove_effect(self, effect_id):
+    def remove_effect(self, effect):
+        effect_id = effect.effect_id
         if effect_id in self.active_effects:
-            self.active_effects.pop(effect_id)
+            effect = self.active_effects[effect_id]
+            effect.remove()
 
-    def has_effect(self, effect_id):
+    def has_effect(self, effect):
+        effect_id = effect.effect_id
         return effect_id in self.active_effects
 
     def count_stacks(self, effect_id):

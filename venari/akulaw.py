@@ -14,7 +14,7 @@ class Akulaw(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        self.deal_damage(target, 66, DamageType.AD)
+        self.deal_damage(target, 66, DamageType.AD, 100)
         target.apply_effect(Stagger(self.messages))
         self.messages.append(f"{self.name} used its ability on {target.name} and staggering the target!")
 
