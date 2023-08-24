@@ -16,8 +16,8 @@ class BattleStats:
             self.dodge_chance = dodge_chance
         elif base_stats is not None and level is not None:
             self.constitution = ((2 * base_stats.constitution * (level + 4)) / 100)
-            self.attack_damage = ((2 * base_stats.attack_damage * (level + 4)) / 100)
-            self.ability_power = ((2 * base_stats.ability_power * (level + 4)) / 100)
+            self.attack_damage = ((2 * base_stats.strength * (level + 4)) / 100)
+            self.ability_power = ((2 * base_stats.intellect * (level + 4)) / 100)
             self.defense = ((2 * base_stats.defence * (level + 4)) / 100)
             self.magic_resist = ((2 * base_stats.magic_resist * (level + 4)) / 100)
             self.hp = 10 * level + self.constitution * 15 + 100

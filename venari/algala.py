@@ -21,7 +21,8 @@ class Algala(Venari):
                          battle,
                          battle_handler,
                          battle_stats)
-        self.apply_effect(BoarSkin(self.messages))
+        if 'boar_skin' not in self.battle_handler.active_effects:
+            self.apply_effect(BoarSkin(self.messages))
 
     def basic_attack(self, target):
         super().basic_attack(target)
@@ -34,8 +35,6 @@ class Algala(Venari):
 
     def on_basic_attack_hit(self, target):
         super().on_basic_attack_hit(target)
-        self.apply_effect(Armor(self.messages))
-        self.messages.append(f"{self.name}({self.level})'s gained an armor stack!")
 
     def use_ability(self, target):
         super().use_ability(target)
@@ -58,9 +57,10 @@ class Algala(Venari):
         super().on_swap_in()
 
         missing_hp_percentage = (self.battle_stats.initial_hp - self.battle_stats.hp) / self.battle_stats.initial_hp
-
+        print(f"This is the missing hp percent {missing_hp_percentage}")
         # Calculate the boosts based on every 30% missing hp
         bonus_factor = missing_hp_percentage // 0.30
+        print(f"This is the bonus factor {bonus_factor}")
         self.deal_damage(enemy_team[0], 10 * bonus_factor, DamageType.AD, 100)
         self.messages.append(f"{self.name} used its ability!")
 

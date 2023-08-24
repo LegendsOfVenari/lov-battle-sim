@@ -10,3 +10,4 @@ from .dodge_buff import DodgeBuff
 from .accuracy_debuff import AccuracyDebuff
 from .boar_skin import BoarSkin
 from .unique import Unique
+from .natural_touch import NaturalTouch

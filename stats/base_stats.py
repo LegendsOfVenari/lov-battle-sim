@@ -1,8 +1,8 @@
 class BaseStats:
     def __init__(self, 
                  constitution=None,
-                 attack_damage=None,
-                 ability_power=None,
+                 strength=None,
+                 intellect=None,
                  defence=None,
                  magic_resist=None,
                  passive_energy_gain=None,
@@ -10,8 +10,8 @@ class BaseStats:
                  basic_attack_frequency=None,
                  basic_attack_damage=None):
         self.constitution = constitution
-        self.attack_damage = attack_damage
-        self.ability_power = ability_power
+        self.strength = strength
+        self.intellect = intellect
         self.defence = defence
         self.magic_resist = magic_resist
         self.passive_energy_gain = passive_energy_gain
@@ -22,8 +22,8 @@ class BaseStats:
     def serialize(self):
         return {
             'constitution': self.constitution,
-            'attack_damage': self.attack_damage,
-            'ability_power': self.ability_power,
+            'strength': self.strength,
+            'intellect': self.intellect,
             'defence': self.defence,
             'magic_resist': self.magic_resist,
             'passive_energy_gain': self.passive_energy_gain,
@@ -35,8 +35,8 @@ class BaseStats:
     @classmethod
     def deserialize(cls, data):
         return cls(constitution=data['constitution'],
-                   attack_damage=data['attack_damage'],
-                   ability_power=data['ability_power'],
+                   strength=data['strength'],
+                   intellect=data['intellect'],
                    defence=data['defence'],
                    magic_resist=data['magic_resist'],
                    passive_energy_gain=data['passive_energy_gain'],

@@ -61,7 +61,7 @@ class BattleHandler:
         target.receive_damage(damage)
 
     def _calculate_basic_attack_damage(self, attacker, target, base_damage):
-        attacker_attack_damage = ((2 * attacker.base_stats.attack_damage) * (attacker.level + 4)) / 100
+        attacker_attack_damage = ((2 * attacker.base_stats.strength) * (attacker.level + 4)) / 100
         target_defense = ((2 * target.base_stats.defence) * (target.level + 4)) / 100
 
         ad_reduction = target_defense / (target_defense + 300)
@@ -151,6 +151,9 @@ class BattleHandler:
     def heal(self, venari, amount):
         venari.battle_stats.hp = min(venari.battle_stats.hp + amount, venari.battle_stats.initial_hp)
         self.messages.append(f"Healed {amount} HP!")
+
+    def reduce_swap_cooldown(self, amount):
+        self.swap_cooldown = max(0, self.swap_cooldown - amount)
 
     def find_effect_instance(self, effect):
         return next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)

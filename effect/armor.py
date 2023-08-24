@@ -35,7 +35,7 @@ class Armor(StackableEffect):
 
     def on_damage_received(self, venari, damage):
         if damage > 0:
-            venari.battle_handler.remove_stack(self, venari)
+            self.remove_stack(venari)
             self.messages.append(f"{venari.name} lost an Armor stack!")
 
     def stack(self):

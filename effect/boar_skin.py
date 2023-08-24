@@ -48,6 +48,8 @@ class BoarSkin(Effect):
 
     def num_stacks(self, venari):
         current_hp_percentage = (venari.battle_stats.hp / venari.battle_stats.initial_hp) * 100
+
+        print(f"Current HP Percentage: {current_hp_percentage}")
         if 70 <= current_hp_percentage <= 100:
             return 0
         elif 40 <= current_hp_percentage < 70:

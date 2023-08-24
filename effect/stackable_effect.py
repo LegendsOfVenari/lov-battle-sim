@@ -21,6 +21,8 @@ class StackableEffect(Effect):
 
     def remove_stack(self, venari):
         self.count -= 1
+        print("THIS IS THE CURRENT COUNT")
+        print(f"{self.count}")
         # If no more counts, remove the effect
         if self.count <= 0:
             self.remove()

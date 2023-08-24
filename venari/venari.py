@@ -30,6 +30,10 @@ class Venari:
         else:
             return self.battle.team1
 
+    def get_ally_bench(self):
+        team = self.get_ally_team()
+        return team[1:]  # Return all venari except the first one (point venari)
+
     # Battle Handler methods
 
     def basic_attack(self, target, auto_attack_buff=0):
@@ -61,6 +65,9 @@ class Venari:
 
     def gain_energy(self, amount):
         self.battle_handler.gain_energy(amount)
+
+    def reduce_swap_cooldown(self, amount):
+        self.battle_handler.reduce_swap_cooldown(amount)
 
     # Callback methods
 
