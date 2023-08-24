@@ -28,13 +28,13 @@ class NaturalTouch(StackableEffect):
         return {
             'name': self.__class__.__name__,
             'description': self.description(),
-            'is_permanent': self.is_permanent,
-            'count': self.count
+            'count': self.count,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
     def deserialize(cls, data, messages):
         print(data)
         return NaturalTouch(messages,
-                            data["is_permanent"],
-                            data["count"])
+                            data["count"],
+                            data["is_permanent"],)
