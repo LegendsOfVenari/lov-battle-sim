@@ -2,8 +2,14 @@ from .effect import Effect
 
 
 class StackableEffect(Effect):
-    def __init__(self, messages, initial_duration=None, duration=None, count=0, expired=False):
-        super().__init__(messages, duration, expired)
+    def __init__(self,
+                 messages,
+                 initial_duration=None,
+                 duration=None,
+                 count=0,
+                 expired=False,
+                 is_permanent=False):
+        super().__init__(messages, duration, expired, is_permanent)
         self.count = count
         self.initial_duration = initial_duration
 

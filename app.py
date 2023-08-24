@@ -73,14 +73,14 @@ def index():
 
 def initialize_teams(messages):
     team1 = [
-        Aharas("Aharas", aharas_base_stats, 4, messages, True),
-        Akulaw("Akulaw", akulaw_base_stats, 6, messages, True),
-        Meeka("Meeka", meeka_base_stats, 5, messages, True)
+        Aharas("Aharas", aharas_base_stats, 10, messages, True),
+        Akulaw("Akulaw", akulaw_base_stats, 10, messages, True),
+        Algala("Algala", algala_base_stats, 10, messages, False)
     ]
     team2 = [
-        Algala("Algala", algala_base_stats, 5, messages, False),
-        Akulaw("Akulaw", akulaw_base_stats, 7, messages, False),
-        Akulaw("Akulaw", akulaw_base_stats, 2, messages, False)
+        Algala("Algala", algala_base_stats, 10, messages, False),
+        Meeka("Meeka", meeka_base_stats, 10, messages, True),
+        Akulaw("Akulaw", akulaw_base_stats, 10, messages, False)
     ]
     return team1, team2
 

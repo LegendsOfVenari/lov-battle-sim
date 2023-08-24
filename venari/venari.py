@@ -80,12 +80,12 @@ class Venari:
         """Process all active effects for the Venari."""
         for effect in list(self.battle_handler.active_effects.values()):
              # Remove any expired effects
-            if effect.expired:
+            if effect.expired and not effect.is_permanent:
                 effect.on_remove(self)
                 self.battle_handler.active_effects.pop(effect.effect_id)
             else:
                 effect.on_tick(self)
-                if effect.expired:
+                if effect.expired and not effect.is_permanent:
                     effect.on_remove(self)
                     self.battle_handler.active_effects.pop(effect.effect_id)
 
@@ -96,7 +96,7 @@ class Venari:
 
         self.tick_effects()
 
-        self.battle_handler.tick(is_point, self)
+        self.battle_handler.tick(is_point)
 
     # Serialization
 

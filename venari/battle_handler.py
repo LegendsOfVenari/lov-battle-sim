@@ -100,11 +100,9 @@ class BattleHandler:
     def ready_to_attack(self, basic_attack_frequency):
         return self.attack_tick_counter >= basic_attack_frequency
 
-    def tick(self, is_point, venari):
+    def tick(self, is_point):
         if is_point:
             self.attack_tick_counter += 1
-            if self.attack_tick_counter >= venari.base_stats.basic_attack_frequency:
-                self.messages.append(f"Will attack on the next tick!")
         else:
             if self.swap_cooldown > 0:
                 self.swap_cooldown -= 1
@@ -112,7 +110,6 @@ class BattleHandler:
     def gain_energy(self, amount):
         self.energy += amount
         self.energy = min(self.energy, 100)
-        self.messages.append(f"Gained {amount} Energy passively")
 
     # ---------------------- EFFECT METHODS ---------------------- #
 

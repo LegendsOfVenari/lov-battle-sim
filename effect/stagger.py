@@ -2,7 +2,11 @@ from .effect import Effect
 
 class Stagger(Effect):
 
-    def __init__(self, messages, duration=3, expired=False):
+    def __init__(self,
+                 messages,
+                 duration=3,
+                 expired=False,
+                 is_permanent=False):
         super().__init__(messages, duration, expired)
         self.effect_id = "stagger"
 
@@ -23,12 +27,14 @@ class Stagger(Effect):
             'name': self.__class__.__name__,
             'description': self.description(),
             'duration': self.duration,
-            'expired': self.expired
+            'expired': self.expired,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
     def deserialize(cls, data, messages):
         return Stagger(messages,
                        data["duration"],
-                       data["expired"])
+                       data["expired"],
+                       data["is_permanent"])
 

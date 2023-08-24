@@ -3,8 +3,22 @@ from .stackable_effect import StackableEffect
 
 class Unique(StackableEffect):
 
-    def __init__(self, messages, effect_id, initial_duration, duration, count=0):
-        super().__init__(messages, initial_duration, duration, count)
+    def __init__(self,
+                 messages,
+                 effect_id,
+                 initial_duration,
+                 duration,
+                 count=0,
+                 expired=False,
+                 is_permanent=False):
+        super().__init__(
+            messages,
+            initial_duration,
+            duration,
+            count,
+            expired,
+            is_permanent
+        )
         self.effect_id = effect_id
 
     def description(self):
@@ -17,7 +31,8 @@ class Unique(StackableEffect):
             'description': self.description(),
             'initial_duration': self.initial_duration,
             'duration': self.duration,
-            'count': self.count
+            'count': self.count,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
@@ -26,5 +41,6 @@ class Unique(StackableEffect):
                       data["effect_id"],
                       data["initial_duration"],
                       data["duration"],
-                      data["count"])
+                      data["count"],
+                      data["is_permanent"])
 

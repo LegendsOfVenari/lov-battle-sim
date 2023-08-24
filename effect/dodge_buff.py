@@ -3,7 +3,12 @@ from .effect import Effect
 
 class DodgeBuff(Effect):
 
-    def __init__(self, boost_amount, messages, duration, expired=False):
+    def __init__(self,
+                 boost_amount,
+                 messages,
+                 duration,
+                 expired=False,
+                 is_permanent=False):
         super().__init__(messages, duration, expired)
         self.boost_amount = boost_amount
         self.effect_id = "dodge_buff"
@@ -26,7 +31,8 @@ class DodgeBuff(Effect):
             'duration': self.duration,
             'description': self.description(),
             'boost_amount': self.boost_amount,
-            'expired': self.expired
+            'expired': self.expired,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
@@ -34,4 +40,5 @@ class DodgeBuff(Effect):
         return DodgeBuff(data["boost_amount"],
                          messages,
                          data["duration"],
-                         data["expired"])
+                         data["expired"],
+                         data["is_permanent"])

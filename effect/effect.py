@@ -3,11 +3,16 @@ import importlib
 
 class Effect:
 
-    def __init__(self, messages, duration=None, expired=False):
+    def __init__(self,
+                 messages,
+                 duration=None,
+                 expired=False,
+                 is_permanent=False):
         self.messages = messages
         self.duration = duration
         self.effect_id = "none"
         self.expired = expired
+        self.is_permanent = is_permanent
 
     def description(self):
         """Returns a human-readable description of the effect."""

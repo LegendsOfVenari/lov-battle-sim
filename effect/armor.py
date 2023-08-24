@@ -7,8 +7,9 @@ class Armor(StackableEffect):
                  defense_boost=0,
                  magic_resist_boost=0,
                  count=0,
-                 expired=False):
-        super().__init__(messages, None, None, count, expired)
+                 expired=False,
+                 is_permanent=False):
+        super().__init__(messages, None, None, count, expired, is_permanent)
         self.defense_boost = defense_boost
         self.magic_resist_boost = magic_resist_boost
         self.effect_id = "armor"
@@ -49,7 +50,8 @@ class Armor(StackableEffect):
             'description': self.description(),
             'defense_boost': self.defense_boost,
             'magic_resist_boost': self.magic_resist_boost,
-            'expired': self.expired
+            'expired': self.expired,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
@@ -58,6 +60,7 @@ class Armor(StackableEffect):
                      data["defense_boost"],
                      data["magic_resist_boost"],
                      data["count"],
-                     data["expired"]
+                     data["expired"],
+                     data["is_permanent"]
         )
 

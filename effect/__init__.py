@@ -8,4 +8,5 @@ from .effect import Effect
 from .stackable_effect import StackableEffect
 from .dodge_buff import DodgeBuff
 from .accuracy_debuff import AccuracyDebuff
+from .boar_skin import BoarSkin
 from .unique import Unique

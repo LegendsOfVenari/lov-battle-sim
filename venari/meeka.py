@@ -28,6 +28,8 @@ class Meeka(Venari):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
         self.deal_damage(enemy_team[0], 20, DamageType.AD, 100)
+        enemy_team[0].apply_effect(AccuracyDebuff(self.messages, 3, 20))
+
 
     def get_opportunist_effect(self):
         return Unique(self.messages, "Opportunist", 2, 2)

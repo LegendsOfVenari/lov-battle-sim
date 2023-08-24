@@ -4,7 +4,13 @@ from config import DamageType
 
 class Poison(StackableEffect):
 
-    def __init__(self, messages, initial_duration=8, duration=8, count=0, expired=False):
+    def __init__(self,
+                 messages,
+                 initial_duration=8,
+                 duration=8,
+                 count=0,
+                 expired=False,
+                 is_permanent=False):
         super().__init__(messages, initial_duration, duration, count, expired)
         self.effect_id = "poison"
 
@@ -27,7 +33,8 @@ class Poison(StackableEffect):
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count,
-            'expired': self.expired
+            'expired': self.expired,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
@@ -37,5 +44,6 @@ class Poison(StackableEffect):
                       data["initial_duration"],
                       data["duration"],
                       data["count"],
-                      data["expired"])
+                      data["expired"],
+                      data["is_permanent"])
 

@@ -3,7 +3,13 @@ from .effect import Effect
 
 class MagicResistDebuff(Effect):
 
-    def __init__(self, messages, duration, reduction_percent, reduction_amount=0, expired=False):
+    def __init__(self,
+                 messages,
+                 duration,
+                 reduction_percent,
+                 reduction_amount=0,
+                 expired=False,
+                 is_permanent=False):
         super().__init__(messages, duration, expired)
         # Convert the percentage to a factor
         self.reduction_percent = reduction_percent
@@ -34,7 +40,8 @@ class MagicResistDebuff(Effect):
             'description': self.description(),
             'reduction_percent': self.reduction_percent,
             'reduction_amount': self.reduction_amount,
-            'expired': self.expired
+            'expired': self.expired,
+            'is_permanent': self.is_permanent
         }
 
     @classmethod
@@ -43,4 +50,5 @@ class MagicResistDebuff(Effect):
                                  data["duration"],
                                  data["reduction_percent"],
                                  data["reduction_amount"],
-                                 data["expired"])
+                                 data["expired"],
+                                 data["is_permanent"])

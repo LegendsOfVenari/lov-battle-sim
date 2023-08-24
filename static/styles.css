@@ -1,15 +1,14 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 40px auto;
-    max-width: 1200px;
-    background-color: #f3f4f6;
+    margin: 0; /* Updated this to 0 */
     padding: 20px;
+    background-color: #0F141A;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1, h2, h3 {
-    color: #333;
+    color: #DDE2E8;
 }
 
 ul {
@@ -21,23 +20,36 @@ li {
     padding: 10px 0;
 }
 
+button:disabled {
+    padding: 5px 15px;
+    margin-right: 10px;
+    border: none;
+    background-color: #202933;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color:#99ACC2;
+    color: #99ACC2;
+}
+
 button {
     padding: 5px 15px;
     margin-right: 10px;
     border: none;
-    border-radius: 3px;
-    background-color: #007BFF;
-    color: #fff;
+    background-color: #202933;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color:#0BE881;
+    color: #0BE881;
     cursor: pointer;
 }
 
 #battle-log {
-    max-height: 400px;
+    min-height: 500px;
+    max-height: 500px;
     overflow-y: scroll;
-    border: 1px solid #ccc;
-    padding: 10px;
+    padding: 5px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: #202933;
     box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -45,11 +57,16 @@ button {
     min-height: 100px;
     max-height: 100px; /* Set a fixed height */
     overflow-y: auto; /* This will add a scrollbar if the content inside exceeds the max-height */
-    border: 1px solid #ccc;
-    padding: 5px;
+    padding: 2px;
     border-radius: 3px;
-    background-color: #eaeaea;
+    background-color: #202933;
     margin-top: 5px;
+}
+
+.effect-label {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    color: #99ACC2;
 }
 
 .button-container {
@@ -137,4 +154,9 @@ button {
     height: 50px;
     border-radius: 50%; /* Makes the image circular */
     margin-right: 10px; /* Spacing, adjust as needed */
+}
+
+.venari-row {
+    display: flex;
+    align-items: center; /* This will vertically center the items in case they have different heights */
 }
