@@ -19,7 +19,7 @@ class Poison(StackableEffect):
 
     def on_tick(self, venari):
         super().on_tick(venari)
-        damage = 0.1 * venari.battle_stats.hp  # 10% of current HP in true damage
+        damage = 0.02 * venari.battle_stats.initial_hp  # 10% of current HP in true damage
         venari.deal_damage(venari, damage, DamageType.TRUE_DAMAGE, 100)
         self.messages.append(f"{venari.name} took {damage:.2f} poison damage!")
 

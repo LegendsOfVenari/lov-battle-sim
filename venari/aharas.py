@@ -33,11 +33,9 @@ class Aharas(Venari):
         self.messages.append(f"{self.name} used its ability on {target.name}, consuming {poison_stacks} poison stacks.")
 
     def on_swap_in(self, enemy_team=None):
-        """Apply a 50% dodge buff for 5 ticks when Aharas is swapped in."""
+        """Apply 1 stack of [Poison] to Point Venari."""
         super().on_swap_in()
-        dodgeBuff = DodgeBuff(50, self.messages, 5)
-        if not self.battle_handler.has_effect(dodgeBuff):
-            self.apply_effect(dodgeBuff)
+        self.apply_poison_effect(enemy_team[0])
 
     def tick(self, is_point=True):
         """Override the base tick method."""

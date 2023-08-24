@@ -44,7 +44,7 @@ button {
     transition: background-color 0.3s, color 0.3s; /* Transition effect */
 }
 
-button:hover {
+button:not(:disabled):hover {
     background-color: #0BE881;
     color: #202933;
 }
@@ -209,4 +209,29 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #0BE881;
     color: #202933;
+}
+
+.avatar-container {
+    position: relative;
+    display: inline-block; /* allows the modal to appear right below the avatar */
+}
+
+.avatar-container .modal {
+    display: none;
+    position: absolute; 
+    top: 100%; /* positions the modal right at the bottom of the avatar */
+    left: 0;
+    z-index: 10;
+    width: 600px; /* or any desired width */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    /* ... other modal styles ... */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.avatar-container:hover .modal {
+    display: block;
 }

@@ -20,8 +20,40 @@
             <!-- Point Venari -->
             <div>
                 <div class="venari-row">
-                    <img src="{{ url_for('static', filename='images/' + team1_status[0]['name'].lower() + '.png') }}"
-                        alt="{{ team1_status[0]['name'] }}" class="avatar">
+                    <div class="avatar-container">
+                        <img id="venariAvatar_{{ team1_status[0].name }}"
+                            src="{{ url_for('static', filename='images/' + team1_status[0]['name'].lower() + '.png') }}"
+                            alt="{{ team1_status[0]['name'] }}" class="avatar">
+                        <div class="modal" id="venariModal_{{ team1_status[0].name }}">
+                            <div class="modal-content">
+                                <h3>Passive Description:</h3>
+
+                                <h3>Active Ability Description:</h3>
+
+                                <h3>Swap Ability Description:</h3>
+                                <div class="container">
+                                    <div class="column">
+                                        <ul>
+                                            <li>Level: {{ team1_status[0].level }}</li>
+                                            <li>Initial HP: {{ team1_status[0].battle_stats.initial_hp }}</li>
+                                            <li>HP: {{ team1_status[0].battle_stats.hp }}</li>
+                                            <li>Constitution: {{ team1_status[0].battle_stats.constitution }}</li>
+                                            <li>Dodge Chance: {{ team1_status[0].battle_stats.dodge_chance }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li>Attack Damage: {{ team1_status[0].battle_stats.attack_damage }}</li>
+                                            <li>Ability Power: {{ team1_status[0].battle_stats.ability_power }}</li>
+                                            <li>Defense: {{ team1_status[0].battle_stats.defense }}</li>
+                                            <li>Magic Resist: {{ team1_status[0].battle_stats.magic_resist }}</li>
+                                            <li>Accuracy: {{ team1_status[0].battle_stats.accuracy }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <p class="effect-label">
                         LVL {{ team1_status[0]['level'] }} {{ team1_status[0]['name'] }} |
                         Next Attack: {{ team1_status[0]['base_stats']['basic_attack_frequency'] -
@@ -71,8 +103,43 @@
                     {% for venari in team1_status[1:] %}
                     <li>
                         <div class="venari-row">
-                            <img src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
-                                alt="{{ venari['name'] }}" class="avatar">
+                            <div class="avatar-container">
+                                <img id="venariAvatar_{{ venari['name'] }}"
+                                     src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
+                                     alt="{{ venari['name'] }}" class="avatar">
+                                <div class="modal" id="venariModal_{{ venari['name'] }}">
+                                    <div class="modal-content">
+                                        <h3>Passive Description:</h3>
+                                        <!-- You can inject the passive description here -->
+                            
+                                        <h3>Active Ability Description:</h3>
+                                        <!-- You can inject the active ability description here -->
+                            
+                                        <h3>Swap Ability Description:</h3>
+                                        <!-- You can inject the swap ability description here -->
+                                        <div class="container">
+                                            <div class="column">
+                                                <ul>
+                                                    <li>Level: {{ venari['level'] }}</li>
+                                                    <li>Initial HP: {{ venari['battle_stats']['initial_hp'] }}</li>
+                                                    <li>HP: {{ venari['battle_stats']['hp'] }}</li>
+                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}</li>
+                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="column">
+                                                <ul>
+                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}</li>
+                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}</li>
+                                                    <li>Defense: {{ venari['battle_stats']['defense'] }}</li>
+                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}</li>
+                                                    <li>Accuracy: {{ venari['battle_stats']['accuracy'] }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <p class="effect-label">
                                 {{ venari['name'] }}({{ venari['level'] }})
                             </p>
@@ -125,8 +192,40 @@
         <div class="column">
             <div>
                 <div class="venari-row">
-                    <img src="{{ url_for('static', filename='images/' + team2_status[0]['name'].lower() + '.png') }}"
-                        alt="{{ team2_status[0]['name'] }}" class="avatar">
+                    <div class="avatar-container">
+                        <img id="venariAvatar_{{ team2_status[0].name }}"
+                            src="{{ url_for('static', filename='images/' + team2_status[0]['name'].lower() + '.png') }}"
+                            alt="{{ team2_status[0]['name'] }}" class="avatar">
+                        <div class="modal" id="venariModal_{{ team2_status[0].name }}">
+                            <div class="modal-content">
+                                <h3>Passive Description:</h3>
+
+                                <h3>Active Ability Description:</h3>
+
+                                <h3>Swap Ability Description:</h3>
+                                <div class="container">
+                                    <div class="column">
+                                        <ul>
+                                            <li>Level: {{ team2_status[0].level }}</li>
+                                            <li>Initial HP: {{ team2_status[0].battle_stats.initial_hp }}</li>
+                                            <li>HP: {{ team2_status[0].battle_stats.hp }}</li>
+                                            <li>Constitution: {{ team2_status[0].battle_stats.constitution }}</li>
+                                            <li>Dodge Chance: {{ team2_status[0].battle_stats.dodge_chance }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="column">
+                                        <ul>
+                                            <li>Attack Damage: {{ team2_status[0].battle_stats.attack_damage }}</li>
+                                            <li>Ability Power: {{ team2_status[0].battle_stats.ability_power }}</li>
+                                            <li>Defense: {{ team2_status[0].battle_stats.defense }}</li>
+                                            <li>Magic Resist: {{ team2_status[0].battle_stats.magic_resist }}</li>
+                                            <li>Accuracy: {{ team2_status[0].battle_stats.accuracy }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <p class="effect-label">
                         LVL {{ team2_status[0]['level'] }} {{ team2_status[0]['name'] }} |
                         Next Attack: {{ team2_status[0]['base_stats']['basic_attack_frequency'] -
@@ -163,8 +262,43 @@
                     {% for venari in team2_status[1:] %}
                     <li>
                         <div class="venari-row">
-                            <img src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
-                                alt="{{ venari['name'] }}" class="avatar">
+                            <div class="avatar-container">
+                                <img id="venariAvatar_{{ venari['name'] }}"
+                                     src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
+                                     alt="{{ venari['name'] }}" class="avatar">
+                                <div class="modal" id="venariModal_{{ venari['name'] }}">
+                                    <div class="modal-content">
+                                        <h3>Passive Description:</h3>
+                                        <!-- You can inject the passive description here -->
+                            
+                                        <h3>Active Ability Description:</h3>
+                                        <!-- You can inject the active ability description here -->
+                            
+                                        <h3>Swap Ability Description:</h3>
+                                        <!-- You can inject the swap ability description here -->
+                                        <div class="container">
+                                            <div class="column">
+                                                <ul>
+                                                    <li>Level: {{ venari['level'] }}</li>
+                                                    <li>Initial HP: {{ venari['battle_stats']['initial_hp'] }}</li>
+                                                    <li>HP: {{ venari['battle_stats']['hp'] }}</li>
+                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}</li>
+                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="column">
+                                                <ul>
+                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}</li>
+                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}</li>
+                                                    <li>Defense: {{ venari['battle_stats']['defense'] }}</li>
+                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}</li>
+                                                    <li>Accuracy: {{ venari['battle_stats']['accuracy'] }}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <p class="effect-label">
                                 LVL {{ venari['level'] }} {{ venari['name'] }}
                             </p>
