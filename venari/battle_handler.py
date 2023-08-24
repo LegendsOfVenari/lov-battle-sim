@@ -77,7 +77,7 @@ class BattleHandler:
 
         # Calculate damage
         if damage_type == DamageType.AD:
-            ad_multiplier = (((2 * attacker.level) / 5) * base_damage) / 50
+            ad_multiplier = (((2 * attacker.level) / 5) * base_damage * 10) / 50
             damage = ad_multiplier + attacker.battle_stats.attack_damage + base_damage
             return damage * (1 - ad_reduction)
 
