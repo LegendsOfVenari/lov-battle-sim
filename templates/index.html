@@ -15,6 +15,7 @@
 
 <body>
     <div class="container">
+        {% if game_started %}
         <!-- Player Section -->
         <div class="column">
             <!-- Point Venari -->
@@ -187,7 +188,6 @@
             </div>
             </section>
         </div>
-
         <!-- AI Section -->
         <div class="column">
             <div>
@@ -332,6 +332,7 @@
                 </ul>
             </div>
         </div>
+        {% endif %}
 
         <div class="column">
             <section>
