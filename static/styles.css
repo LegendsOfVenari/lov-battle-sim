@@ -44,6 +44,18 @@ button {
     transition: background-color 0.3s, color 0.3s; /* Transition effect */
 }
 
+arena-effect {
+    padding: 5px 15px;
+    margin-right: 10px;
+    border: none;
+    background-color: #202933;
+    border-radius: 5px;
+    border: 1px solid;
+    border-color:#0BE881;
+    color: #0BE881;
+    cursor: pointer;
+}
+
 button:not(:disabled):hover {
     background-color: #0BE881;
     color: #202933;

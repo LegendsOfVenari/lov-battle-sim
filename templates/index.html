@@ -20,6 +20,15 @@
         <div class="column">
             <!-- Point Venari -->
             <div>
+                {% for arena_effect in team1_arena_effects_status.values() %}
+                <div class="venari-row">
+                    <div class="arena-effect">
+                        <button>
+                            {{ arena_effect['description'] }}
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
                 <div class="venari-row">
                     <div class="avatar-container">
                         <img id="venariAvatar_{{ team1_status[0].name }}"
@@ -68,12 +77,14 @@
                         style="width: {{ (team1_status[0]['battle_stats']['hp'] / team1_status[0]['battle_stats']['initial_hp']) * 100 }}%;">
                     </div>
                     <div class="hp-text">
-                        {{ team1_status[0]['battle_stats']['hp'] }} / {{ team1_status[0]['battle_stats']['initial_hp']
+                        {{ team1_status[0]['battle_stats']['hp'] }} / {{
+                        team1_status[0]['battle_stats']['initial_hp']
                         }}
                     </div>
                 </div>
                 <div class="energy-bar-container">
-                    <div class="energy-bar" style="width: {{ team1_status[0]['battle_handler']['energy'] }}%;"></div>
+                    <div class="energy-bar" style="width: {{ team1_status[0]['battle_handler']['energy'] }}%;">
+                    </div>
                     <div class="energy-text">
                         {{ team1_status[0]['battle_handler']['energy'] }} / 100
                     </div>
@@ -106,16 +117,16 @@
                         <div class="venari-row">
                             <div class="avatar-container">
                                 <img id="venariAvatar_{{ venari['name'] }}"
-                                     src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
-                                     alt="{{ venari['name'] }}" class="avatar">
+                                    src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
+                                    alt="{{ venari['name'] }}" class="avatar">
                                 <div class="modal" id="venariModal_{{ venari['name'] }}">
                                     <div class="modal-content">
                                         <h3>Passive Description:</h3>
                                         <!-- You can inject the passive description here -->
-                            
+
                                         <h3>Active Ability Description:</h3>
                                         <!-- You can inject the active ability description here -->
-                            
+
                                         <h3>Swap Ability Description:</h3>
                                         <!-- You can inject the swap ability description here -->
                                         <div class="container">
@@ -124,16 +135,21 @@
                                                     <li>Level: {{ venari['level'] }}</li>
                                                     <li>Initial HP: {{ venari['battle_stats']['initial_hp'] }}</li>
                                                     <li>HP: {{ venari['battle_stats']['hp'] }}</li>
-                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}</li>
-                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}</li>
+                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}
+                                                    </li>
+                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}
+                                                    </li>
                                                 </ul>
                                             </div>
                                             <div class="column">
                                                 <ul>
-                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}</li>
-                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}</li>
+                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}
+                                                    </li>
+                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}
+                                                    </li>
                                                     <li>Defense: {{ venari['battle_stats']['defense'] }}</li>
-                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}</li>
+                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}
+                                                    </li>
                                                     <li>Accuracy: {{ venari['battle_stats']['accuracy'] }}</li>
                                                 </ul>
                                             </div>
@@ -237,13 +253,15 @@
                         style="width: {{ (team2_status[0]['battle_stats']['hp'] / team2_status[0]['battle_stats']['initial_hp']) * 100 }}%;">
                     </div>
                     <div class="hp-text">
-                        {{ team2_status[0]['battle_stats']['hp'] }} / {{ team2_status[0]['battle_stats']['initial_hp']
+                        {{ team2_status[0]['battle_stats']['hp'] }} / {{
+                        team2_status[0]['battle_stats']['initial_hp']
                         }}
                     </div>
                 </div>
                 <!-- Energy Bar for AI Point Venari -->
                 <div class="energy-bar-container">
-                    <div class="energy-bar" style="width: {{ team2_status[0]['battle_handler']['energy'] }}%;"></div>
+                    <div class="energy-bar" style="width: {{ team2_status[0]['battle_handler']['energy'] }}%;">
+                    </div>
                     <div class="energy-text">
                         {{ team2_status[0]['battle_handler']['energy'] }} / 100
                     </div>
@@ -264,16 +282,16 @@
                         <div class="venari-row">
                             <div class="avatar-container">
                                 <img id="venariAvatar_{{ venari['name'] }}"
-                                     src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
-                                     alt="{{ venari['name'] }}" class="avatar">
+                                    src="{{ url_for('static', filename='images/' + venari['name'].lower() + '.png') }}"
+                                    alt="{{ venari['name'] }}" class="avatar">
                                 <div class="modal" id="venariModal_{{ venari['name'] }}">
                                     <div class="modal-content">
                                         <h3>Passive Description:</h3>
                                         <!-- You can inject the passive description here -->
-                            
+
                                         <h3>Active Ability Description:</h3>
                                         <!-- You can inject the active ability description here -->
-                            
+
                                         <h3>Swap Ability Description:</h3>
                                         <!-- You can inject the swap ability description here -->
                                         <div class="container">
@@ -282,16 +300,21 @@
                                                     <li>Level: {{ venari['level'] }}</li>
                                                     <li>Initial HP: {{ venari['battle_stats']['initial_hp'] }}</li>
                                                     <li>HP: {{ venari['battle_stats']['hp'] }}</li>
-                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}</li>
-                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}</li>
+                                                    <li>Constitution: {{ venari['battle_stats']['constitution'] }}
+                                                    </li>
+                                                    <li>Dodge Chance: {{ venari['battle_stats']['dodge_chance'] }}
+                                                    </li>
                                                 </ul>
                                             </div>
                                             <div class="column">
                                                 <ul>
-                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}</li>
-                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}</li>
+                                                    <li>Attack Damage: {{ venari['battle_stats']['attack_damage'] }}
+                                                    </li>
+                                                    <li>Ability Power: {{ venari['battle_stats']['ability_power'] }}
+                                                    </li>
                                                     <li>Defense: {{ venari['battle_stats']['defense'] }}</li>
-                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}</li>
+                                                    <li>Magic Resist: {{ venari['battle_stats']['magic_resist'] }}
+                                                    </li>
                                                     <li>Accuracy: {{ venari['battle_stats']['accuracy'] }}</li>
                                                 </ul>
                                             </div>

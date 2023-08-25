@@ -11,8 +11,8 @@ class Battle:
     def __init__(self, team1, team2, tick_count, messages, team1_arena_effects=None, team2_arena_effects=None):
         self.team1 = team1
         self.team2 = team2
-        self.team1_arena_effects = {}
-        self.team2_arena_effects = {}
+        self.team1_arena_effects = team1_arena_effects
+        self.team2_arena_effects = team2_arena_effects
         self.messages = messages
         self.action_queue = []
         self.tick_count = tick_count
@@ -21,11 +21,21 @@ class Battle:
         """Check if the game is over."""
         return all(venari.battle_stats.hp <= 0 for venari in self.team1) or all(venari.battle_stats.hp <= 0 for venari in self.team2)
 
+    def get_ally_team(self, venari):
+        return self.team1 if venari in self.team1 else self.team2
+
+    def get_enemy_team(self, venari):
+        return self.team2 if venari in self.team1 else self.team1
+
+    def add_ally_arena_effect(self, arena_effect, venari):
+        ally_team = self.get_ally_team(venari)
+        self.add_arena_effect(arena_effect, ally_team)
+
     def add_arena_effect(self, arena_effect, team):
         if team == self.team1:
-            self.team1_arena_effects[arena_effect.effect_id] = arena_effect
+            self.team1_arena_effects[arena_effect.arena_effect_id] = arena_effect
         elif team == self.team2:
-            self.team2_arena_effects[arena_effect.effect_id] = arena_effect
+            self.team2_arena_effects[arena_effect.arena_effect_id] = arena_effect
 
     def trigger_arena_effect_swap_in(self, venari, arena_effects):
         for arena_effect in list(arena_effects.values()):
@@ -46,12 +56,24 @@ class Battle:
 
         # Trigger auras
         for arena_effect in list(self.team1_arena_effects.values()):
-            arena_effect.on_tick(self.team1, self.team2)
+            if arena_effect.expired:
+                arena_effect.on_remove(self)
+                self.team1_arena_effects.pop(arena_effect.arena_effect_id)
+            else:
+                arena_effect.on_tick(self.team1[0])
+                if arena_effect.expired:
+                    arena_effect.on_remove(self)
+                    self.team1_arena_effects.pop(arena_effect.arena_effect_id)
 
-        for arena_effect in list(self.team1_arena_effects.values()):
-            arena_effect.on_tick(self.team2, self.team1)
-
-        # Remove any expired auras
+        for arena_effect in list(self.team2_arena_effects.values()):
+            if arena_effect.expired:
+                arena_effect.on_remove(self)
+                self.team2_arena_effects.pop(arena_effect.arena_effect_id)
+            else:
+                arena_effect.on_tick(self.team1[0])
+                if arena_effect.expired:
+                    arena_effect.on_remove(self)
+                    self.team2_arena_effects.pop(arena_effect.arena_effect_id)
 
         if self.team1[0].battle_stats.hp > 0:
             self.team1[0].tick()  # Point venari

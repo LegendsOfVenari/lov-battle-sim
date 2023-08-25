@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session
 from battle import Battle, ActionType
 from venari import Aharas, Akulaw, Algala, Venari, Meeka, Nyrie
+from arena_effect import ArenaEffect
 from config import venari_base_stats_map
 import os
 
@@ -13,13 +14,34 @@ def serialize_teams(team1, team2):
     serialized_team2 = [Venari.serialize_venari(venari) for venari in team2]
     return serialized_team1, serialized_team2
 
+
 def deserialize_teams(serialized_team1, serialized_team2, messages):
     team1 = [Venari.deserialize_venari(data, messages) for data in serialized_team1]
     team2 = [Venari.deserialize_venari(data, messages) for data in serialized_team2]
     return team1, team2
 
 
+def serialize_arena_effects(team1_arena_effects, team2_arena_effects):
+    serialized_team1_arena_effect = {key: effect.serialize()
+                                     for key, effect in team1_arena_effects.items()}
+
+    serialized_team2_arena_effect = {key: effect.serialize()
+                                     for key, effect in team2_arena_effects.items()}
+
+    return serialized_team1_arena_effect, serialized_team2_arena_effect
+
+
+def deserialize_arena_effects(serialized_team1_arena_effect, serialized_team2_arena_effect, messages):
+    team1_arena_effects = {arena_effect_id: ArenaEffect.deserialize(data, messages) 
+                           for arena_effect_id, data in serialized_team1_arena_effect.items()}
+
+    team2_arena_effects = {arena_effect_id: ArenaEffect.deserialize(data, messages) 
+                           for arena_effect_id, data in serialized_team2_arena_effect.items()}
+
+    return team1_arena_effects, team2_arena_effects
+
 @app.route('/', methods=['GET', 'POST'])
+
 def index():
     messages = session.get('messages', ["Game started!"])
 
@@ -27,6 +49,8 @@ def index():
     if request.method == 'POST' and 'player_venari1' in request.form:
         team1 = [initialize_venari(name, messages, True) for name in ['player_venari1', 'player_venari2', 'player_venari3']]
         team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3']]
+        team1_arena_effects = {}
+        team2_arena_effects = {}
         battle = Battle(team1, team2, 0, messages)
         session['team1'], session['team2'] = serialize_teams(team1, team2)
         session['tick'] = 0
@@ -39,13 +63,14 @@ def index():
     else:
         if 'game_started' not in session or request.form.get('action') == ActionType.NEW_GAME.value:
             team1, team2 = default_teams(messages)
+            team1_arena_effects = {}
+            team2_arena_effects = {}
             session['game_started'] = False
         else:
             team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
+            team1_arena_effects, team2_arena_effects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
 
-        battle = Battle(team1, team2, session.get('tick', 0), messages)
-        session['team1_arena_effects'] = session.get('team1_arena_effects', {})
-        session['team2_arena_effects'] = session.get('team2_arena_effects', {})
+        battle = Battle(team1, team2, session.get('tick', 0), messages, team1_arena_effects, team2_arena_effects)
 
         for venari in team1:
             venari.battle = battle
@@ -71,14 +96,16 @@ def index():
                 session['messages'] = result["messages"]
                 session['tick'] = result["tick_count"]
                 session['team1'], session['team2'] = serialize_teams(result['team1_status'], result['team2_status'])
-                session['team1_arena_effects'] = result['team1_arena_effects']
-                session['team2_arena_effects'] = result['team2_arena_effects']
+                session['team1_arena_effects'], session['team2_arena_effects'] = serialize_arena_effects(result['team1_arena_effects'], result['team2_arena_effects'])
 
     # Deserialize the teams for displaying in the template
     team1_status, team2_status = serialize_teams(team1, team2)
+    team1_arena_effects_status, team2_arena_effects_status = serialize_arena_effects(team1_arena_effects, team2_arena_effects)
     return render_template('index.html',
                            team1_status=team1_status,
                            team2_status=team2_status,
+                           team1_arena_effects_status=team1_arena_effects_status,
+                           team2_arena_effects_status=team2_arena_effects_status,
                            tick=session.get('tick', 0),
                            messages=messages,
                            game_started=session.get('game_started', False))

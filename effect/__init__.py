@@ -11,3 +11,4 @@ from .accuracy_debuff import AccuracyDebuff
 from .boar_skin import BoarSkin
 from .unique import Unique
 from .natural_touch import NaturalTouch
+from .ready_to_help_effect import ReadyToHelpEffect

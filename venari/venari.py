@@ -1,6 +1,5 @@
 import random
 import importlib
-from config import venari_base_stats_map
 from .battle_handler import BattleHandler
 from stats import BattleStats, BaseStats
 
@@ -69,6 +68,12 @@ class Venari:
     def reduce_swap_cooldown(self, amount):
         self.battle_handler.reduce_swap_cooldown(amount)
 
+    def increase_attack_speed(self, amount):
+        self.battle_handler.increase_attack_speed(amount)
+
+    def decrease_attack_speed(self, amount):
+        self.battle_handler.decrease_attack_speed(amount)
+
     # Callback methods
 
     def on_basic_attack_hit(self, target):
@@ -80,6 +85,9 @@ class Venari:
     def on_swap_in(self, enemy_team=None):
         self.battle_handler.attack_tick_counter = 0
         self.battle_handler.swap_cooldown = 6
+
+    def on_ally_basic_attack_hit(self, target):
+        pass
 
     # Tick methods
 
@@ -127,7 +135,8 @@ class Venari:
 
         module = importlib.import_module("venari")
         venari_class = getattr(module, name)
-        base_stats = venari_base_stats_map.get(name)
+
+        base_stats = BaseStats.deserialize(data['base_stats'])
 
         serialized_battle_handler = data.get('battle_handler')
         if serialized_battle_handler:

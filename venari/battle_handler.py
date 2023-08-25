@@ -82,7 +82,7 @@ class BattleHandler:
             return damage * (1 - ad_reduction)
 
         elif damage_type == DamageType.AP:
-            damage = BattleHandler.calculateAbilityPower(attacker, base_damage)
+            damage = attacker.battle_handler.calculate_ability_power(attacker, base_damage)
             return damage * (1 - ap_reduction)
 
         elif damage_type == DamageType.TRUE_DAMAGE:
@@ -90,10 +90,9 @@ class BattleHandler:
         else:
             raise ValueError("Invalid damage type provided.")
 
-    @classmethod
-    def calculateAbilityPower(cls, attacker, base_damage):
-        ap_multiplier = (((2 * attacker.level) / 5) * base_damage * 10) / 50
-        return ap_multiplier + attacker.battle_stats.ability_power + base_damage
+    def calculate_ability_power(self, venari, base_damage):
+        ap_multiplier = (((2 * venari.level) / 5) * base_damage * 10) / 50
+        return ap_multiplier + venari.battle_stats.ability_power + base_damage
 
     # ---------------------- UTILITY METHODS ---------------------- #
 
@@ -110,6 +109,13 @@ class BattleHandler:
     def gain_energy(self, amount):
         self.energy += amount
         self.energy = min(self.energy, 100)
+
+    def increase_attack_speed(self, amount):
+        self.attack_tick_counter -= amount
+        self.attack_tick_counter = max(0, self.attack_tick_counter)
+
+    def decrease_attack_speed(self, amount):
+        self.attack_tick_counter += amount
 
     # ---------------------- EFFECT METHODS ---------------------- #
 
