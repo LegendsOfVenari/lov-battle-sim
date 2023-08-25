@@ -149,6 +149,12 @@ class BattleHandler:
         else:
             return 0
 
+    def get_effect(self, effect_id):
+        if effect_id in self.active_effects:
+            return self.active_effects[effect_id]
+        else:
+            return None
+
     def is_effect_stackable(self, effect):
         return isinstance(effect, StackableEffect)
 

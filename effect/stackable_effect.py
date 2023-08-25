@@ -16,16 +16,18 @@ class StackableEffect(Effect):
     def stack(self):
         self.count += 1
 
+    def reset(self):
+        self.count = 0
+
     def on_apply(self, venari):
         self.stack()
 
     def remove_stack(self, venari):
         self.count -= 1
-        print("THIS IS THE CURRENT COUNT")
-        print(f"{self.count}")
         # If no more counts, remove the effect
         if self.count <= 0:
-            self.remove()
+            if not self.is_permanent:
+                self.remove()
 
     def on_tick(self, venari):
         """What the effect does on each tick."""

@@ -61,12 +61,25 @@ nyrie_base_stats = BaseStats(
     basic_attack_damage=35
 )
 
+vespille_base_stats = BaseStats(
+    constitution=91,
+    strength=44,
+    intellect=70,
+    defence=40,
+    magic_resist=75,
+    passive_energy_gain=10,
+    basic_attack_energy_gain=16,
+    basic_attack_frequency=3,
+    basic_attack_damage=35
+)
+
 venari_base_stats_map = {
     'Aharas': aharas_base_stats,
     'Akulaw': akulaw_base_stats,
     'Algala': algala_base_stats,
     'Meeka': meeka_base_stats,
-    'Nyrie': nyrie_base_stats
+    'Nyrie': nyrie_base_stats,
+    'Vespille': vespille_base_stats
 }
 
 class DamageType(Enum):

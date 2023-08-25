@@ -8,12 +8,14 @@ class BoarSkin(Effect):
                  expired=False,
                  is_permanent=True,
                  ad_buff=0,
-                 stacks=0):
+                 total_armor_distributed=0,
+                 total_damage_received=0):
         super().__init__(messages, None, expired, is_permanent)
         # Gain 10% AD and 1 Armor for every 30% missing health
         self.effect_id = "boar_skin"
         self.ad_buff = ad_buff
-        self.stacks = stacks
+        self.total_armor_distributed = total_armor_distributed
+        self.total_damage_received = total_damage_received
 
     def description(self):
         return f"Boar Skin +{round(self.ad_buff, 2)} AD"
@@ -27,37 +29,24 @@ class BoarSkin(Effect):
         pass
 
     def on_damage_received(self, venari, damage):
-        calculatedStacks = self.num_stacks(venari)
-        difference_in_stacks = calculatedStacks - self.stacks
-        if self.stacks != calculatedStacks:
-            self.stacks = calculatedStacks
-            self.distributeBonus(venari, difference_in_stacks)
+        self.total_damage_received += damage
 
-    def on_heal_received(self, venari, heal):
-        pass
+        hp_percentage = self.total_damage_received / venari.battle_stats.initial_hp
+        calculatedStacks = int(hp_percentage * 10 / 3) # This gives the number of 30% chunks
 
-    def distributeBonus(self, venari, difference_in_stacks):
+        if self.total_armor_distributed != calculatedStacks:
+            self.distributeBonus(venari, calculatedStacks)
+            self.total_armor_distributed = calculatedStacks
+
+    def distributeBonus(self, venari, calculatedStacks):
         venari.battle_stats.attack_damage -= self.ad_buff
-        self.ad_buff = (0.1 * venari.battle_stats.attack_damage) * self.stacks
+        self.ad_buff = (0.1 * venari.battle_stats.attack_damage) * calculatedStacks
         venari.battle_stats.attack_damage += self.ad_buff
+        difference_in_stacks = calculatedStacks - self.total_armor_distributed
         for _ in range(difference_in_stacks):
             venari.apply_effect(Armor(self.messages))
 
         self.messages.append(f"{venari.name} gained {self.ad_buff} attack damage and {difference_in_stacks} armor!")
-
-
-    def num_stacks(self, venari):
-        current_hp_percentage = (venari.battle_stats.hp / venari.battle_stats.initial_hp) * 100
-
-        print(f"Current HP Percentage: {current_hp_percentage}")
-        if 70 <= current_hp_percentage <= 100:
-            return 0
-        elif 40 <= current_hp_percentage < 70:
-            return 1
-        elif 10 <= current_hp_percentage < 40:
-            return 2
-        else:
-            return 3
 
     def serialize(self):
         return {
@@ -66,7 +55,8 @@ class BoarSkin(Effect):
             'expired': self.expired,
             'is_permanent': self.is_permanent,
             'ad_buff': self.ad_buff,
-            'stacks': self.stacks
+            'total_armor_distributed': self.total_armor_distributed,
+            'total_damage_received': self.total_damage_received
         }
 
     @classmethod
@@ -76,4 +66,5 @@ class BoarSkin(Effect):
                              data["expired"],
                              data["is_permanent"],
                              data["ad_buff"],
-                             data["stacks"])
+                             data["total_armor_distributed"],
+                             data["total_damage_received"])

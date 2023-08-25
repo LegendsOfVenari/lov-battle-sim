@@ -25,13 +25,11 @@ class MagicResistDebuff(Effect):
         reduction_factor = self.reduction_percent / 100
         self.reduction_amount = venari.battle_stats.magic_resist * reduction_factor
         venari.battle_stats.magic_resist = max(venari.battle_stats.magic_resist - self.reduction_amount, 0)
-        self.messages.append(f"{venari.name}'s magic resist was reduced by {round(self.reduction_amount, 1)}")
 
 
     def on_remove(self, venari):
         # Restore the magic resist
         venari.battle_stats.magic_resist += self.reduction_amount
-        self.messages.append(f"{venari.name}'s magic resist was restored by {round(self.reduction_amount, 1)}")
 
     def serialize(self):
         return {

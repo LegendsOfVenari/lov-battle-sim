@@ -31,6 +31,14 @@ class BattleStats:
     def hp_percentage(self):
         return self.hp / self.initial_hp
 
+    def increase_dodge_chance(self, amount):
+        self.dodge_chance += amount
+        self.dodge_chance = min(self.dodge_chance, 100)
+
+    def decrease_dodge_chance(self, amount):
+        self.dodge_chance -= amount
+        self.dodge_chance = max(self.dodge_chance, 0)
+
     def serialize(self):
         return {
             'hp': self.hp,

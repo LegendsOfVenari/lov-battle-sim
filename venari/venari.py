@@ -74,6 +74,19 @@ class Venari:
     def decrease_attack_speed(self, amount):
         self.battle_handler.decrease_attack_speed(amount)
 
+    # Battle Stat methods
+
+    def increase_dodge_chance(self, amount):
+        self.battle_stats.increase_dodge_chance(amount)
+
+    def decrease_dodge_chance(self, amount):
+        self.battle_stats.decrease_dodge_chance(amount)
+
+    # Effect Methods
+
+    def get_effect(self, effect_id):
+        return self.battle_handler.get_effect(effect_id)
+
     # Callback methods
 
     def on_basic_attack_hit(self, target):

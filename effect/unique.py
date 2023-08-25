@@ -22,7 +22,7 @@ class Unique(StackableEffect):
         self.effect_id = effect_id
 
     def description(self):
-        return f"Unique ({self.id}): {self.count} stacks, ({self.duration} ticks)"
+        return f"Unique ({self.effect_id}): {self.count} stacks, ({self.duration} ticks)"
 
     def serialize(self):
         return {
@@ -37,6 +37,7 @@ class Unique(StackableEffect):
 
     @classmethod
     def deserialize(cls, data, messages):
+        print(f"{data}")
         return Unique(messages,
                       data["effect_id"],
                       data["initial_duration"],

@@ -12,3 +12,5 @@ from .boar_skin import BoarSkin
 from .unique import Unique
 from .natural_touch import NaturalTouch
 from .ready_to_help_effect import ReadyToHelpEffect
+from .dust_cloud_effect import DustCloudEffect
+from .gathering_dust import GatheringDust

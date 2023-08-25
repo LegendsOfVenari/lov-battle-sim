@@ -25,12 +25,10 @@ class DefenceDebuff(Effect):
         reduction_factor = self.reduction_percent / 100
         self.reduction_amount = venari.battle_stats.defense * reduction_factor
         venari.battle_stats.defense = max(venari.battle_stats.defense - self.reduction_amount, 0)
-        self.messages.append(f"{venari.name}'s defence was reduced by {round(self.reduction_amount, 1)}")
 
     def on_remove(self, venari):
         # Restore the defence (armor)
         venari.battle_stats.defense += self.reduction_amount
-        self.messages.append(f"{venari.name}'s defence was restored by {round(self.reduction_amount, 1)}")
 
     def serialize(self):
         return {

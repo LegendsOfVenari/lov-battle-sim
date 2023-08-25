@@ -207,6 +207,15 @@
         <!-- AI Section -->
         <div class="column">
             <div>
+                {% for arena_effect in team2_arena_effects_status.values() %}
+                <div class="venari-row">
+                    <div class="arena-effect">
+                        <button>
+                            {{ arena_effect['description'] }}
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
                 <div class="venari-row">
                     <div class="avatar-container">
                         <img id="venariAvatar_{{ team2_status[0].name }}"
@@ -395,54 +404,28 @@
             {% if not game_started %}
             <section>
                 <form method="post">
+                    {% set venari_names = ["Aharas", "Akulaw", "Algala", "Meeka", "Nyrie", "Vespille"] %}
+
                     <h3>Player's Team:</h3>
                     <div class="venari-row">
-                        <select name="player_venari1">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
+                        {% for i in range(1, 4) %}
+                        <select name="player_venari{{ i }}">
+                            {% for name in venari_names %}
+                            <option value="{{ name }}">{{ name }}</option>
+                            {% endfor %}
                         </select>
-                        <select name="player_venari2">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
-                        </select>
-                        <select name="player_venari3">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
-                        </select>
+                        {% endfor %}
                     </div>
 
                     <h3>AI's Team:</h3>
                     <div class="venari-row">
-                        <select name="ai_venari1">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
+                        {% for i in range(1, 4) %}
+                        <select name="ai_venari{{ i }}">
+                            {% for name in venari_names %}
+                            <option value="{{ name }}">{{ name }}</option>
+                            {% endfor %}
                         </select>
-                        <select name="ai_venari2">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
-                        </select>
-                        <select name="ai_venari3">
-                            <option value="Aharas">Aharas</option>
-                            <option value="Akulaw">Akulaw</option>
-                            <option value="Algala">Algala</option>
-                            <option value="Meeka">Meeka</option>
-                            <option value="Nyrie">Nyrie</option>
-                        </select>
+                        {% endfor %}
                     </div>
 
                     <input type="submit" value="Start Battle">

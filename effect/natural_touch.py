@@ -5,9 +5,8 @@ from .armor import Armor
 class NaturalTouch(StackableEffect):
     def __init__(self,
                  messages,
-                 count=0,
-                 is_permanent=True):
-        super().__init__(messages, None, None, count, False, is_permanent)
+                 count=0):
+        super().__init__(messages, None, None, count, False, True)
         self.effect_id = "natural_touch"
 
     def description(self):
@@ -36,5 +35,4 @@ class NaturalTouch(StackableEffect):
     def deserialize(cls, data, messages):
         print(data)
         return NaturalTouch(messages,
-                            data["count"],
-                            data["is_permanent"],)
+                            data["count"])
