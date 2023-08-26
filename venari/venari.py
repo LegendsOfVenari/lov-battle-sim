@@ -87,6 +87,22 @@ class Venari:
     def get_effect(self, effect_id):
         return self.battle_handler.get_effect(effect_id)
 
+    # Modifier Methods
+
+    def can_auto_attack(self):
+        """Determine if a Venari can auto attack based on its effects."""
+        for effect in self.battle_handler.active_effects.values():
+            if effect.modify_auto_attack(self):
+                return False
+        return True
+
+    def can_swap(self):
+        """Determine if a Venari can swap based on its effects."""
+        for effect in self.battle_handler.active_effects.values():
+            if effect.modify_swap(self):
+                return False
+        return True
+
     # Callback methods
 
     def on_basic_attack_hit(self, target):
