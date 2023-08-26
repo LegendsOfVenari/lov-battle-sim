@@ -73,13 +73,26 @@ vespille_base_stats = BaseStats(
     basic_attack_damage=35
 )
 
+valtri_base_stats = BaseStats(
+    constitution=76,
+    strength=83,
+    intellect=71,
+    defence=90,
+    magic_resist=85,
+    passive_energy_gain=12,
+    basic_attack_energy_gain=16,
+    basic_attack_frequency=4,
+    basic_attack_damage=35
+)
+
 venari_base_stats_map = {
     'Aharas': aharas_base_stats,
     'Akulaw': akulaw_base_stats,
     'Algala': algala_base_stats,
     'Meeka': meeka_base_stats,
     'Nyrie': nyrie_base_stats,
-    'Vespille': vespille_base_stats
+    'Vespille': vespille_base_stats,
+    'Valtri': valtri_base_stats
 }
 
 class DamageType(Enum):

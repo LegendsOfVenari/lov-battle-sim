@@ -10,7 +10,15 @@ from .dodge_buff import DodgeBuff
 from .accuracy_debuff import AccuracyDebuff
 from .boar_skin import BoarSkin
 from .unique import Unique
+
+# Nyrie
 from .natural_touch import NaturalTouch
 from .ready_to_help_effect import ReadyToHelpEffect
+
+# Vespille
 from .dust_cloud_effect import DustCloudEffect
 from .gathering_dust import GatheringDust
+
+# Valtri
+from .lone_survivor import LoneSurvivor
+from .moonlit_hunt_mark import MoonlitHuntMark

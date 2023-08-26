@@ -22,10 +22,19 @@ class Battle:
         return all(venari.battle_stats.hp <= 0 for venari in self.team1) or all(venari.battle_stats.hp <= 0 for venari in self.team2)
 
     def get_ally_team(self, venari):
-        return self.team1 if venari in self.team1 else self.team2
+        for v in self.team1:
+            if v is venari:
+                return self.team1
+        for v in self.team2:
+            if v is venari:
+                return self.team2
+        return None
 
     def get_enemy_team(self, venari):
-        return self.team2 if venari in self.team1 else self.team1
+        if self.get_ally_team(venari) is self.team1:
+            return self.team2
+        else:
+            return self.team1
 
     def add_ally_arena_effect(self, arena_effect, venari):
         ally_team = self.get_ally_team(venari)
@@ -44,6 +53,10 @@ class Battle:
     def auto_swap(self, team, enemy_team, traps):
         # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].battle_stats.hp <= 0 and len(team) > 1:
+            # Notify effects that ally has been defeated
+            for venari in team:
+                for effect in venari.battle_handler.active_effects.values():
+                    effect.on_ally_defeated()
             del team[0]
             team[0].on_swap_in(enemy_team)
             self.trigger_arena_effect_swap_in(team[0], traps)
@@ -70,7 +83,7 @@ class Battle:
                 arena_effect.on_remove(self)
                 self.team2_arena_effects.pop(arena_effect.arena_effect_id)
             else:
-                arena_effect.on_tick(self.team1[0])
+                arena_effect.on_tick(self.team2[0])
                 if arena_effect.expired:
                     arena_effect.on_remove(self)
                     self.team2_arena_effects.pop(arena_effect.arena_effect_id)
@@ -95,6 +108,15 @@ class Battle:
         self.auto_swap(self.team1, self.team2, self.team1_arena_effects)
         self.auto_swap(self.team2, self.team1, self.team2_arena_effects)
         self.tick_count += 1
+
+    def _swap_venari(self, team, swap_index):
+        """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
+        if team[swap_index].battle_handler.swap_cooldown == 0:
+            # Swap the point Venari with the chosen bench Venari
+            team[0], team[swap_index] = team[swap_index], team[0]
+            team[0].on_swap_in(self.get_enemy_team(team[0]))
+            return True
+        return False
 
     def interactive_battle_simulation(self, action, swap_index=None):
         self.messages.append(f"Current Tick: {self.tick_count}")

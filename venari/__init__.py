@@ -5,4 +5,5 @@ from .algala import Algala
 from .meeka import Meeka
 from .nyrie import Nyrie
 from .vespille import Vespille
+from .valtri import Valtri
 from .battle_handler import BattleHandler, DamageType

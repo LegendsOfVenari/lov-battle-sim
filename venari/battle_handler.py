@@ -55,6 +55,9 @@ class BattleHandler:
         for effect in list(self.active_effects.values()):
             effect.on_damage_received(venari, damage)
 
+    def receive_damage_from_effect(self, venari, damage):
+        venari.battle_stats.hp = max(0, venari.battle_stats.hp - damage)
+
     def _deal_auto_attack_damage(self, attacker, target, auto_attack_buff):
         damage = self._calculate_basic_attack_damage(attacker, target, attacker.base_stats.basic_attack_damage + auto_attack_buff)
         self.messages.append(f"{attacker.name}({attacker.level}) attacked {target.name}({target.level}) for {damage:.2f} damage!")

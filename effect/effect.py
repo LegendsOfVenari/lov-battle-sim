@@ -40,6 +40,10 @@ class Effect:
         """Placeholder for actions to be taken when the Venari with this effect receives damage."""
         pass
 
+    def on_ally_defeated(self):
+        """Placeholder for actions to be taken when an ally is defeated."""
+        pass
+
     # Utility methods
 
     def remove(self):
@@ -47,6 +51,10 @@ class Effect:
 
     def modify_basic_attack(self, venari, target):
         """Returns a boolean indicating if the basic attack should proceed."""
+        return True
+
+    def modify_swap(self, venari, target):
+        """Returns a boolean indicating if the swap should proceed."""
         return True
 
     # Serialization
