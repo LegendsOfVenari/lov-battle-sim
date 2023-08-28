@@ -6,4 +6,6 @@ from .meeka import Meeka
 from .nyrie import Nyrie
 from .vespille import Vespille
 from .valtri import Valtri
+from .antello import Antello
+from .eurici import Eurici
 from .battle_handler import BattleHandler, DamageType

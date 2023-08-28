@@ -43,7 +43,8 @@ def deserialize_arena_effects(serialized_team1_arena_effect, serialized_team2_ar
 @app.route('/', methods=['GET', 'POST'])
 
 def index():
-    messages = session.get('messages', ["Game started!"])
+    # messages = session.get('messages', ["Game started!"])
+    messages = []
 
     # Check if the POST request is a result of the team selection form submission
     if request.method == 'POST' and 'player_venari1' in request.form:
@@ -54,7 +55,7 @@ def index():
         battle = Battle(team1, team2, 0, messages)
         session['team1'], session['team2'] = serialize_teams(team1, team2)
         session['tick'] = 0
-        session['messages'] = messages
+        session['messages'] = [messages]
         session['game_started'] = True
         session['team1_arena_effects'] = {}
         session['team2_arena_effects'] = {}

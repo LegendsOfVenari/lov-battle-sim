@@ -99,7 +99,7 @@ class Venari:
     def can_swap(self):
         """Determine if a Venari can swap based on its effects."""
         for effect in self.battle_handler.active_effects.values():
-            if effect.modify_swap(self):
+            if effect.modify_swap():
                 return False
         return True
 

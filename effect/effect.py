@@ -53,9 +53,9 @@ class Effect:
         """Returns a boolean indicating if the basic attack should proceed."""
         return True
 
-    def modify_swap(self, venari, target):
+    def modify_swap(self):
         """Returns a boolean indicating if the swap should proceed."""
-        return True
+        return False
 
     # Serialization
 

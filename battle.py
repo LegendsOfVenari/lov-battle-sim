@@ -109,15 +109,6 @@ class Battle:
         self.auto_swap(self.team2, self.team1, self.team2_arena_effects)
         self.tick_count += 1
 
-    def _swap_venari(self, team, swap_index):
-        """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
-        if team[swap_index].battle_handler.swap_cooldown == 0:
-            # Swap the point Venari with the chosen bench Venari
-            team[0], team[swap_index] = team[swap_index], team[0]
-            team[0].on_swap_in(self.get_enemy_team(team[0]))
-            return True
-        return False
-
     def interactive_battle_simulation(self, action, swap_index=None):
         self.messages.append(f"Current Tick: {self.tick_count}")
 
@@ -139,14 +130,8 @@ class Battle:
                 self.messages.append(f"{self.team1[0].name} does not have enough energy!")
 
         elif action == ActionType.SWAP and swap_index is not None:
-            venari_to_swap = self.team1[swap_index + 1]
-            if venari_to_swap and venari_to_swap.battle_handler.swap_cooldown == 0:
-                # Swap the point Venari with the chosen bench Venari
-                self.team1[0], self.team1[swap_index + 1] = self.team1[swap_index + 1], self.team1[0]
-                self.team1[0].on_swap_in(self.team2)
-                self.messages.append(f"Swapped {self.team1[swap_index + 1].name} with {self.team1[0].name}!")
-            else:
-                self.messages.append(f"Cannot swap this Venari due to cooldown or other issues.")
+            self._swap_venari(self.team1, swap_index + 1)
+            self.messages.append(f"Swapped {self.team1[swap_index + 1].name} with {self.team1[0].name}!")
         elif action == ActionType.NEXT_TICK:
             self.messages.append(f"Moved to the next tick without any action.")
         elif action == ActionType.NEW_GAME:
@@ -163,13 +148,11 @@ class Battle:
         if self.team2[0].battle_handler.energy >= 100:
             self.team2[0].use_ability(self.team1[0])
 
-        elif len(self.team2) > 1 and self.team2[1].battle_handler.swap_cooldown == 0:
-            self.team2[0], self.team2[1] = self.team2[1], self.team2[0]
-            self.team2[0].on_swap_in(self.team1)
+        elif len(self.team2) > 1 and self.team2[1].battle_handler.swap_cooldown == 0 and self.team2[1].can_swap():
+            self._swap_venari(self.team2, 1)
 
-        elif len(self.team2) > 2 and self.team2[2].battle_handler.swap_cooldown == 0:
-            self.team2[0], self.team2[2] = self.team2[2], self.team2[0]
-            self.team2[0].on_swap_in(self.team1)
+        elif len(self.team2) > 2 and self.team2[2].battle_handler.swap_cooldown == 0 and self.team2[1].can_swap():
+            self._swap_venari(self.team2, 2)
 
         # Execute actions in the queue
         self.tick()
@@ -188,3 +171,12 @@ class Battle:
             "team1_arena_effects": self.team1_arena_effects,
             "team2_arena_effects": self.team2_arena_effects
         }
+
+    def _swap_venari(self, team, swap_index):
+        """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
+        if team[swap_index].battle_handler.swap_cooldown == 0 and team[swap_index].can_swap():
+            # Swap the point Venari with the chosen bench Venari
+            team[0], team[swap_index] = team[swap_index], team[0]
+            team[0].on_swap_in(self.get_enemy_team(team[0]))
+            return True
+        return False
