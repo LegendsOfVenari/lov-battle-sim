@@ -1,6 +1,5 @@
-import random
 from .venari import Venari
-from effect import Poison, DodgeBuff
+from effect import Poison
 from config import DamageType
 
 

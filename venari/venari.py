@@ -115,9 +115,6 @@ class Venari:
         self.battle_handler.attack_tick_counter = 0
         self.battle_handler.swap_cooldown = 6
 
-    def on_ally_basic_attack_hit(self, target):
-        pass
-
     # Tick methods
 
     def tick_effects(self):

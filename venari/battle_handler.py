@@ -32,6 +32,12 @@ class BattleHandler:
             attacker.on_basic_attack_hit(target)
             # Basic Attack Energy Gain
             self.gain_energy(attacker.base_stats.basic_attack_energy_gain)
+
+            # Call back for effects
+            for ally in attacker.battle.get_ally_team(attacker):
+                for effect in list(ally.battle_handler.active_effects.values()):
+                    effect.on_ally_basic_attack(attacker)
+
             return True
         else:
             attacker.on_target_miss(target)

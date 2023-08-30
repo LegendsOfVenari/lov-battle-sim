@@ -1,9 +1,9 @@
 from .venari import Venari
-from effect import NaturalTouch
-from arena_effect import ReadyToHelpAura
+from effect import ArmyOfOne
+from config import DamageType
 
 
-class Nyrie(Venari):
+class Laticus(Venari):
     def __init__(self,
                  name,
                  base_stats,
@@ -21,21 +21,18 @@ class Nyrie(Venari):
                          battle,
                          battle_handler,
                          battle_stats)
-        if 'natural_touch' not in self.battle_handler.active_effects:
-            self.apply_effect(NaturalTouch(self.messages))
-
-    def basic_attack(self, target):
-        super().basic_attack(target)
-        self.apply_effect(NaturalTouch(self.messages))
+        if 'army_of_one' not in self.battle_handler.active_effects:
+            self.apply_effect(ArmyOfOne(self.messages))
 
     def use_ability(self, target):
         super().use_ability(target)
-        heal_amount = self.battle_handler.calculate_ability_power(self, 30)
-        self.battle.add_ally_arena_effect(ReadyToHelpAura(self.messages, 6, False, heal_amount), self)
+
+        army_of_one = self.get_effect("army_of_one")
+        army_of_one.buffed_barrage(self)
+
+        self.messages.append(f"{self.name} used its ability and doubled its stacks.")
 
     def on_swap_in(self, enemy_team=None):
-        # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
-        ally_bench = self.get_ally_bench()
-        for venari in ally_bench:
-            venari.reduce_swap_cooldown(2)
+        for _ in range(5):
+            self.deal_damage(enemy_team[0], 5, DamageType.AP, 100)

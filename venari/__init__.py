@@ -8,4 +8,5 @@ from .vespille import Vespille
 from .valtri import Valtri
 from .antello import Antello
 from .eurici import Eurici
+from .laticus import Laticus
 from .battle_handler import BattleHandler, DamageType

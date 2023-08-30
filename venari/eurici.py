@@ -1,6 +1,5 @@
 from .venari import Venari
 from effect import Web, Armor, Guard
-from arena_effect import GracefulEmbraceAura
 from config import DamageType
 
 

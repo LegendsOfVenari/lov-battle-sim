@@ -29,3 +29,6 @@ from .moonlit_hunt_mark import MoonlitHuntMark
 from .nourishing_resilience import NourishingResilience
 from .graceful_embrace_effect import GracefulEmbraceEffect
 from .moonlight_vigor import MoonlightVigor
+
+# Laticus
+from .army_of_one import ArmyOfOne

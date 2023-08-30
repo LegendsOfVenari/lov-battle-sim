@@ -44,6 +44,10 @@ class Effect:
         """Placeholder for actions to be taken when an ally is defeated."""
         pass
 
+    def on_ally_basic_attack(self, venari):
+        """Placeholder for actions to be taken when an ally basic attacks."""
+        pass
+
     # Utility methods
 
     def remove(self):
