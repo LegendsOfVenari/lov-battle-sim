@@ -45,11 +45,13 @@ def deserialize_arena_effects(serialized_team1_arena_effect, serialized_team2_ar
 def index():
     # messages = session.get('messages', ["Game started!"])
     messages = []
+    team1_arena_effects = {}
+    team2_arena_effects = {}
 
     # Check if the POST request is a result of the team selection form submission
     if request.method == 'POST' and 'player_venari1' in request.form:
-        team1 = [initialize_venari(name, messages, True) for name in ['player_venari1', 'player_venari2', 'player_venari3']]
-        team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3']]
+        team1 = [initialize_venari(name, messages, True) for name in ['player_venari1', 'player_venari2', 'player_venari3'] if request.form.get(name) != "None"]
+        team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
         team1_arena_effects = {}
         team2_arena_effects = {}
         battle = Battle(team1, team2, 0, messages)
@@ -68,8 +70,15 @@ def index():
             team2_arena_effects = {}
             session['game_started'] = False
         else:
-            team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
-            team1_arena_effects, team2_arena_effects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
+            if 'team1' in session and 'team2' in session:
+                team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
+                team1_arena_effects, team2_arena_eAffects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
+            else:
+                # Handle the case where the teams aren't set. Maybe initialize to default teams?
+                team1, team2 = default_teams(messages)
+                team1_arena_effects = {}
+                team2_arena_effects = {}
+                session['game_started'] = True
 
         battle = Battle(team1, team2, session.get('tick', 0), messages, team1_arena_effects, team2_arena_effects)
 
@@ -80,8 +89,25 @@ def index():
 
         if request.method == 'POST':
             action = request.form.get('action')
+            result = None
+            if action == "next_battle":
+                # Reset the AI's Venari team
+                # _, team2 = default_teams(messages)
+                team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
+                team2 = list(filter(None, team2))  # This will remove any None values from the list
+                if len(team2) == 0:
+                    _, team2 = default_teams(messages)
 
-            if action == ActionType.ABILITY.value:
+                team2_arena_effects = {}
+                battle = Battle(team1, team2, 0, messages)
+                session['team1'], session['team2'] = serialize_teams(team1, team2)
+                session['tick'] = 0
+                session['messages'] = [messages]
+                session['game_started'] = True
+                session['team1_arena_effects'] = {}
+                session['team2_arena_effects'] = {}
+
+            elif action == ActionType.ABILITY.value:
                 result = battle.interactive_battle_simulation(ActionType.ABILITY)
             elif "swap_" in action:
                 swap_index = int(action.split("_")[1])  # Extract Venari index from the action
@@ -90,8 +116,6 @@ def index():
                 result = battle.interactive_battle_simulation(ActionType.NEXT_TICK)
             elif action == ActionType.NEW_GAME.value:
                 result = battle.interactive_battle_simulation(ActionType.NEW_GAME)
-            else:
-                result = None
 
             if result:
                 session['messages'] = result["messages"]
@@ -113,7 +137,10 @@ def index():
 
 def initialize_venari(name_key, messages, isPlayerVenari):
     name = request.form.get(name_key)
+    if not name:
+        return None  # If name is None or empty, return None
     base_stats = venari_base_stats_map.get(name)
+    print(f"Name: {name}, Base Stats: {base_stats}")  # Add this line
     return Venari(name, base_stats, 10, messages, isPlayerVenari)
 
 def default_teams(messages):

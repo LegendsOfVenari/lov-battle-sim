@@ -372,14 +372,12 @@
             {% if game_started %}
             <div class="venari-row">
                 <section>
-                    <!-- Next Tick Button -->
                     <div class="button-container">
                         <form id="next-tick-form" method="post" style="display: inline;">
                             <input type="hidden" name="action" value="next_tick" />
                             <button type="submit" name="action" value="next_tick">Next Tick</button>
                         </form>
                     </div>
-                    <!-- Start New Game Button -->
                 </section>
                 <section>
                     <div class="button-container">
@@ -395,11 +393,10 @@
                 </section>
             </div>
             {% endif %}
-            {% if not game_started %}
             <section>
                 <form method="post">
                     {% set venari_names = ["Aharas", "Akulaw", "Algala", "Meeka", "Nyrie", "Vespille", "Valtri", "Antello", "Eurici", "Laticus"] %}
-
+                    {% if not game_started %}
                     <h3>Player's Team:</h3>
                     <div class="venari-row">
                         {% for i in range(1, 4) %}
@@ -407,10 +404,11 @@
                             {% for name in venari_names %}
                             <option value="{{ name }}">{{ name }}</option>
                             {% endfor %}
+                            <option value="None">None</option>
                         </select>
                         {% endfor %}
                     </div>
-
+                    {% endif %}
                     <h3>AI's Team:</h3>
                     <div class="venari-row">
                         {% for i in range(1, 4) %}
@@ -418,14 +416,18 @@
                             {% for name in venari_names %}
                             <option value="{{ name }}">{{ name }}</option>
                             {% endfor %}
+                            <option value="None">None</option>
                         </select>
                         {% endfor %}
                     </div>
-
+                    <div class="button-container">
+                        <button type="submit" name="action" value="next_battle">Next Battle</button>
+                    </div>
+                    {% if not game_started %}
                     <input type="submit" value="Start Battle">
+                    {% endif %}
                 </form>
             </section>
-            {% endif %}
         </div>
     </div>
 
