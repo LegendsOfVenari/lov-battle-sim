@@ -5,25 +5,9 @@ from arena_effect import DustCloudAura
 
 
 class Vespille(Venari):
-    def __init__(self,
-                 name,
-                 base_stats,
-                 level,
-                 messages,
-                 isPlayerVenari,
-                 battle=None,
-                 battle_handler=None,
-                 battle_stats=None):
-        super().__init__(name,
-                         base_stats,
-                         level,
-                         messages,
-                         isPlayerVenari,
-                         battle,
-                         battle_handler,
-                         battle_stats)
-        if 'gathering_dust' not in self.battle_handler.active_effects:
-            self.apply_effect(GatheringDust(self.messages))
+
+    def on_ally_basic_attack(self, attacker):
+        self.reduce_swap_cooldown(1)
 
     def basic_attack(self, target):
         super().basic_attack(target)
