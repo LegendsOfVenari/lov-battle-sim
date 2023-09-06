@@ -31,6 +31,14 @@ class Poison(StackableEffect):
     def stack(self):
         super().stack()
 
+    def calculate_total_remaining_damage(self, venari):
+        total_damage = venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10)
+        total_damage = total_damage / self.initial_duration
+        total_damage *= self.duration
+        if self.count > 1:
+            total_damage += venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10) * self.count - 1
+        return total_damage
+
     def serialize(self):
         return {
             'name': self.__class__.__name__,

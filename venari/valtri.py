@@ -4,25 +4,11 @@ from config import DamageType
 
 
 class Valtri(Venari):
-    def __init__(self,
-                 name,
-                 base_stats,
-                 level,
-                 messages,
-                 isPlayerVenari,
-                 battle=None,
-                 battle_handler=None,
-                 battle_stats=None):
-        super().__init__(name,
-                         base_stats,
-                         level,
-                         messages,
-                         isPlayerVenari,
-                         battle,
-                         battle_handler,
-                         battle_stats)
-        if 'lone_survivor' not in self.battle_handler.active_effects:
-            self.apply_effect(LoneSurvivor(self.messages))
+    def basic_attack(self, target):
+        super().basic_attack(target)
+        # If valtri targets a marked enemy, reduce attack cooldown by 1
+        if target.has_effect_id("moonlit_hunt_mark"):
+            self.reduce_swap_cooldown(1)
 
     def use_ability(self, target):
         super().use_ability(target)

@@ -13,23 +13,24 @@ class Aharas(Venari):
     def on_basic_attack_hit(self, target):
         """Override the base method to potentially apply a Poison effect on basic attack hit."""
         super().on_basic_attack_hit(target)
-        self.apply_poison_effect(target)
-        self.messages.append(f"{self.name}({self.level})'s poison triggered!")
+        poison_effect = target.get_effect("poison")
+        if poison_effect is not None:
+            poison_effect.duration = 6
+            self.messages.append(f"{self.name}({self.level})'s poison duration refreshed!")
 
     def use_ability(self, target):
         """Override the base method to deal additional damage based on the number of Poison stacks."""
         super().use_ability(target)
 
         # Calculate bonus damage based on poison stacks
-        poison_stacks = target.battle_handler.count_stacks(Poison(self.messages, self.level, self.battle_stats.ability_power))
-        print(poison_stacks)
-        bonus_damage = 20 + 50 * poison_stacks
-        self.deal_damage(target, bonus_damage, DamageType.AP, 100)
+        poison_effect = target.get_effect("poison")
+        if poison_effect is not None:
+            total_damage = poison_effect.calculate_total_remaining_damage(self) * 3
+            self.deal_damage(target, total_damage, DamageType.AP, 100)
 
-        # Remove poison effects
-        target.remove_effect_id("poison")
-
-        self.messages.append(f"{self.name} used its ability on {target.name}, consuming {poison_stacks} poison stacks.")
+            # Remove poison effects
+            target.remove_effect_id("poison")
+            self.messages.append(f"{self.name} used its ability on {target.name}, dealing {total_damage} poison stacks.")
 
     def on_swap_in(self, enemy_team=None):
         """Apply 1 stack of [Poison] to Point Venari."""
