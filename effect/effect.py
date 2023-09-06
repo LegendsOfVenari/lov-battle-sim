@@ -32,7 +32,7 @@ class Effect:
         pass
 
     def on_remove(self, venari):
-        self.messages.append(f"{venari.name}'s effect has expired.")
+        self.messages.append(f"{venari.name}'s {self.effect_id} effect has expired.")
         """What happens when the effect is removed or expires."""
         pass
 

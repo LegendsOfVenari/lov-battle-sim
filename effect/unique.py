@@ -10,14 +10,16 @@ class Unique(StackableEffect):
                  duration,
                  count=0,
                  expired=False,
-                 is_permanent=False):
+                 is_permanent=False,
+                 max_stacks=None):
         super().__init__(
             messages,
             initial_duration,
             duration,
             count,
             expired,
-            is_permanent
+            is_permanent,
+            max_stacks
         )
         self.effect_id = effect_id
 
@@ -32,7 +34,9 @@ class Unique(StackableEffect):
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count,
-            'is_permanent': self.is_permanent
+            'expired': self.expired,
+            'is_permanent': self.is_permanent,
+            'max_stacks': self.max_stacks
         }
 
     @classmethod
@@ -43,5 +47,6 @@ class Unique(StackableEffect):
                       data["initial_duration"],
                       data["duration"],
                       data["count"],
-                      data["is_permanent"])
-
+                      data["expired"],
+                      data["is_permanent"],
+                      data["max_stacks"])

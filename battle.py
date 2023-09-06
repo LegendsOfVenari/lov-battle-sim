@@ -40,6 +40,10 @@ class Battle:
         ally_team = self.get_ally_team(venari)
         self.add_arena_effect(arena_effect, ally_team)
 
+    def add_enemy_arena_effect(self, arena_effect, venari):
+        enemy_team = self.get_enemy_team(venari)
+        self.add_arena_effect(arena_effect, enemy_team)
+
     def add_arena_effect(self, arena_effect, team):
         if team == self.team1:
             self.team1_arena_effects[arena_effect.arena_effect_id] = arena_effect
@@ -50,6 +54,12 @@ class Battle:
         for arena_effect in list(arena_effects.values()):
             arena_effect.on_swap_in(venari)
 
+    def has_arena_effect(self, arena_effect_id, venari):
+        if self.get_ally_team(venari) == self.team1:
+            return arena_effect_id in self.team1_arena_effects
+        else:
+            return arena_effect_id in self.team2_arena_effects
+
     def auto_swap(self, team, enemy_team, traps):
         # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].battle_stats.hp <= 0 and len(team) > 1:
@@ -58,8 +68,8 @@ class Battle:
                 for effect in venari.battle_handler.active_effects.values():
                     effect.on_ally_defeated()
             del team[0]
-            team[0].on_swap_in(enemy_team)
             self.trigger_arena_effect_swap_in(team[0], traps)
+            team[0].on_swap_in(enemy_team)
 
     def tick(self):
         # Process the action queue
@@ -78,15 +88,15 @@ class Battle:
                     arena_effect.on_remove(self)
                     self.team1_arena_effects.pop(arena_effect.arena_effect_id)
 
-        for arena_effect in list(self.team2_arena_effects.values()):
-            if arena_effect.expired:
-                arena_effect.on_remove(self)
-                self.team2_arena_effects.pop(arena_effect.arena_effect_id)
+        for arena_effect2 in list(self.team2_arena_effects.values()):
+            if arena_effect2.expired:
+                arena_effect2.on_remove(self)
+                self.team2_arena_effects.pop(arena_effect2.arena_effect_id)
             else:
-                arena_effect.on_tick(self.team2[0])
-                if arena_effect.expired:
-                    arena_effect.on_remove(self)
-                    self.team2_arena_effects.pop(arena_effect.arena_effect_id)
+                arena_effect2.on_tick(self.team2[0])
+                if arena_effect2.expired:
+                    arena_effect2.on_remove(self)
+                    self.team2_arena_effects.pop(arena_effect2.arena_effect_id)
 
         if self.team1[0].battle_stats.hp > 0:
             self.team1[0].tick()  # Point venari
@@ -130,7 +140,7 @@ class Battle:
                 self.messages.append(f"{self.team1[0].name} does not have enough energy!")
 
         elif action == ActionType.SWAP and swap_index is not None:
-            self._swap_venari(self.team1, swap_index + 1)
+            self._swap_venari(self.team1, swap_index + 1, self.team1_arena_effects)
             self.messages.append(f"Swapped {self.team1[swap_index + 1].name} with {self.team1[0].name}!")
         elif action == ActionType.NEXT_TICK:
             self.messages.append(f"Moved to the next tick without any action.")
@@ -149,10 +159,10 @@ class Battle:
             self.team2[0].use_ability(self.team1[0])
 
         elif len(self.team2) > 1 and self.team2[1].can_swap():
-            self._swap_venari(self.team2, 1)
+            self._swap_venari(self.team2, 1, self.team2_arena_effects)
 
         elif len(self.team2) > 2 and self.team2[2].can_swap():
-            self._swap_venari(self.team2, 2)
+            self._swap_venari(self.team2, 2, self.team2_arena_effects)
 
         # Execute actions in the queue
         self.tick()
@@ -172,8 +182,9 @@ class Battle:
             "team2_arena_effects": self.team2_arena_effects
         }
 
-    def _swap_venari(self, team, swap_index):
+    def _swap_venari(self, team, swap_index, traps):
         """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
         # Swap the point Venari with the chosen bench Venari
         team[0], team[swap_index] = team[swap_index], team[0]
+        self.trigger_arena_effect_swap_in(team[0], traps)
         team[0].on_swap_in(self.get_enemy_team(team[0]))

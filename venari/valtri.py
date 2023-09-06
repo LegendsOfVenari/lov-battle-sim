@@ -1,5 +1,5 @@
 from .venari import Venari
-from effect import LoneSurvivor, MoonlitHuntMark, DodgeBuff
+from effect import LoneSurvivor, MoonlitHuntMark, Bleed
 from config import DamageType
 
 
@@ -33,4 +33,5 @@ class Valtri(Venari):
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
-        self.apply_effect(DodgeBuff(100, self.messages, 3))
+        self.deal_damage(enemy_team[0], 10, DamageType.AD, 100)
+        enemy_team[0].apply_effect(Bleed)

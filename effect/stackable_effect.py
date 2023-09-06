@@ -8,13 +8,16 @@ class StackableEffect(Effect):
                  duration=None,
                  count=0,
                  expired=False,
-                 is_permanent=False):
+                 is_permanent=False,
+                 max_stacks=None):
         super().__init__(messages, duration, expired, is_permanent)
         self.count = count
         self.initial_duration = initial_duration
+        self.max_stacks = max_stacks
 
     def stack(self):
-        self.count += 1
+        if self.max_stacks is None or self.count < self.max_stacks:
+            self.count += 1
 
     def reset(self):
         self.count = 0

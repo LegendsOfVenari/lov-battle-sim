@@ -34,6 +34,7 @@ class ArenaEffect:
     # Utility methods
 
     def remove(self):
+        self.messages.append(f"{self.arena_effect_id}'s effect is expiring.")
         self.expired = True
 
     def serialize(self):

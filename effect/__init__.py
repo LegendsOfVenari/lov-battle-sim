@@ -13,6 +13,8 @@ from .unique import Unique
 from .web import Web
 from .guard import Guard
 from .stun import Stun
+from .bleed import Bleed
+from .trap_effect import TrapEffect
 
 # Nyrie
 from .natural_touch import NaturalTouch

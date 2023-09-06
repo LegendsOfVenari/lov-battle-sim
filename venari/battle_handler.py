@@ -33,6 +33,7 @@ class BattleHandler:
 
             # Call back for effects
             for ally in attacker.battle.get_ally_team(attacker):
+                ally.on_ally_basic_attack(attacker)
                 for effect in list(ally.battle_handler.active_effects.values()):
                     effect.on_ally_basic_attack(attacker)
 
@@ -146,8 +147,16 @@ class BattleHandler:
             effect = self.active_effects[effect_id]
             effect.remove()
 
+    def remove_effect_id(self, effect_id):
+        if effect_id in self.active_effects:
+            effect = self.active_effects[effect_id]
+            effect.remove()
+
     def has_effect(self, effect):
         effect_id = effect.effect_id
+        return effect_id in self.active_effects
+
+    def has_effect_id(self, effect_id):
         return effect_id in self.active_effects
 
     def count_stacks(self, effect_id):

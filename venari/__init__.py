@@ -9,4 +9,5 @@ from .valtri import Valtri
 from .antello import Antello
 from .eurici import Eurici
 from .laticus import Laticus
+from .folicri import Folicri
 from .battle_handler import BattleHandler, DamageType

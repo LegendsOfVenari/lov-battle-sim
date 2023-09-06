@@ -4,7 +4,7 @@ from effect import ReadyToHelpEffect
 
 class ReadyToHelpAura(Aura):
     def __init__(self, messages, duration=6, expired=False, heal_tick=0):
-        super().__init__(messages, duration)
+        super().__init__(messages, duration, expired)
         self.heal_amount = heal_tick
         self.arena_effect_id = "ready_to_help_aura"
 

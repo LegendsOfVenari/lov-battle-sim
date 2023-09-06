@@ -142,7 +142,7 @@ eurici_base_stats = BaseStats(
     basic_attack_damage=35,
     passive_description="Gain 1 [Armor] for each enemy Venari is [Webbed].",
     ability_description="Deal 15 AP damage. [Web] all enemy Venari for 3 Ticks.",
-    swap_description="[Guard]. For every attack guarded, fill your energy bar by 3."
+    swap_description="Deal [10] AP damage and [Web] Point Venari for 8 Ticks. If Venari is already [Poisoned] or [Stunned], gain 8 points to energy bar."
 )
 
 laticus_base_stats = BaseStats(

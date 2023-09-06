@@ -72,7 +72,7 @@ def index():
         else:
             if 'team1' in session and 'team2' in session:
                 team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
-                team1_arena_effects, team2_arena_eAffects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
+                team1_arena_effects, team2_arena_effects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
             else:
                 # Handle the case where the teams aren't set. Maybe initialize to default teams?
                 team1, team2 = default_teams(messages)

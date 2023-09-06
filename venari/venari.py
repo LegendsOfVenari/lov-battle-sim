@@ -41,6 +41,10 @@ class Venari:
     def use_ability(self, target):
         self.battle_handler.energy = 0
 
+        # Call back method
+        enemy_team = self.get_enemy_team()
+        enemy_team[0].on_enemy_ability(self)
+
     def apply_effect(self, effect):
         self.battle_handler.apply_effect(effect, self)
 
@@ -87,6 +91,12 @@ class Venari:
     def get_effect(self, effect_id):
         return self.battle_handler.get_effect(effect_id)
 
+    def has_effect_id(self, effect_id):
+        return self.battle_handler.has_effect_id(effect_id)
+
+    def remove_effect_id(self, effect_id):
+        self.battle_handler.remove_effect_id(effect_id)
+
     # Modifier Methods
 
     def can_use_ability(self):
@@ -120,7 +130,18 @@ class Venari:
 
     def on_swap_in(self, enemy_team=None):
         self.battle_handler.attack_tick_counter = 0
+        # Do not trigger abilities if venari cannot be swapped in
+        if not self.can_swap():
+            self.battle_handler.swap_cooldown = 6
+            self.messages.append(f"{self.name}({self.level}) cannot trigger its swap ability!")
+            return
         self.battle_handler.swap_cooldown = 6
+
+    def on_ally_basic_attack(self, attacker):
+        pass
+
+    def on_enemy_ability(self, enemy):
+        pass
 
     # Tick methods
 
