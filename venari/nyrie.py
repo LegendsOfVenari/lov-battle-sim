@@ -30,7 +30,7 @@ class Nyrie(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        heal_amount = self.battle_handler.calculate_ability_power(self, 30)
+        heal_amount = self.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 30)/6
         self.battle.add_ally_arena_effect(ReadyToHelpAura(self.messages, 6, False, heal_amount), self)
 
     def on_swap_in(self, enemy_team=None):
