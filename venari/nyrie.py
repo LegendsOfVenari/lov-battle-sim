@@ -38,4 +38,4 @@ class Nyrie(Venari):
         super().on_swap_in()
         ally_bench = self.get_ally_bench()
         for venari in ally_bench:
-            venari.reduce_swap_cooldown(2)
+            venari.reduce_swap_cooldown(1)

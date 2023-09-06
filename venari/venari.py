@@ -150,10 +150,10 @@ class Venari:
         self.battle_handler.attack_tick_counter = 0
         # Do not trigger abilities if venari cannot be swapped in
         if not self.can_swap():
-            self.battle_handler.swap_cooldown = 6
+            self.battle_handler.swap_cooldown = 12
             self.messages.append(f"{self.name}({self.level}) cannot trigger its swap ability!")
             return
-        self.battle_handler.swap_cooldown = 6
+        self.battle_handler.swap_cooldown = 12
 
     def on_ally_basic_attack(self, attacker):
         pass

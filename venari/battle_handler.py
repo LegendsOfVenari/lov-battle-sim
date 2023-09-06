@@ -85,18 +85,21 @@ class BattleHandler:
 
         # Calculate damage
         if damage_type == DamageType.AD:
-            ad_multiplier = (((2 * attacker.level) / 5) * base_damage * 10) / 50
-            damage = ad_multiplier + attacker.battle_stats.attack_damage + base_damage
+            damage = self.calculate_attack_damage(attacker, base_damage)
             return damage * (1 - ad_reduction)
 
         elif damage_type == DamageType.AP:
-            damage = attacker.battle_handler.calculate_ability_power(attacker, base_damage)
+            damage = self.calculate_ability_power(attacker, base_damage)
             return damage * (1 - ap_reduction)
 
         elif damage_type == DamageType.TRUE_DAMAGE:
             return base_damage
         else:
             raise ValueError("Invalid damage type provided.")
+
+    def calculate_attack_damage(self, venari, base_damage):
+        ad_multiplier = (((2 * venari.level) / 5) * base_damage * 10) / 50
+        return ad_multiplier + venari.battle_stats.attack_damage + base_damage
 
     def calculate_ability_power(self, venari, base_damage):
         ap_multiplier = (((2 * venari.level) / 5) * base_damage * 10) / 50

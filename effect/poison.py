@@ -6,8 +6,8 @@ class Poison(StackableEffect):
 
     def __init__(self,
                  messages,
-                 initial_duration=8,
-                 duration=8,
+                 initial_duration=6,
+                 duration=6,
                  count=0,
                  expired=False,
                  is_permanent=False):
@@ -20,7 +20,7 @@ class Poison(StackableEffect):
     def on_tick(self, venari):
         super().on_tick(venari)
         damage = 0.02 * venari.battle_stats.initial_hp  # 10% of current HP in true damage
-        venari.deal_damage(venari, damage, DamageType.TRUE_DAMAGE, 100)
+        venari.deal_damage(venari, damage, DamageType.AP, 100)
         self.messages.append(f"{venari.name} took {damage:.2f} poison damage!")
 
     def stack(self):
