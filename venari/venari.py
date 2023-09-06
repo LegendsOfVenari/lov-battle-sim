@@ -55,6 +55,9 @@ class Venari:
                                         damage_type,
                                         accuracy)
 
+    def deal_effect_damage(self, damage_type, target, total_damage):
+        self.battle_handler.deal_effect_damage(damage_type, target, total_damage)
+
     def ready_to_attack(self):
         return self.battle_handler.ready_to_attack(
             self.base_stats.basic_attack_frequency

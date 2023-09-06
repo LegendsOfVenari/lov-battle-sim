@@ -6,7 +6,7 @@ from config import DamageType
 class Aharas(Venari):
     def apply_poison_effect(self, target):
         """Apply the Poison effect to the target."""
-        target.apply_effect(Poison(self.messages))
+        target.apply_effect(Poison(self.messages, self.level, self.battle_stats.ability_power))
 
         self.messages.append(f"{self.name}({self.level})'s poison triggered!")
 
@@ -21,13 +21,13 @@ class Aharas(Venari):
         super().use_ability(target)
 
         # Calculate bonus damage based on poison stacks
-        poison_stacks = target.battle_handler.count_stacks(Poison(self.messages))
+        poison_stacks = target.battle_handler.count_stacks(Poison(self.messages, self.level, self.battle_stats.ability_power))
         print(poison_stacks)
         bonus_damage = 20 + 50 * poison_stacks
         self.deal_damage(target, bonus_damage, DamageType.AP, 100)
 
         # Remove poison effects
-        target.battle_handler.remove_effect(Poison(self.messages))
+        target.remove_effect_id("poison")
 
         self.messages.append(f"{self.name} used its ability on {target.name}, consuming {poison_stacks} poison stacks.")
 

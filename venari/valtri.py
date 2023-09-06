@@ -34,4 +34,4 @@ class Valtri(Venari):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
         self.deal_damage(enemy_team[0], 10, DamageType.AD, 100)
-        #enemy_team[0].apply_effect(Bleed)
+        enemy_team[0].apply_effect(Bleed(self.messages, self.level, self.battle_stats.attack_damage))

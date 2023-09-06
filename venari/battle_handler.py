@@ -85,11 +85,11 @@ class BattleHandler:
 
         # Calculate damage
         if damage_type == DamageType.AD:
-            damage = self.calculate_attack_damage(attacker, base_damage)
+            damage = self.calculate_attack_damage(attacker.level, attacker.battle_stats.attack_damage, base_damage)
             return damage * (1 - ad_reduction)
 
         elif damage_type == DamageType.AP:
-            damage = self.calculate_ability_power(attacker, base_damage)
+            damage = self.calculate_ability_power(attacker.level, attacker.battle_stats.ability_power, base_damage)
             return damage * (1 - ap_reduction)
 
         elif damage_type == DamageType.TRUE_DAMAGE:
@@ -97,13 +97,33 @@ class BattleHandler:
         else:
             raise ValueError("Invalid damage type provided.")
 
-    def calculate_attack_damage(self, venari, base_damage):
-        ad_multiplier = (((2 * venari.level) / 5) * base_damage * 10) / 50
-        return ad_multiplier + venari.battle_stats.attack_damage + base_damage
+    def deal_effect_damage(self, damage_type, target, total_damage):
+        # Calculate reductions
+        ap_reduction = target.battle_stats.magic_resist / (target.battle_stats.magic_resist + 300)
+        ad_reduction = target.battle_stats.defense / (target.battle_stats.defense + 300)
 
-    def calculate_ability_power(self, venari, base_damage):
-        ap_multiplier = (((2 * venari.level) / 5) * base_damage * 10) / 50
-        return ap_multiplier + venari.battle_stats.ability_power + base_damage
+        damage = total_damage
+
+        # Calculate damage
+        if damage_type == DamageType.AD:
+            damage = total_damage * (1 - ad_reduction)
+
+        elif damage_type == DamageType.AP:
+            damage = total_damage * (1 - ap_reduction)
+
+        elif damage_type == DamageType.TRUE_DAMAGE:
+            damage = total_damage
+
+        self.messages.append(f"Dealt {damage} Damage!")
+        target.receive_damage(damage)
+
+    def calculate_attack_damage(self, level, attack_damage, base_damage):
+        ad_multiplier = (((2 * level) / 5) * base_damage * 10) / 50
+        return ad_multiplier + attack_damage + base_damage
+
+    def calculate_ability_power(self, level, ability_power, base_damage):
+        ap_multiplier = (((2 * level) / 5) * base_damage * 10) / 50
+        return ap_multiplier + ability_power + base_damage
 
     # ---------------------- UTILITY METHODS ---------------------- #
 

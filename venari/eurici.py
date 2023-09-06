@@ -11,7 +11,9 @@ class Eurici(Venari):
         # web all enemies
         for enemy in self.battle.get_enemy_team(self):
             enemy.apply_effect(Web(self.messages, 3))
-            self.apply_effect(Armor(self.messages))
+
+        self.apply_effect(Armor(self.messages))
+        self.apply_effect(Armor(self.messages))
 
         self.messages.append(f"{self.name} used its ability!")
 

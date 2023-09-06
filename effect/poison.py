@@ -6,12 +6,16 @@ class Poison(StackableEffect):
 
     def __init__(self,
                  messages,
+                 level,
+                 ability_power,
                  initial_duration=6,
                  duration=6,
                  count=0,
                  expired=False,
                  is_permanent=False):
         super().__init__(messages, initial_duration, duration, count, expired)
+        self.level = level
+        self.ability_power = ability_power
         self.effect_id = "poison"
 
     def description(self):
@@ -19,9 +23,10 @@ class Poison(StackableEffect):
 
     def on_tick(self, venari):
         super().on_tick(venari)
-        damage = 0.02 * venari.battle_stats.initial_hp  # 10% of current HP in true damage
-        venari.deal_damage(venari, damage, DamageType.AP, 100)
-        self.messages.append(f"{venari.name} took {damage:.2f} poison damage!")
+        total_damage = venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10)
+        total_damage = total_damage / self.initial_duration
+        venari.deal_effect_damage(DamageType.AP, venari, total_damage)
+        self.messages.append(f"{venari.name} took {total_damage:.2f} poison damage!")
 
     def stack(self):
         super().stack()
@@ -30,6 +35,8 @@ class Poison(StackableEffect):
         return {
             'name': self.__class__.__name__,
             'description': self.description(),
+            'level': self.level,
+            'ability_power': self.ability_power,
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count,
@@ -41,9 +48,10 @@ class Poison(StackableEffect):
     def deserialize(cls, data, messages):
 
         return Poison(messages,
+                      data["level"],
+                      data["ability_power"],
                       data["initial_duration"],
                       data["duration"],
                       data["count"],
                       data["expired"],
                       data["is_permanent"])
-
