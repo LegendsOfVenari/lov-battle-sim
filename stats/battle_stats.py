@@ -46,6 +46,20 @@ class BattleStats:
         self.attack_damage -= amount
         self.attack_damage = max(self.attack_damage, 0)
 
+    def increase_magic_resist(self, amount):
+        self.magic_resist += amount
+
+    def decrease_magic_resist(self, amount):
+        self.magic_resist -= amount
+        self.magic_resist = max(self.magic_resist, 0)
+
+    def increase_ability_power(self, amount):
+        self.ability_power += amount
+
+    def decrease_ability_power(self, amount):
+        self.ability_power -= amount
+        self.ability_power = max(self.ability_power, 0)
+
     def serialize(self):
         return {
             'hp': self.hp,

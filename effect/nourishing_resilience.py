@@ -21,7 +21,7 @@ class NourishingResilience(Effect):
         if wounded_allies:
             # Choose a random wounded ally
             chosen_ally = random.choice(wounded_allies)
-            heal_amount = venari.battle_handler.calculate_ability_power(chosen_ally, 20)
+            heal_amount = damage * 0.3
 
             # Apply the heal
             chosen_ally.heal(heal_amount)

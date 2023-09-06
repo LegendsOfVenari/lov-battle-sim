@@ -92,6 +92,18 @@ class Venari:
     def decrease_attack_damage(self, amount):
         self.battle_stats.decrease_attack_damage(amount)
 
+    def increase_ability_power(self, amount):
+        self.battle_stats.increase_ability_power(amount)
+
+    def decrease_ability_power(self, amount):
+        self.battle_stats.decrease_ability_power(amount)
+
+    def increase_magic_resist(self, amount):
+        self.battle_stats.increase_magic_resist(amount)
+
+    def decrease_magic_resist(self, amount):
+        self.battle_stats.decrease_magic_resist(amount)
+
     # Effect Methods
 
     def get_effect(self, effect_id):

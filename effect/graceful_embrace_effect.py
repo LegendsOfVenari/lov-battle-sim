@@ -18,11 +18,12 @@ class GracefulEmbraceEffect(Effect):
         super().on_apply(venari)
         # Refresh Duration
         self.duration = 1
+        venari.increase_magic_resist(10)
+        venari.increase_ability_power(15)
 
-    def on_tick(self, venari):
-        super().on_tick(venari)
-        # Heal Venari
-        venari.heal(self.heal_amount)
+    def on_remove(self, venari):
+        venari.decrease_magic_resist(10)
+        venari.decrease_ability_power(15)
 
     def serialize(self):
         return {

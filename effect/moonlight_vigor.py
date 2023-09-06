@@ -22,7 +22,7 @@ class MoonlightVigor(Effect):
     def on_tick(self, venari):
         super().on_tick(venari)
         # Heal Venari
-        venari.heal(self.heal_amount)
+        venari.heal(self.heal_amount/8)
 
     def serialize(self):
         return {
