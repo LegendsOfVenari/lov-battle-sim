@@ -4,7 +4,7 @@ from config import DamageType
 
 
 class Trap(ArenaEffect):
-    def __init__(self, messages, duration=None, expired=False):
+    def __init__(self, messages, duration=6, expired=False):
         super().__init__(messages, duration, expired)
         self.arena_effect_id = "trap"
 
@@ -15,7 +15,7 @@ class Trap(ArenaEffect):
         self.remove()
 
     def description(self):
-        return "Trap"
+        return "Trap: {self.duration} Duration"
 
     def serialize(self):
         return {

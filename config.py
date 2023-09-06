@@ -83,7 +83,7 @@ vespille_base_stats = BaseStats(
     basic_attack_energy_gain=16,
     basic_attack_frequency=3,
     basic_attack_damage=35,
-    passive_description="Gain a stack of [Gathering Dust] every auto attack. Max 5 stacks. For each stack of [Gathering Dust], gain 10% dodge chance for Vespille.",
+    passive_description="Honeycombed: Vespille’s swap cooldown is reduced by 1 tick for each allied Basic Attack.",
     ability_description="Expel all stacks of [Gathering Dust] and create an Aura that grants [10% * Gathering Dust Stacks expelled] Dodge Chance for 12 ticks.",
     swap_description="Gain 50% dodge rate for 3 ticks upon swapping in."
 )

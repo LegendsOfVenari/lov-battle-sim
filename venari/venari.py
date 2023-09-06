@@ -86,6 +86,12 @@ class Venari:
     def decrease_dodge_chance(self, amount):
         self.battle_stats.decrease_dodge_chance(amount)
 
+    def increase_attack_damage(self, amount):
+        self.battle_stats.increase_attack_damage(amount)
+
+    def decrease_attack_damage(self, amount):
+        self.battle_stats.decrease_attack_damage(amount)
+
     # Effect Methods
 
     def get_effect(self, effect_id):

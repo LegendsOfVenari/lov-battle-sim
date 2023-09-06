@@ -60,6 +60,20 @@ class Battle:
         else:
             return arena_effect_id in self.team2_arena_effects
 
+    def remove_ally_arena_effect(self, arena_effect_id, venari):
+        ally_team = self.get_ally_team(venari)
+        self.remove_arena_effect(arena_effect_id, ally_team)
+
+    def remove_arena_effect(self, arena_effect_id, team):
+        if team == self.team1:
+            if arena_effect_id in self.team1_arena_effects:
+                arena_effect = self.team1_arena_effects[arena_effect_id]
+                arena_effect.remove()
+        elif team == self.team2:
+            if arena_effect_id in self.team2_arena_effects:
+                arena_effect = self.team2_arena_effects[arena_effect_id]
+                arena_effect.remove()
+
     def auto_swap(self, team, enemy_team, traps):
         # Auto-swap point venari with first bench venari if its HP reaches 0.
         if team[0].battle_stats.hp <= 0 and len(team) > 1:

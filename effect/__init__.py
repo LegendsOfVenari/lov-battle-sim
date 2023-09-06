@@ -21,7 +21,7 @@ from .natural_touch import NaturalTouch
 from .ready_to_help_effect import ReadyToHelpEffect
 
 # Vespille
-from .dust_cloud_effect import DustCloudEffect
+from .pheremone_tailwind_effect import PheremoneTailwindEffect
 from .gathering_dust import GatheringDust
 
 # Valtri

@@ -39,6 +39,13 @@ class BattleStats:
         self.dodge_chance -= amount
         self.dodge_chance = max(self.dodge_chance, 0)
 
+    def increase_attack_damage(self, amount):
+        self.attack_damage += amount
+
+    def decrease_attack_damage(self, amount):
+        self.attack_damage -= amount
+        self.attack_damage = max(self.attack_damage, 0)
+
     def serialize(self):
         return {
             'hp': self.hp,

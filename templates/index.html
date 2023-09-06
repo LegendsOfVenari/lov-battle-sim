@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="energy-bar-container">
-                    <div class="energy-bar" style="width: {{ team1_status[0]['battle_handler']['energy'] }}%;">
+                    <div class="energy-bar" style="width: {{ (team1_status[0]['battle_handler']['energy'] / 60) * 100 }}%;">
                     </div>
                     <div class="energy-text">
                         {{ team1_status[0]['battle_handler']['energy'] }} / 60
@@ -170,7 +170,7 @@
                         </div>
                         <!-- Energy Bar -->
                         <div class="energy-bar-container">
-                            <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
+                            <div class="energy-bar" style="width: {{ (venari['battle_handler']['energy']/60) * 100 }}%;"></div>
                             <div class="energy-text">
                                 {{ venari['battle_handler']['energy'] }} / 60
                             </div>
@@ -265,7 +265,7 @@
                 </div>
                 <!-- Energy Bar for AI Point Venari -->
                 <div class="energy-bar-container">
-                    <div class="energy-bar" style="width: {{ team2_status[0]['battle_handler']['energy'] }}%;">
+                    <div class="energy-bar" style="width: {{ (team2_status[0]['battle_handler']['energy']/60)*100 }}%;">
                     </div>
                     <div class="energy-text">
                         {{ team2_status[0]['battle_handler']['energy'] }} / 60
@@ -341,7 +341,7 @@
                         </div>
                         <!-- Energy Bar -->
                         <div class="energy-bar-container">
-                            <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
+                            <div class="energy-bar" style="width: {{ (venari['battle_handler']['energy']/60)*100 }}%;"></div>
                             <div class="energy-text">
                                 {{ venari['battle_handler']['energy'] }} / 60
                             </div>

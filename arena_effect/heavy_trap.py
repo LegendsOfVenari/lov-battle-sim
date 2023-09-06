@@ -4,7 +4,7 @@ from config import DamageType
 
 
 class HeavyTrap(ArenaEffect):
-    def __init__(self, messages, stockpile_stacks, duration=None, expired=False):
+    def __init__(self, messages, stockpile_stacks, duration=6, expired=False):
         super().__init__(messages, duration, expired)
         self.stockpile_stacks = stockpile_stacks
         self.arena_effect_id = "heavy_trap"
@@ -16,7 +16,7 @@ class HeavyTrap(ArenaEffect):
         self.remove()
 
     def description(self):
-        return f"Heavy Trap: {self.stockpile_stacks} Stacks"
+        return f"Heavy Trap: {self.stockpile_stacks} Stacks {self.duration} Duration"
 
     def serialize(self):
         return {

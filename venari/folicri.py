@@ -8,7 +8,8 @@ class Folicri(Venari):
     def on_enemy_ability(self, enemy):
         if self.battle.has_arena_effect("trap", self):
             self._add_stockpile()
-        else:
+        elif not self.battle.has_arena_effect("heavy_trap", self):
+            # Can only place a trap down when no other trap is active
             self.battle.add_enemy_arena_effect(Trap(self.messages), self)
 
 
