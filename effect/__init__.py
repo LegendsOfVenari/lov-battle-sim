@@ -15,6 +15,7 @@ from .guard import Guard
 from .stun import Stun
 from .bleed import Bleed
 from .trap_effect import TrapEffect
+from .silence import Silence
 
 # Nyrie
 from .natural_touch import NaturalTouch
