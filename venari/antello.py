@@ -29,8 +29,7 @@ class Antello(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        heal_amount = self.battle_handler.calculate_ability_power(self, 30)
-        self.battle.add_ally_arena_effect(GracefulEmbraceAura(self.messages, 12, False, heal_amount), self)
+        self.battle.add_ally_arena_effect(GracefulEmbraceAura(self.messages, 12), self)
 
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
