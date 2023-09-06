@@ -1,5 +1,5 @@
 from .venari import Venari
-from effect import Web, Armor, Guard
+from effect import Web, Armor, Silence
 from config import DamageType
 
 
@@ -19,8 +19,7 @@ class Eurici(Venari):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
         self.deal_damage(enemy_team[0], 10, DamageType.AP, 100)
-        enemy_team[0].apply_effect(Web(self.messages, 8))
-        self.apply_effect(Armor(self.messages))
+        enemy_team[0].apply_effect(Silence(self.messages, 3))
 
         if enemy_team[0].has_effect_id("poison") or enemy_team[0].has_effect_id("web"):
             self.gain_energy(8)
