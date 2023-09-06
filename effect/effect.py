@@ -53,12 +53,16 @@ class Effect:
     def remove(self):
         self.expired = True
 
-    def modify_basic_attack(self, venari, target):
+    def modify_auto_attack(self, venari):
         """Returns a boolean indicating if the basic attack should proceed."""
-        return True
+        return False
 
     def modify_swap(self):
         """Returns a boolean indicating if the swap should proceed."""
+        return False
+
+    def modify_ability(self, venari):
+        """Returns a boolean indicating if the ability should proceed."""
         return False
 
     # Serialization

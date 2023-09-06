@@ -1,5 +1,5 @@
 from .venari import Venari
-from effect import Armor, AttackDamageBuff, BoarSkin
+from effect import Armor, Stun, BoarSkin
 from config import DamageType
 
 
@@ -30,9 +30,6 @@ class Algala(Venari):
     def armor(self):
         return Armor(self.messages)
 
-    def attack_damage_buff(self):
-        return AttackDamageBuff(10, self.messages)
-
     def on_basic_attack_hit(self, target):
         super().on_basic_attack_hit(target)
 
@@ -56,13 +53,8 @@ class Algala(Venari):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
 
-        missing_hp_percentage = (self.battle_stats.initial_hp - self.battle_stats.hp) / self.battle_stats.initial_hp
-        print(f"This is the missing hp percent {missing_hp_percentage}")
-        # Calculate the boosts based on every 30% missing hp
-        bonus_factor = missing_hp_percentage // 0.30
-        print(f"This is the bonus factor {bonus_factor}")
-        self.deal_damage(enemy_team[0], 10 * bonus_factor, DamageType.AD, 100)
-        self.messages.append(f"{self.name} used its ability!")
+        enemy_team[0].apply_effect(Stun(self.messages))
+        self.apply_effect(Stun(self.messages))
 
     def on_swap_out(self):
         self.battle_handler.remove_effect(self.attack_damage_buff())

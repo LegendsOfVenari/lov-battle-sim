@@ -20,10 +20,8 @@ class BattleHandler:
         """Performs a basic attack from the attacker to the target."""
         self.attack_tick_counter = 0
 
-        for effect in list(attacker.battle_handler.active_effects.values()):
-            should_proceed = effect.modify_basic_attack(attacker, target)
-            if not should_proceed:
-                return False
+        if not attacker.can_auto_attack():
+            return False
 
         hit_chance = random.randint(0, 100)
         if hit_chance <= attacker.battle_stats.accuracy - attacker.battle_stats.dodge_chance:
@@ -117,7 +115,7 @@ class BattleHandler:
 
     def gain_energy(self, amount):
         self.energy += amount
-        self.energy = min(self.energy, 100)
+        self.energy = min(self.energy, 60)
 
     def increase_attack_speed(self, amount):
         self.attack_tick_counter -= amount

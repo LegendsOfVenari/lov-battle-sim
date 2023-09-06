@@ -12,6 +12,7 @@ from .boar_skin import BoarSkin
 from .unique import Unique
 from .web import Web
 from .guard import Guard
+from .stun import Stun
 
 # Nyrie
 from .natural_touch import NaturalTouch

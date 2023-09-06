@@ -85,7 +85,7 @@
                     <div class="energy-bar" style="width: {{ team1_status[0]['battle_handler']['energy'] }}%;">
                     </div>
                     <div class="energy-text">
-                        {{ team1_status[0]['battle_handler']['energy'] }} / 100
+                        {{ team1_status[0]['battle_handler']['energy'] }} / 60
                     </div>
                 </div>
                 <div class="effects-container">
@@ -98,7 +98,7 @@
                 <!-- Ability Button for Point Venari -->
                 <div class="button-container">
                     <form method="post" style="display: inline;">
-                        {% if team1_status[0]['battle_handler']['energy'] == 100 %}
+                        {% if team1_status[0]['can_use_ability'] %}
                         <button type="submit" name="action" value="ability">Ability</button>
                         {% else %}
                         <button disabled>Ability</button>
@@ -172,11 +172,11 @@
                         <div class="energy-bar-container">
                             <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
                             <div class="energy-text">
-                                {{ venari['battle_handler']['energy'] }} / 100
+                                {{ venari['battle_handler']['energy'] }} / 60
                             </div>
                         </div>
                         <!-- Swap button -->
-                        {% if venari['battle_handler']['swap_cooldown'] == 0 %}
+                        {% if venari['can_swap'] %}
                         <div class="button-container">
                             <form method="post" style="display: inline;">
                                 <button type="submit" name="action" value="swap_{{ loop.index0 }}">Swap</button>
@@ -268,7 +268,7 @@
                     <div class="energy-bar" style="width: {{ team2_status[0]['battle_handler']['energy'] }}%;">
                     </div>
                     <div class="energy-text">
-                        {{ team2_status[0]['battle_handler']['energy'] }} / 100
+                        {{ team2_status[0]['battle_handler']['energy'] }} / 60
                     </div>
                 </div>
                 <div class="effects-container">
@@ -343,7 +343,7 @@
                         <div class="energy-bar-container">
                             <div class="energy-bar" style="width: {{ venari['battle_handler']['energy'] }}%;"></div>
                             <div class="energy-text">
-                                {{ venari['battle_handler']['energy'] }} / 100
+                                {{ venari['battle_handler']['energy'] }} / 60
                             </div>
                         </div>
                     </li>

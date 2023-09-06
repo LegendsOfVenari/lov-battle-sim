@@ -40,7 +40,7 @@ algala_base_stats = BaseStats(
     basic_attack_damage=35,
     passive_description="Gain [Armor] and [10 AD] for every 30% missing health",
     ability_description="Charges recklessly at the opposing Venari, dealing [75 AD] to both the target and self. Self damage is ignored if the Algala has at least 1 Armor stack.",
-    swap_description="Deal [10 AD] for every 30% missing health"
+    swap_description="Algala enters the arena smashing the ground with it’s head applying [Stun] to both the Enemy Point Venari and Algala"
 )
 
 meeka_base_stats = BaseStats(

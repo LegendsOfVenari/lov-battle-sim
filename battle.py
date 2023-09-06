@@ -124,7 +124,7 @@ class Battle:
             }
 
         if action == ActionType.ABILITY:
-            if self.team1[0].battle_handler.energy >= 100:
+            if self.team1[0].can_use_ability():
                 self.action_queue.append(lambda: self.team1[0].use_ability(self.team2[0]))
             else:
                 self.messages.append(f"{self.team1[0].name} does not have enough energy!")
@@ -145,13 +145,13 @@ class Battle:
             }
 
         # AI decisions
-        if self.team2[0].battle_handler.energy >= 100:
+        if self.team2[0].can_use_ability():
             self.team2[0].use_ability(self.team1[0])
 
-        elif len(self.team2) > 1 and self.team2[1].battle_handler.swap_cooldown == 0 and self.team2[1].can_swap():
+        elif len(self.team2) > 1 and self.team2[1].can_swap():
             self._swap_venari(self.team2, 1)
 
-        elif len(self.team2) > 2 and self.team2[2].battle_handler.swap_cooldown == 0 and self.team2[1].can_swap():
+        elif len(self.team2) > 2 and self.team2[2].can_swap():
             self._swap_venari(self.team2, 2)
 
         # Execute actions in the queue
@@ -174,9 +174,6 @@ class Battle:
 
     def _swap_venari(self, team, swap_index):
         """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
-        if team[swap_index].battle_handler.swap_cooldown == 0 and team[swap_index].can_swap():
-            # Swap the point Venari with the chosen bench Venari
-            team[0], team[swap_index] = team[swap_index], team[0]
-            team[0].on_swap_in(self.get_enemy_team(team[0]))
-            return True
-        return False
+        # Swap the point Venari with the chosen bench Venari
+        team[0], team[swap_index] = team[swap_index], team[0]
+        team[0].on_swap_in(self.get_enemy_team(team[0]))

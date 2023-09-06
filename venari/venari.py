@@ -89,6 +89,13 @@ class Venari:
 
     # Modifier Methods
 
+    def can_use_ability(self):
+        """Determine if a Venari can use its ability based on its effects."""
+        for effect in self.battle_handler.active_effects.values():
+            if effect.modify_ability(self):
+                return False
+        return self.battle_handler.energy == 60
+
     def can_auto_attack(self):
         """Determine if a Venari can auto attack based on its effects."""
         for effect in self.battle_handler.active_effects.values():
@@ -101,7 +108,7 @@ class Venari:
         for effect in self.battle_handler.active_effects.values():
             if effect.modify_swap():
                 return False
-        return True
+        return self.battle_handler.swap_cooldown == 0
 
     # Callback methods
 
@@ -150,6 +157,8 @@ class Venari:
             'isPlayerVenari': venari.isPlayerVenari,
             'battle_handler': venari.battle_handler.serialize(),
             'battle_stats': venari.battle_stats.serialize(),
+            'can_swap': venari.can_swap(),
+            'can_use_ability': venari.can_use_ability()
         }
 
     @classmethod

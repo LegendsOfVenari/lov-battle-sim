@@ -1,6 +1,6 @@
 from .effect import Effect
 
-class Stagger(Effect):
+class Stun(Effect):
 
     def __init__(self,
                  messages,
@@ -8,18 +8,20 @@ class Stagger(Effect):
                  expired=False,
                  is_permanent=False):
         super().__init__(messages, duration, expired)
-        self.effect_id = "stagger"
+        self.effect_id = "stun"
 
     def description(self):
-        return f"Stagger, {self.duration} ticks)"
+        return f"Stun, ({self.duration}) ticks"
 
     def on_apply(self, venari):
         super().on_apply(venari)
 
     def modify_auto_attack(self, venari):
-        self.messages.append(f"{venari.name}({venari.level}) has been staggered")
-        # remove the effect after it's triggered
-        self.remove()
+        self.messages.append(f"{venari.name}({venari.level}) has been stunned")
+        return True  # Basic attack does not proceed
+
+    def modify_ability(self, venari):
+        self.messages.append(f"{venari.name}({venari.level}) has been stunned")
         return True  # Basic attack does not proceed
 
     def serialize(self):
@@ -33,8 +35,7 @@ class Stagger(Effect):
 
     @classmethod
     def deserialize(cls, data, messages):
-        return Stagger(messages,
-                       data["duration"],
-                       data["expired"],
-                       data["is_permanent"])
-
+        return Stun(messages,
+                    data["duration"],
+                    data["expired"],
+                    data["is_permanent"])
