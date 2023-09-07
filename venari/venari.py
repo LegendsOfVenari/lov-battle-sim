@@ -139,9 +139,10 @@ class Venari:
         for effect in self.battle_handler.active_effects.values():
             if effect.modify_swap():
                 return False
-        for venari in self.battle.get_ally_team(self):
-            if venari.battle_handler.is_assist:
-                return False
+        if self.battle is not None:
+            for venari in self.battle.get_ally_team(self):
+                if venari.battle_handler.is_assist:
+                    return False
         return self.battle_handler.swap_cooldown == 0
 
     # Callback methods
