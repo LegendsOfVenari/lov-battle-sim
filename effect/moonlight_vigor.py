@@ -5,7 +5,7 @@ class MoonlightVigor(Effect):
     def __init__(self,
                  messages,
                  heal_amount,
-                 duration=8,
+                 duration=6,
                  expired=False):
         super().__init__(messages, duration, expired, False)
         self.effect_id = "moonlight_vigor"
@@ -17,12 +17,12 @@ class MoonlightVigor(Effect):
     def on_apply(self, venari):
         super().on_apply(venari)
         # Refresh Duration
-        self.duration = 8
+        self.duration = 6
 
     def on_tick(self, venari):
         super().on_tick(venari)
         # Heal Venari
-        venari.heal(self.heal_amount/8)
+        venari.heal(self.heal_amount/6)
 
     def serialize(self):
         return {

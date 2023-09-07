@@ -35,5 +35,6 @@ class Antello(Venari):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
 
-        heal_amount = self.battle_stats.initial_hp * 0.3
-        self.apply_effect(MoonlightVigor(self.messages, heal_amount))
+        heal_amount = self.battle_stats.initial_hp * 0.1
+        ally_team = self.battle.get_ally_team()
+        ally_team[0].apply_effect(MoonlightVigor(self.messages, heal_amount))
