@@ -83,7 +83,6 @@ def index():
 
         for venari in team1:
             venari.battle = battle
-            venari.battle_handler.energy = 0
         for venari in team2:
             venari.battle = battle
 
