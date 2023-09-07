@@ -22,7 +22,9 @@ class Laticus(Venari):
                          battle_handler,
                          battle_stats)
         if 'army_of_one' not in self.battle_handler.active_effects:
-            self.apply_effect(ArmyOfOne(self.messages))
+            effect = ArmyOfOne(self.messages)
+            self.apply_effect(effect)
+            effect.reset()
 
     def use_ability(self, target):
         super().use_ability(target)

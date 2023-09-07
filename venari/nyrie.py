@@ -22,7 +22,9 @@ class Nyrie(Venari):
                          battle_handler,
                          battle_stats)
         if 'natural_touch' not in self.battle_handler.active_effects:
-            self.apply_effect(NaturalTouch(self.messages))
+            effect = NaturalTouch(self.messages)
+            self.apply_effect(effect)
+            effect.reset()
 
     def basic_attack(self, target):
         super().basic_attack(target)

@@ -23,13 +23,13 @@ class AccuracyDebuff(Effect):
         super().on_apply(venari)
         # Reduce defence (armor) by the specified percentage
         reduction_factor = self.reduction_percent / 100
-        self.reduction_amount = venari.battle_stats.defense * reduction_factor
-        venari.battle_stats.accuracy = max(venari.battle_stats.defense - self.reduction_amount, 0)
+        self.reduction_amount = venari.battle_stats.accuracy * reduction_factor
+        venari.battle_stats.accuracy = max(venari.battle_stats.accuracy - self.reduction_amount, 0)
         self.messages.append(f"{venari.name}'s accuracy was reduced by {round(self.reduction_amount, 1)}")
 
     def on_remove(self, venari):
         # Restore the defence (armor)
-        venari.battle_stats.defense += self.reduction_amount
+        venari.battle_stats.accuracy += self.reduction_amount
         self.messages.append(f"{venari.name}'s accuracy was restored by {round(self.reduction_amount, 1)}")
 
     def serialize(self):
