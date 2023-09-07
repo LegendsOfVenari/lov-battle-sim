@@ -199,6 +199,7 @@ class Battle:
     def _swap_venari(self, team, swap_index, traps):
         """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
         # Swap the point Venari with the chosen bench Venari
+        team[0].on_swap_out()
         team[0], team[swap_index] = team[swap_index], team[0]
         self.trigger_arena_effect_swap_in(team[0], traps)
         team[0].on_swap_in(self.get_enemy_team(team[0]))

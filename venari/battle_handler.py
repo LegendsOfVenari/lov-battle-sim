@@ -9,7 +9,7 @@ class BattleHandler:
 
     def __init__(self, messages):
         self.energy = 0
-        self.attack_tick_counter = 0
+        self.attack_tick_counter = 100
         self.active_effects = {}
         self.swap_cooldown = 0
         self.messages = messages

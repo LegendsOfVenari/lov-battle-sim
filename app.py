@@ -74,7 +74,6 @@ def index():
                 team1, team2 = deserialize_teams(session['team1'], session['team2'], messages)
                 team1_arena_effects, team2_arena_effects = deserialize_arena_effects(session['team1_arena_effects'], session['team2_arena_effects'], messages)
             else:
-                # Handle the case where the teams aren't set. Maybe initialize to default teams?
                 team1, team2 = default_teams(messages)
                 team1_arena_effects = {}
                 team2_arena_effects = {}
@@ -84,6 +83,7 @@ def index():
 
         for venari in team1:
             venari.battle = battle
+            venari.battle_handler.energy = 0
         for venari in team2:
             venari.battle = battle
 
