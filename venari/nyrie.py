@@ -32,7 +32,7 @@ class Nyrie(Venari):
         super().use_ability(target)
         ally_team = self.battle.get_ally_team(self)
         for venari in ally_team:
-            shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 50)
+            shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 60)
             venari.apply_effect(Shield(self.messages, shield_amount, 6))
 
     def on_swap_in(self, enemy_team=None):
@@ -40,4 +40,9 @@ class Nyrie(Venari):
         super().on_swap_in()
         ally_bench = self.get_ally_bench()
         for venari in ally_bench:
-            venari.reduce_swap_cooldown(1)
+            if venari is not self:
+                venari.reduce_swap_cooldown(1)
+
+        ally_point_venari = self.get_ally_point_venari()
+        shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 20)
+        ally_point_venari.apply_effect(Shield(self.messages, shield_amount, 6))
