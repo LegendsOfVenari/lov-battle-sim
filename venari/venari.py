@@ -189,7 +189,7 @@ class Venari:
         pass
 
     def swap_to_point(self):
-        self.battle_handler.attack_tick_counter = 0
+        self.battle_handler.attack_tick_counter = 100
         self.battle.swap_venari(self)
         self.battle_handler.is_assist = False
         self.battle_handler.assist_cooldown = 6
