@@ -16,11 +16,17 @@ class Venari:
         self.battle_handler = battle_handler or BattleHandler(messages)
 
     # Team Methods
-    def get_point_venari(self):
+    def get_ally_point_venari(self):
         if self.isPlayerVenari:
             return self.battle.team1[0]
         else:
             return self.battle.team2[0]
+
+    def get_enemy_point_venari(self):
+        if self.isPlayerVenari:
+            return self.battle.team2[0]
+        else:
+            return self.battle.team1[0]
 
     def get_ally_team(self):
         if self.isPlayerVenari:
@@ -47,8 +53,14 @@ class Venari:
         self.battle_handler.energy = 0
 
         # Call back method
+        ally_team = self.get_ally_team()
+        for venari in ally_team:
+            if venari is not self:
+                venari.on_ally_ability(self)
         enemy_team = self.get_enemy_team()
-        enemy_team[0].on_enemy_ability(self)
+        for venari in enemy_team:
+            if venari is not self:
+                venari.on_enemy_ability(self)
 
     def apply_effect(self, effect):
         self.battle_handler.apply_effect(effect, self)
@@ -171,6 +183,9 @@ class Venari:
         pass
 
     def on_enemy_ability(self, enemy):
+        pass
+
+    def on_ally_ability(self, ally):
         pass
 
     def swap_to_point(self):

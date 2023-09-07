@@ -22,6 +22,9 @@ class ArmyOfOne(StackableEffect):
         venari.battle_stats.ability_power += self.count
         self.count *= 2
 
+    def working_colony(self, venari):
+        self.count += 2
+
     def on_ally_basic_attack(self, venari):
         self.on_apply(venari)
 

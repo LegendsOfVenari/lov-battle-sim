@@ -13,16 +13,12 @@ class Eurici(Venari):
             enemy.apply_effect(Web(self.messages, 3))
 
         self.apply_effect(Armor(self.messages))
-        self.apply_effect(Armor(self.messages))
 
         self.messages.append(f"{self.name} used its ability!")
 
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
-        self.deal_damage(enemy_team[0], 10, DamageType.AP, 100)
-        enemy_team[0].apply_effect(Silence(self.messages, 2))
-
-        if enemy_team[0].has_effect_id("poison") or enemy_team[0].has_effect_id("web"):
-            self.gain_energy(8)
-            self.messages.append(f"{self.name} gained 8 energy from the enemy's poison/web!")
+        enemy_venari = self.get_enemy_point_venari()
+        enemy_venari.apply_effect(Web(self.messages, 2))
+        self.apply_effect(Armor(self.messages))

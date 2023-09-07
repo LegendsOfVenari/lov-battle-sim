@@ -6,6 +6,7 @@ from arena_effect import Trap, HeavyTrap
 class Folicri(Venari):
 
     def on_enemy_ability(self, enemy):
+        # Should this only be on point/assist only?
         if self.battle.has_arena_effect("trap", self):
             self._add_stockpile()
         elif not self.battle.has_arena_effect("heavy_trap", self):
@@ -37,8 +38,7 @@ class Folicri(Venari):
 
     def on_swap_in(self, enemy_team=None):
         super().on_swap_in()
-        self._add_stockpile()
-        self.deal_damage(enemy_team[0], 10, DamageType.AP, 100)
+        self.battle.add_enemy_arena_effect(Trap(self.messages), self)
 
     def _add_stockpile(self):
         self.apply_effect(Unique(self.messages, "stockpile", None, None, 0, False, False, 5))

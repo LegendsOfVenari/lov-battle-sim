@@ -32,7 +32,14 @@ class Laticus(Venari):
 
         self.messages.append(f"{self.name} used its ability and doubled its stacks.")
 
-    def on_swap_in(self, enemy_team=None):
-        super().on_swap_in()
+        enemy_team = self.battle.get_enemy_team(self)
         for _ in range(5):
             self.deal_damage(enemy_team[0], 5, DamageType.AP, 100)
+
+    def on_swap_in(self, enemy_team=None):
+        super().on_swap_in()
+
+    def on_ally_ability(self, ally):
+        super().on_ally_ability(ally)
+        army_of_one = self.get_effect("army_of_one")
+        army_of_one.working_colony(self)

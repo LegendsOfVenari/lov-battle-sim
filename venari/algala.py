@@ -54,4 +54,4 @@ class Algala(Venari):
         super().on_swap_in()
 
         enemy_team[0].apply_effect(Stun(self.messages))
-        self.deal_damage(self, self.battle_stats.max_health * 0.1, DamageType.AD, 100)
+        self.deal_damage(self, self.battle_stats.initial_hp * 0.1, DamageType.AD, 100)

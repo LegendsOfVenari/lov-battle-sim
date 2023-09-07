@@ -36,5 +36,5 @@ class Antello(Venari):
         super().on_swap_in()
 
         heal_amount = self.battle_stats.initial_hp * 0.1
-        ally_team = self.battle.get_ally_team()
-        ally_team[0].apply_effect(MoonlightVigor(self.messages, heal_amount))
+        point_venari = self.get_ally_point_venari()
+        point_venari.apply_effect(MoonlightVigor(self.messages, heal_amount))
