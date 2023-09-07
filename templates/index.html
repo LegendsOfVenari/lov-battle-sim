@@ -182,6 +182,11 @@
                                 <button type="submit" name="action" value="swap_{{ loop.index0 }}">Swap</button>
                             </form>
                         </div>
+                        {% elif venari['battle_handler']['is_assist'] %}
+                        <div class="button-container">
+                            <button disabled>Assist Cooldown: {{ venari['battle_handler']['assist_cooldown'] }}
+                                ticks</button>
+                        </div>
                         {% else %}
                         <div class="button-container">
                             <button disabled>Swap Cooldown: {{ venari['battle_handler']['swap_cooldown'] }}

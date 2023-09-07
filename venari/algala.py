@@ -55,6 +55,3 @@ class Algala(Venari):
 
         enemy_team[0].apply_effect(Stun(self.messages))
         self.apply_effect(Stun(self.messages))
-
-    def on_swap_out(self):
-        self.battle_handler.remove_effect(self.attack_damage_buff())

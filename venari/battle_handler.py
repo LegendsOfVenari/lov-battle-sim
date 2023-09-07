@@ -12,6 +12,8 @@ class BattleHandler:
         self.attack_tick_counter = 100
         self.active_effects = {}
         self.swap_cooldown = 0
+        self.assist_cooldown = 6
+        self.is_assist = False
         self.messages = messages
 
     # ---------------------- ATTACK METHODS ---------------------- #
@@ -141,6 +143,9 @@ class BattleHandler:
     def tick(self, is_point):
         if is_point:
             self.attack_tick_counter += 1
+        elif self.is_assist:
+            if self.assist_cooldown > 0:
+                self.assist_cooldown -= 1
         else:
             if self.swap_cooldown > 0:
                 self.swap_cooldown -= 1
@@ -155,6 +160,10 @@ class BattleHandler:
 
     def decrease_attack_speed(self, amount):
         self.attack_tick_counter += amount
+
+    def swap_to_assist(self):
+        self.is_assist = True
+        self.assist_cooldown = 6
 
     # ---------------------- EFFECT METHODS ---------------------- #
 
@@ -224,7 +233,9 @@ class BattleHandler:
             'energy': self.energy,
             'attack_tick_counter': self.attack_tick_counter,
             'active_effects': {key: effect.serialize() for key, effect in self.active_effects.items()},
-            'swap_cooldown': self.swap_cooldown
+            'swap_cooldown': self.swap_cooldown,
+            'assist_cooldown': self.assist_cooldown,
+            'is_assist': self.is_assist
         }
 
     @classmethod
@@ -234,4 +245,6 @@ class BattleHandler:
         battleHandler.attack_tick_counter = data['attack_tick_counter']
         battleHandler.active_effects = {key: Effect.deserialize(effect_data, messages) for key, effect_data in data['active_effects'].items()}
         battleHandler.swap_cooldown = data['swap_cooldown']
+        battleHandler.assist_cooldown = data['assist_cooldown']
+        battleHandler.is_assist = data['is_assist']
         return battleHandler

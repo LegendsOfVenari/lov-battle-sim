@@ -154,7 +154,8 @@ class Battle:
                 self.messages.append(f"{self.team1[0].name} does not have enough energy!")
 
         elif action == ActionType.SWAP and swap_index is not None:
-            self._swap_venari(self.team1, swap_index + 1, self.team1_arena_effects)
+            # self._swap_venari(self.team1, swap_index + 1, self.team1_arena_effects)
+            self._set_assist_venari(self.team1, swap_index + 1, self.team1_arena_effects)
             self.messages.append(f"Swapped {self.team1[swap_index + 1].name} with {self.team1[0].name}!")
         elif action == ActionType.NEXT_TICK:
             self.messages.append(f"Moved to the next tick without any action.")
@@ -173,10 +174,12 @@ class Battle:
             self.team2[0].use_ability(self.team1[0])
 
         elif len(self.team2) > 1 and self.team2[1].can_swap():
-            self._swap_venari(self.team2, 1, self.team2_arena_effects)
+            # self._swap_venari(self.team2, 1, self.team2_arena_effects)
+            self._set_assist_venari(self.team2, 1, self.team2_arena_effects)
 
         elif len(self.team2) > 2 and self.team2[2].can_swap():
-            self._swap_venari(self.team2, 2, self.team2_arena_effects)
+            # self._swap_venari(self.team2, 2, self.team2_arena_effects)
+            self._set_assist_venari(self.team2, 2, self.team2_arena_effects)
 
         # Execute actions in the queue
         self.tick()
@@ -196,10 +199,15 @@ class Battle:
             "team2_arena_effects": self.team2_arena_effects
         }
 
-    def _swap_venari(self, team, swap_index, traps):
+    def swap_venari(self, venari):
         """Utility function to swap the point Venari with a bench Venari based on the given swap index."""
         # Swap the point Venari with the chosen bench Venari
+        team = self.get_ally_team(venari)
         team[0].on_swap_out()
+        swap_index = team.index(venari)
         team[0], team[swap_index] = team[swap_index], team[0]
+
+    def _set_assist_venari(self, team, swap_index, traps):
+        team[swap_index].battle_handler.swap_to_assist()
+        team[swap_index].on_swap_in(self.get_enemy_team(team[0]))
         self.trigger_arena_effect_swap_in(team[0], traps)
-        team[0].on_swap_in(self.get_enemy_team(team[0]))

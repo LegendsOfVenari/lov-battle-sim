@@ -139,6 +139,9 @@ class Venari:
         for effect in self.battle_handler.active_effects.values():
             if effect.modify_swap():
                 return False
+        for venari in self.battle.get_ally_team(self):
+            if venari.battle_handler.is_assist:
+                return False
         return self.battle_handler.swap_cooldown == 0
 
     # Callback methods
@@ -150,7 +153,6 @@ class Venari:
         pass
 
     def on_swap_in(self, enemy_team=None):
-        self.battle_handler.attack_tick_counter = 0
         # Do not trigger abilities if venari cannot be swapped in
         if not self.can_swap():
             self.messages.append(f"{self.name}({self.level}) cannot trigger its swap ability!")
@@ -164,6 +166,12 @@ class Venari:
 
     def on_enemy_ability(self, enemy):
         pass
+
+    def swap_to_point(self):
+        self.battle_handler.attack_tick_counter = 0
+        self.battle.swap_venari(self)
+        self.battle_handler.is_assist = False
+        self.battle_handler.assist_cooldown = 6
 
     # Tick methods
 
@@ -182,6 +190,9 @@ class Venari:
 
     def tick(self, is_point=True):
         """What the Venari does every tick."""
+        # Swap point venari with assist venari if need be
+        if self.battle_handler.is_assist and self.battle_handler.assist_cooldown == 0:
+            self.swap_to_point()
 
         self.battle_handler.gain_energy(self.base_stats.passive_energy_gain)
 
