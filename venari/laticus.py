@@ -27,11 +27,6 @@ class Laticus(Venari):
     def use_ability(self, target):
         super().use_ability(target)
 
-        army_of_one = self.get_effect("army_of_one")
-        army_of_one.buffed_barrage(self)
-
-        self.messages.append(f"{self.name} used its ability and doubled its stacks.")
-
         enemy_team = self.battle.get_enemy_team(self)
         for _ in range(5):
             self.deal_damage(enemy_team[0], 1, DamageType.AP, 100)
@@ -40,3 +35,4 @@ class Laticus(Venari):
         super().on_swap_in()
         army_of_one = self.get_effect("army_of_one")
         army_of_one.buffed_barrage(self)
+        self.messages.append(f"{self.name} used its ability and doubled its stacks.")
