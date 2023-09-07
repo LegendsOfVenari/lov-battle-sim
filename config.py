@@ -53,9 +53,9 @@ meeka_base_stats = BaseStats(
     basic_attack_energy_gain=7,
     basic_attack_frequency=3,
     basic_attack_damage=175,
-    passive_description="If an enemy attack misses, Meeka's next basic attack within the next 2 ticks deals a bonus [30 AD].",
-    ability_description="Meeka throws sand at the enemy Point Venari, Accuracy Debuff 50% - 6 ticks duration",
-    swap_description="Deal [20 AD] upon swapping in. Accuracy Debuff 20% - 3 tick duration"
+    passive_description="Open the Wounds: If the enemy Venari is bleeding, Meeka’s basic attacks deals a bonus [20 AD].",
+    ability_description="Rupture Claw: Swipe at the enemy Point Venari, causing it to [Bleed] for 6 ticks (instead of normal 3 tick Bleed).",
+    swap_description="First to Strike: Basic Attack immediately upon swapping in. If the enemy Venari is bleeding, Basic Attack twice back to back ticks."
 )
 
 nyrie_base_stats = BaseStats(

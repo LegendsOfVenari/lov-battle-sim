@@ -1,5 +1,5 @@
 from .venari import Venari
-from effect import NaturalTouch
+from effect import NaturalTouch, Shield
 from arena_effect import ReadyToHelpAura
 
 
@@ -30,8 +30,10 @@ class Nyrie(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        heal_amount = self.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 30)/6
-        self.battle.add_ally_arena_effect(ReadyToHelpAura(self.messages, 6, False, heal_amount), self)
+        ally_team = self.battle.get_ally_team(self)
+        for venari in ally_team:
+            shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 50)
+            venari.apply_effect(Shield(self.messages, shield_amount, 6))
 
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter

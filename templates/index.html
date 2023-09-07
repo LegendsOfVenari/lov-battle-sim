@@ -406,6 +406,12 @@
                             {% endfor %}
                             <option value="None">None</option>
                         </select>
+                        <!-- Add this dropdown for selecting the level -->
+                        <select name="player_venari{{ i }}_level">
+                            {% for level in range(1, 101) %}
+                            <option value="{{ level }}">{{ level }}</option>
+                            {% endfor %}
+                        </select>
                         {% endfor %}
                     </div>
                     {% endif %}
@@ -417,6 +423,11 @@
                             <option value="{{ name }}">{{ name }}</option>
                             {% endfor %}
                             <option value="None">None</option>
+                        </select>
+                        <select name="ai_venari{{ i }}_level">
+                            {% for level in range(1, 101) %}
+                            <option value="{{ level }}">{{ level }}</option>
+                            {% endfor %}
                         </select>
                         {% endfor %}
                     </div>

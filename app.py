@@ -50,8 +50,8 @@ def index():
 
     # Check if the POST request is a result of the team selection form submission
     if request.method == 'POST' and 'player_venari1' in request.form:
-        team1 = [initialize_venari(name, messages, True) for name in ['player_venari1', 'player_venari2', 'player_venari3'] if request.form.get(name) != "None"]
-        team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
+        team1 = [initialize_venari('player_venari' + str(i), 'player_venari' + str(i) + '_level', messages, True) for i in range(1, 4) if request.form.get('player_venari' + str(i)) != "None"]
+        team2 = [initialize_venari('ai_venari' + str(i), 'ai_venari' + str(i) + '_level', messages, False) for i in range(1, 4) if request.form.get('ai_venari' + str(i)) != "None"]
         team1_arena_effects = {}
         team2_arena_effects = {}
         battle = Battle(team1, team2, 0, messages)
@@ -93,7 +93,7 @@ def index():
             if action == "next_battle":
                 # Reset the AI's Venari team
                 # _, team2 = default_teams(messages)
-                team2 = [initialize_venari(name, messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
+                team2 = [initialize_venari(name, name + '_level', messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
                 team2 = list(filter(None, team2))  # This will remove any None values from the list
                 if len(team2) == 0:
                     _, team2 = default_teams(messages)
@@ -135,13 +135,14 @@ def index():
                            messages=messages,
                            game_started=session.get('game_started', False))
 
-def initialize_venari(name_key, messages, isPlayerVenari):
+def initialize_venari(name_key, level_key, messages, isPlayerVenari):
     name = request.form.get(name_key)
+    level = int(request.form.get(level_key, 1))  # Fetch level; default to 1 if not found
     if not name:
         return None  # If name is None or empty, return None
     base_stats = venari_base_stats_map.get(name)
     print(f"Name: {name}, Base Stats: {base_stats}")  # Add this line
-    return Venari(name, base_stats, 10, messages, isPlayerVenari)
+    return Venari(name, base_stats, level, messages, isPlayerVenari)
 
 def default_teams(messages):
     # This function can be used to set default teams if needed.
