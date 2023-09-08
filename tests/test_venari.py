@@ -8,8 +8,5 @@ class TestVenari(unittest.TestCase):
         self.battle_stats = MagicMock()
         self.venari = Venari("Test", self.base_stats, 1, [], True, battle_stats=self.battle_stats)
 
-
-    # Add more tests...
-
 if __name__ == '__main__':
     unittest.main()
