@@ -22,7 +22,7 @@ class BattleHandler:
         """Performs a basic attack from the attacker to the target."""
         self.reset_attack_counter()
 
-        if not self.is_attack_possible(attacker):
+        if not attacker.can_auto_attack():
             return False
 
         if self.is_hit_successful(attacker):
@@ -36,9 +36,6 @@ class BattleHandler:
 
     def reset_attack_counter(self):
         self.attack_tick_counter = 0
-
-    def is_attack_possible(self, attacker):
-        return attacker.can_auto_attack()
 
     def is_hit_successful(self, attacker):
         hit_chance = random.randint(0, 100)
@@ -153,8 +150,8 @@ class BattleHandler:
 
     # ---------------------- UTILITY METHODS ---------------------- #
 
-    def ready_to_attack(self, basic_attack_frequency):
-        return self.attack_tick_counter >= basic_attack_frequency
+    def ready_to_attack(self, attack_speed):
+        return self.attack_tick_counter >= attack_speed
 
     def tick(self, is_point):
         if is_point:
@@ -162,6 +159,8 @@ class BattleHandler:
         elif self.is_assist:
             if self.assist_cooldown > 0:
                 self.assist_cooldown -= 1
+            if self.can_assist_auto_attack():
+                self.attack_tick_counter += 1
         else:
             if self.swap_cooldown > 0:
                 self.swap_cooldown -= 1
@@ -180,6 +179,13 @@ class BattleHandler:
     def swap_to_assist(self):
         self.is_assist = True
         self.assist_cooldown = 6
+
+    def can_assist_auto_attack(self):
+        """Determine if a Venari can auto attack from the assist position based on its effects."""
+        for effect in self.active_effects.values():
+            if effect.modify_assist_auto_attack(self):
+                return False
+        return True
 
     # ---------------------- EFFECT METHODS ---------------------- #
 
@@ -238,9 +244,6 @@ class BattleHandler:
 
     def reduce_swap_cooldown(self, amount):
         self.swap_cooldown = max(0, self.swap_cooldown - amount)
-
-    def find_effect_instance(self, effect):
-        return next((e for e in self.active_effects if isinstance(e, effect.__class__)), None)
 
     # ---------------------- SERIALIZATION METHODS ---------------------- #
 

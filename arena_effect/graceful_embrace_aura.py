@@ -1,9 +1,11 @@
 from .aura import Aura
 from effect import GracefulEmbraceEffect
-
+from config import graceful_embrace_tick_cooldown
 
 class GracefulEmbraceAura(Aura):
-    def __init__(self, messages, duration=6, expired=False):
+    def __init__(self, messages,
+                 duration=graceful_embrace_tick_cooldown,
+                 expired=False):
         super().__init__(messages, duration)
         self.arena_effect_id = "graceful_embrace_aura"
 

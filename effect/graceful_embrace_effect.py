@@ -1,4 +1,5 @@
 from .effect import Effect
+from config import graceful_embrace_bonus_magic_resist, graceful_embrace_bonus_ability_power
 
 
 class GracefulEmbraceEffect(Effect):
@@ -18,12 +19,12 @@ class GracefulEmbraceEffect(Effect):
         super().on_apply(venari)
         # Refresh Duration
         self.duration = 1
-        venari.battle_stats.magic_resist += 10
-        venari.battle_stats.ability_power += 15
+        venari.battle_stats.magic_resist += graceful_embrace_bonus_magic_resist
+        venari.battle_stats.ability_power += graceful_embrace_bonus_ability_power
 
     def on_remove(self, venari):
-        venari.battle_stats.magic_resist -= 10
-        venari.battle_stats.ability_power -= 15
+        venari.battle_stats.magic_resist -= graceful_embrace_bonus_magic_resist
+        venari.battle_stats.ability_power -= graceful_embrace_bonus_ability_power
 
     def serialize(self):
         return {

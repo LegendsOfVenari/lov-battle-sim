@@ -1,6 +1,7 @@
 from .venari import Venari
 from effect import NourishingResilience, MoonlightVigor
 from arena_effect import GracefulEmbraceAura
+from config import moonlight_vigor_percent_health
 
 
 class Antello(Venari):
@@ -29,12 +30,15 @@ class Antello(Venari):
 
     def use_ability(self, target):
         super().use_ability(target)
-        self.battle.add_ally_arena_effect(GracefulEmbraceAura(self.messages, 12), self)
+
+        self.battle.add_ally_arena_effect(
+            GracefulEmbraceAura(self.messages), self
+        )
 
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
         super().on_swap_in()
 
-        heal_amount = self.battle_stats.initial_hp * 0.3
+        heal_amount = self.battle_stats.initial_hp * moonlight_vigor_percent_health
         point_venari = self.get_ally_point_venari()
         point_venari.apply_effect(MoonlightVigor(self.messages, heal_amount))

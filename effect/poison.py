@@ -11,8 +11,7 @@ class Poison(StackableEffect):
                  initial_duration=6,
                  duration=6,
                  count=0,
-                 expired=False,
-                 is_permanent=False):
+                 expired=False):
         super().__init__(messages, initial_duration, duration, count, expired)
         self.level = level
         self.ability_power = ability_power
@@ -23,7 +22,9 @@ class Poison(StackableEffect):
 
     def on_tick(self, venari):
         super().on_tick(venari)
-        total_damage = venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10)
+        total_damage = venari.battle_handler.calculate_ability_power(
+            self.level, self.ability_power, 10
+        )
         total_damage = total_damage / self.initial_duration
         venari.deal_effect_damage(DamageType.AP, venari, total_damage)
         self.messages.append(f"{venari.name} took {total_damage:.2f} poison damage!")
@@ -32,11 +33,16 @@ class Poison(StackableEffect):
         super().stack()
 
     def calculate_total_remaining_damage(self, venari):
-        total_damage = venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10)
+        total_damage = venari.battle_handler.calculate_ability_power(
+            self.level, self.ability_power, 10
+        )
         total_damage = total_damage / self.initial_duration
         total_damage *= self.duration
         if self.count > 1:
-            total_damage += venari.battle_handler.calculate_ability_power(self.level, self.ability_power, 10) * self.count - 1
+            additional_damage = venari.battle_handler.calculate_ability_power(
+                self.level, self.ability_power, 10
+            )
+            total_damage += additional_damage * self.count - 1
         return total_damage
 
     def serialize(self):
@@ -48,8 +54,7 @@ class Poison(StackableEffect):
             'initial_duration': self.initial_duration,
             'duration': self.duration,
             'count': self.count,
-            'expired': self.expired,
-            'is_permanent': self.is_permanent
+            'expired': self.expired
         }
 
     @classmethod
@@ -61,5 +66,4 @@ class Poison(StackableEffect):
                       data["initial_duration"],
                       data["duration"],
                       data["count"],
-                      data["expired"],
-                      data["is_permanent"])
+                      data["expired"])

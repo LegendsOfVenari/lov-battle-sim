@@ -77,7 +77,7 @@ class Venari:
 
     def ready_to_attack(self):
         return self.battle_handler.ready_to_attack(
-            self.base_stats.basic_attack_frequency
+            self.battle_stats.attack_speed
         )
 
     def receive_damage(self, damage):
@@ -122,13 +122,6 @@ class Venari:
         """Determine if a Venari can auto attack based on its effects."""
         for effect in self.battle_handler.active_effects.values():
             if effect.modify_auto_attack(self):
-                return False
-        return True
-
-    def can_assist_auto_attack(self):
-        """Determine if a Venari can auto attack from the assist position based on its effects."""
-        for effect in self.battle_handler.active_effects.values():
-            if effect.modify_assist_auto_attack(self):
                 return False
         return True
 

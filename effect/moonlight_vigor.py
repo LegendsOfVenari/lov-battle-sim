@@ -1,11 +1,11 @@
 from .effect import Effect
-
+from config import moonlight_vigor_duration
 
 class MoonlightVigor(Effect):
     def __init__(self,
                  messages,
                  heal_amount,
-                 duration=6,
+                 duration=moonlight_vigor_duration,
                  expired=False):
         super().__init__(messages, duration, expired, False)
         self.effect_id = "moonlight_vigor"
@@ -16,13 +16,14 @@ class MoonlightVigor(Effect):
 
     def on_apply(self, venari):
         super().on_apply(venari)
+
         # Refresh Duration
-        self.duration = 6
+        self.duration = moonlight_vigor_duration
 
     def on_tick(self, venari):
         super().on_tick(venari)
         # Heal Venari
-        venari.heal(self.heal_amount/6)
+        venari.heal(self.heal_amount / moonlight_vigor_duration)
 
     def serialize(self):
         return {

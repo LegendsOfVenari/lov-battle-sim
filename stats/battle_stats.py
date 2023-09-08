@@ -17,6 +17,7 @@ class BattleStats:
         self.accuracy = 100
         self.initial_hp = self.hp
         self.dodge_chance = 0
+        self.attack_speed = base_stats.basic_attack_frequency
 
     def set_stats_directly(self, **kwargs):
         self.hp = kwargs.get('hp')
@@ -28,6 +29,7 @@ class BattleStats:
         self.accuracy = kwargs.get('accuracy')
         self.initial_hp = kwargs.get('initial_hp')
         self.dodge_chance = kwargs.get('dodge_chance')
+        self.attack_speed = kwargs.get('attack_speed')
 
     @property
     def hp_percentage(self):
@@ -65,6 +67,14 @@ class BattleStats:
     def ability_power(self, value):
         self._ability_power = max(0, value)
 
+    @property
+    def attack_speed(self):
+        return self._attack_speed
+
+    @attack_speed.setter
+    def attack_speed(self, value):
+        self._attack_speed = max(0, value)
+
     def serialize(self):
         return {
             'hp': self.hp,
@@ -75,7 +85,8 @@ class BattleStats:
             'magic_resist': self.magic_resist,
             'accuracy': self.accuracy,
             'initial_hp': self.initial_hp,
-            'dodge_chance': self.dodge_chance
+            'dodge_chance': self.dodge_chance,
+            'attack_speed': self.attack_speed
         }
 
     @classmethod

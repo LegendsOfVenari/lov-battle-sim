@@ -174,7 +174,16 @@ venari_base_stats_map = {
     'Laticus': laticus_base_stats
 }
 
+
 class DamageType(Enum):
     AD = "ad"
     AP = "ap"
     TRUE_DAMAGE = "true_damage"
+
+
+# Antello
+graceful_embrace_tick_cooldown = 12
+graceful_embrace_bonus_ability_power = 15
+graceful_embrace_bonus_magic_resist = 10
+moonlight_vigor_percent_health = 0.3
+moonlight_vigor_duration = 6

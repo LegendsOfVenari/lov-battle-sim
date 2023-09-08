@@ -5,7 +5,7 @@ from config import DamageType
 
 class Meeka(Venari):
     def on_ally_basic_attack(self, attacker):
-        if self.battle_handler.is_assist:
+        if self.battle_handler.is_assist and attacker is not self:
             enemy_point_venari = self.get_enemy_point_venari()
             super().basic_attack(enemy_point_venari)
 

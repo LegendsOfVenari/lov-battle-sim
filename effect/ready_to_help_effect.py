@@ -42,8 +42,10 @@ class ReadyToHelpEffect(Effect):
     @classmethod
     def deserialize(cls, data, messages):
         print(data)
-        return ReadyToHelpEffect(messages,
-                                data["duration"],
-                                data["expired"],
-                                data["is_permanent"],
-                                data["heal_amount"])
+        return ReadyToHelpEffect(
+            messages,
+            data["duration"],
+            data["expired"],
+            data["is_permanent"],
+            data["heal_amount"]
+        )
