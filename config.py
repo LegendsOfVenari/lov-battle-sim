@@ -181,9 +181,21 @@ class DamageType(Enum):
     TRUE_DAMAGE = "true_damage"
 
 
+# Effects
+poison_duration = 6
+poison_ability_damage = 10
+
 # Antello
 graceful_embrace_tick_cooldown = 12
 graceful_embrace_bonus_ability_power = 15
 graceful_embrace_bonus_magic_resist = 10
 moonlight_vigor_percent_health = 0.3
 moonlight_vigor_duration = 6
+
+
+# Aharas
+boarskin_attack_damage_buff = 10
+boarskin_max_health_breakpoint = 0.3
+wild_charge_base_damage = 75
+wild_charge_damage_type = DamageType.AD
+wild_charge_accuracy = 100

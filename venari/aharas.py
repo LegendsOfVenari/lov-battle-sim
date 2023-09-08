@@ -15,7 +15,7 @@ class Aharas(Venari):
         super().on_basic_attack_hit(target)
         poison_effect = target.get_effect("poison")
         if poison_effect is not None:
-            poison_effect.duration = 6
+            poison_effect.reset_duration()
             self.messages.append(f"{self.name}({self.level})'s poison duration refreshed!")
 
     def use_ability(self, target):

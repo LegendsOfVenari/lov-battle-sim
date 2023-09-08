@@ -1,5 +1,6 @@
 from .effect import Effect
 from .armor import Armor
+from config import boarskin_max_health_breakpoint
 
 
 class BoarSkin(Effect):
@@ -31,8 +32,11 @@ class BoarSkin(Effect):
     def on_damage_received(self, venari, damage):
         self.total_damage_received += damage
 
-        hp_percentage = self.total_damage_received / venari.battle_stats.initial_hp
-        calculatedStacks = int(hp_percentage * 10 / 3) # This gives the number of 30% chunks
+        # Calculate the percentage of initial HP lost
+        hp_lost_percentage = self.total_damage_received / venari.battle_stats.initial_hp
+
+        # Calculate the number of stacks, where each stack represents 30% of initial HP lost
+        calculatedStacks = int(hp_lost_percentage / boarskin_max_health_breakpoint)
 
         if self.total_armor_distributed != calculatedStacks:
             self.distributeBonus(venari, calculatedStacks)

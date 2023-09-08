@@ -1,5 +1,5 @@
 from .stackable_effect import StackableEffect
-from config import DamageType
+from config import DamageType, poison_duration, poison_ability_damage
 
 
 class Poison(StackableEffect):
@@ -8,8 +8,8 @@ class Poison(StackableEffect):
                  messages,
                  level,
                  ability_power,
-                 initial_duration=6,
-                 duration=6,
+                 initial_duration=poison_duration,
+                 duration=poison_duration,
                  count=0,
                  expired=False):
         super().__init__(messages, initial_duration, duration, count, expired)
@@ -29,18 +29,21 @@ class Poison(StackableEffect):
         venari.deal_effect_damage(DamageType.AP, venari, total_damage)
         self.messages.append(f"{venari.name} took {total_damage:.2f} poison damage!")
 
+    def reset_duration(self):
+        self.duration = poison_duration
+
     def stack(self):
         super().stack()
 
     def calculate_total_remaining_damage(self, venari):
         total_damage = venari.battle_handler.calculate_ability_power(
-            self.level, self.ability_power, 10
+            self.level, self.ability_power, poison_ability_damage
         )
         total_damage = total_damage / self.initial_duration
         total_damage *= self.duration
         if self.count > 1:
             additional_damage = venari.battle_handler.calculate_ability_power(
-                self.level, self.ability_power, 10
+                self.level, self.ability_power, poison_ability_damage
             )
             total_damage += additional_damage * self.count - 1
         return total_damage
