@@ -32,12 +32,17 @@ class Effect:
         pass
 
     def on_remove(self, venari):
-        self.messages.append(f"{venari.name}'s {self.effect_id} effect has expired.")
+        self.messages.append(
+            f"{venari.name}'s {self.effect_id} effect has expired."
+        )
         """What happens when the effect is removed or expires."""
         pass
 
     def on_damage_received(self, venari, damage):
-        """Placeholder for actions to be taken when the Venari with this effect receives damage."""
+        """
+        Placeholder for actions to be taken when the Venari with this
+        effect receives damage.
+        """
         pass
 
     def on_ally_defeated(self):
@@ -57,6 +62,13 @@ class Effect:
         """Returns a boolean indicating if the basic attack should proceed."""
         return False
 
+    def modify_assist_auto_attack(self, venari):
+        """
+        Returns a boolean indicating if the assist auto
+        attack should proceed.
+        """
+        return False
+
     def modify_swap(self):
         """Returns a boolean indicating if the swap should proceed."""
         return False
@@ -68,7 +80,10 @@ class Effect:
     # Serialization
 
     def serialize(self):
-        raise NotImplementedError("Each effect should have its own serialization method.")
+        raise NotImplementedError(
+            "Each effect should have its own "
+            "serialization method."
+        )
 
     @classmethod
     def deserialize(cls, data, messages):

@@ -151,6 +151,13 @@ class Venari:
                 return False
         return True
 
+    def can_assist_auto_attack(self):
+        """Determine if a Venari can auto attack from the assist position based on its effects."""
+        for effect in self.battle_handler.active_effects.values():
+            if effect.modify_assist_auto_attack(self):
+                return False
+        return True
+
     def can_swap(self):
         """Determine if a Venari can swap based on its effects."""
         for effect in self.battle_handler.active_effects.values():
