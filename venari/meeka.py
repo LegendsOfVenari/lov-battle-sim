@@ -21,10 +21,3 @@ class Meeka(Venari):
         target.apply_effect(Bleed(self.messages, self.level, self.battle_stats.attack_damage, 6, 6))
 
         self.messages.append(f"{self.name} used its ability on {target.name}!")
-
-    # def on_swap_in(self, enemy_team=None):
-    #     # Call the base class's method to reset the attack tick counter
-    #     super().on_swap_in()
-    #     super().basic_attack(enemy_team[0])
-    #     if enemy_team[0].has_effect_id("bleed"):
-    #         super().basic_attack(enemy_team[0])

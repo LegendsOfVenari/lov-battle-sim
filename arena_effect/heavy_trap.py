@@ -1,6 +1,12 @@
 from .arena_effect import ArenaEffect
 from effect import TrapEffect
-from config import DamageType
+from config import (
+    DamageType,
+    heavy_trap_base_damage,
+    heavy_trap_stack_damage,
+    heavy_trap_damage_type,
+    heavy_trap_accuracy
+)
 
 
 class HeavyTrap(ArenaEffect):
@@ -12,7 +18,12 @@ class HeavyTrap(ArenaEffect):
     def on_swap_in(self, venari):
         self.messages.append(f"{venari.name} stepped on a Heavy Trap!")
         venari.apply_effect(TrapEffect(self.messages))
-        venari.deal_damage(venari, 25 + 3 * self.stockpile_stacks, DamageType.AD, 100)
+        venari.deal_damage(
+            venari, 
+            heavy_trap_base_damage + heavy_trap_stack_damage * self.stockpile_stacks,
+            heavy_trap_damage_type,
+            heavy_trap_accuracy
+        )
         self.remove()
 
     def description(self):

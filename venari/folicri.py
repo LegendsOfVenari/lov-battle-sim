@@ -13,7 +13,6 @@ class Folicri(Venari):
             # Can only place a trap down when no other trap is active
             self.battle.add_enemy_arena_effect(Trap(self.messages), self)
 
-
     def use_ability(self, target):
         super().use_ability(target)
         self.messages.append(f"{self.name} used its ability on {target.name}!")
