@@ -18,12 +18,12 @@ class GracefulEmbraceEffect(Effect):
         super().on_apply(venari)
         # Refresh Duration
         self.duration = 1
-        venari.increase_magic_resist(10)
-        venari.increase_ability_power(15)
+        venari.battle_stats.magic_resist += 10
+        venari.battle_stats.ability_power += 15
 
     def on_remove(self, venari):
-        venari.decrease_magic_resist(10)
-        venari.decrease_ability_power(15)
+        venari.battle_stats.magic_resist -= 10
+        venari.battle_stats.ability_power -= 15
 
     def serialize(self):
         return {
@@ -38,6 +38,6 @@ class GracefulEmbraceEffect(Effect):
     def deserialize(cls, data, messages):
         print(data)
         return GracefulEmbraceEffect(messages,
-                                    data["duration"],
-                                    data["expired"],
-                                    data["heal_amount"])
+                                     data["duration"],
+                                     data["expired"],
+                                     data["heal_amount"])

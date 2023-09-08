@@ -5,8 +5,7 @@ class TrapEffect(Effect):
     def __init__(self,
                  messages,
                  duration=1,
-                 expired=False,
-                 is_permanent=False):
+                 expired=False):
         super().__init__(messages, duration, expired)
         self.effect_id = "stun"
 
@@ -41,5 +40,4 @@ class TrapEffect(Effect):
     def deserialize(cls, data, messages):
         return TrapEffect(messages,
                         data["duration"],
-                        data["expired"],
-                        data["is_permanent"])
+                        data["expired"])

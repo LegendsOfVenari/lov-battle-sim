@@ -13,10 +13,10 @@ class GatheringDust(StackableEffect):
 
     def on_apply(self, venari):
         # Strip previous dodge chance
-        venari.decrease_dodge_chance(self.count * 10)
+        venari.battle_stats.dodge_chance -= self.count * 10
         super().on_apply(venari)
         self.count = min(5, self.count)
-        venari.increase_dodge_chance(self.count * 10)
+        venari.battle_stats.dodge_chance += self.count * 10
 
     def serialize(self):
         return {

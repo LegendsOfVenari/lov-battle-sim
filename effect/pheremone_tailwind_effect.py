@@ -1,22 +1,24 @@
 from .effect import Effect
 
+
 class PheremoneTailwindEffect(Effect):
     def __init__(self, messages, duration=1, expired=False, is_permanent=False):
         super().__init__(messages, duration, expired, is_permanent)
         self.effect_id = "pheremone_tailwind_effect"
 
     def description(self):
-        return f"Pheremone Tailwind Effect: +1 Attack Speed, +15 AD, {self.duration} seconds remaining"
+        return (f"Pheremone Tailwind Effect: +1 Attack Speed, +15 AD, "
+                f"{self.duration} seconds remaining")
 
     def on_apply(self, venari):
         super().on_apply(venari)
         self.duration = 1
-        venari.increase_attack_speed(1)
-        venari.increase_attack_damage(15)
+        venari.battle_stats.attack_speed += 1
+        venari.battle_stats.attack_damage += 15
 
     def on_remove(self, venari):
-        venari.decrease_attack_speed(1)
-        venari.decrease_attack_damage(15)
+        venari.battle_stats.attack_speed -= 1
+        venari.battle_stats.attack_damage -= 15
 
     def serialize(self):
         return {

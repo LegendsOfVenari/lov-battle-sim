@@ -19,10 +19,10 @@ class ReadyToHelpEffect(Effect):
         super().on_apply(venari)
         # Refresh Duration
         self.duration = 1
-        venari.increase_attack_speed(1)
+        venari.battle_stats.attack_speed += 1
 
     def on_remove(self, venari):
-        venari.decrease_attack_speed(1)
+        venari.battle_stats.attack_speed -= 1
 
     def on_tick(self, venari):
         super().on_tick(venari)

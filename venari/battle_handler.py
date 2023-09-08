@@ -20,41 +20,57 @@ class BattleHandler:
 
     def basic_attack(self, attacker, target, auto_attack_buff=0):
         """Performs a basic attack from the attacker to the target."""
-        self.attack_tick_counter = 0
+        self.reset_attack_counter()
 
-        if not attacker.can_auto_attack():
+        if not self.is_attack_possible(attacker):
             return False
 
-        hit_chance = random.randint(0, 100)
-        if hit_chance <= attacker.battle_stats.accuracy - attacker.battle_stats.dodge_chance:
-            self._deal_auto_attack_damage(attacker, target, auto_attack_buff)
-            # Call Back
-            attacker.on_basic_attack_hit(target)
-            # Basic Attack Energy Gain
-            self.gain_energy(attacker.base_stats.basic_attack_energy_gain)
-
-            # Call back for effects
-            for ally in attacker.battle.get_ally_team(attacker):
-                ally.on_ally_basic_attack(attacker)
-                for effect in list(ally.battle_handler.active_effects.values()):
-                    effect.on_ally_basic_attack(attacker)
-
+        if self.is_hit_successful(attacker):
+            self.execute_successful_attack(
+                attacker, target, auto_attack_buff
+            )
             return True
         else:
-            attacker.on_target_miss(target)
-            self.messages.append(f"{attacker.name}({attacker.level})'s attack missed {target.name}({target.level})!")
+            self.handle_missed_attack(attacker, target)
             return False
+
+    def reset_attack_counter(self):
+        self.attack_tick_counter = 0
+
+    def is_attack_possible(self, attacker):
+        return attacker.can_auto_attack()
+
+    def is_hit_successful(self, attacker):
+        hit_chance = random.randint(0, 100)
+        return (
+            hit_chance <=
+            attacker.battle_stats.accuracy - attacker.battle_stats.dodge_chance
+        )
+
+    def execute_successful_attack(self, attacker, target, auto_attack_buff):
+        self._deal_auto_attack_damage(attacker, target, auto_attack_buff)
+        attacker.on_basic_attack_hit(target)
+        self.gain_energy(attacker.base_stats.basic_attack_energy_gain)
+        self.notify_ally_effects_on_attack(attacker)
+
+    def notify_ally_effects_on_attack(self, attacker):
+        for ally in attacker.battle.get_ally_team(attacker):
+            ally.on_ally_basic_attack(attacker)
+            for effect in list(ally.battle_handler.active_effects.values()):
+                effect.on_ally_basic_attack(attacker)
+
+    def handle_missed_attack(self, attacker, target):
+        attacker.on_target_miss(target)
+        self.messages.append(f"{attacker.name}({attacker.level})'s attack missed {target.name}({target.level})!")
 
     def deal_damage(self, attacker, target, base_damage, damage_type, accuracy):
         """Calculates and deals damage from the attacker to the target."""
-        hit_chance = random.randint(0, 100)
-        if hit_chance <= accuracy - attacker.battle_stats.dodge_chance:
+        if self.is_hit_successful(attacker):
             damage = self._calculate_damage(damage_type, attacker, target, base_damage)
             self.messages.append(f"Dealt {damage} Damage!")
             target.receive_damage(damage)
         else:
-            attacker.on_target_miss(target)
-            self.messages.append(f"{attacker.name}({attacker.level})'s ability missed {target.name}({target.level})!")
+            self.handle_missed_attack(attacker, target)
 
     def receive_damage(self, venari, damage):
 
