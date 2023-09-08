@@ -33,9 +33,10 @@ class Nyrie(Venari):
     def use_ability(self, target):
         super().use_ability(target)
         ally_team = self.battle.get_ally_team(self)
-        for venari in ally_team:
-            shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 60)
-            venari.apply_effect(Shield(self.messages, shield_amount, 6))
+        if ally_team:
+            for venari in ally_team:
+                shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 60)
+                venari.apply_effect(Shield(self.messages, shield_amount, 6))
 
     def on_swap_in(self, enemy_team=None):
         # Call the base class's method to reset the attack tick counter
@@ -46,5 +47,5 @@ class Nyrie(Venari):
                 venari.reduce_swap_cooldown(1)
 
         ally_point_venari = self.get_ally_point_venari()
-        shield_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 20)
+        shield_amount = self.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 20)
         ally_point_venari.apply_effect(Shield(self.messages, shield_amount, 6))
