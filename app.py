@@ -94,6 +94,8 @@ def index():
                 # _, team2 = default_teams(messages)
                 for venari in team1:
                     venari.battle_handler.energy = 0
+                    venari.battle_handler.is_assist = False
+                    venari.battle_handler.assist_cooldown = 0
                 team2 = [initialize_venari(name, name + '_level', messages, False) for name in ['ai_venari1', 'ai_venari2', 'ai_venari3'] if request.form.get(name) != "None"]
                 team2 = list(filter(None, team2))  # This will remove any None values from the list
                 if len(team2) == 0:
