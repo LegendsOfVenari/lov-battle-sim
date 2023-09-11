@@ -92,13 +92,13 @@ class BattleHandler:
         target.receive_damage(damage)
 
     def _calculate_basic_attack_damage(self, attacker, target, base_damage):
-        attacker_attack_damage = ((2 * attacker.base_stats.strength) * (attacker.level + 4)) / 100
-        target_defense = ((2 * target.base_stats.defence) * (target.level + 4)) / 100
+        attacker_attack_damage = attacker.battle_stats.attack_damage
 
-        ad_reduction = target_defense / (target_defense + 300)
+        ad_reduction = target.battle_stats.defense / (target.battle_stats.defense + 300)
 
         ad_multiplier = (((2 * attacker.level) / 5) * base_damage) / 50
-        damage = ad_multiplier + attacker_attack_damage + base_damage/10
+        damage = ad_multiplier + attacker_attack_damage + base_damage / 10
+
         return damage * (1 - ad_reduction)
 
     def _calculate_damage(self, damage_type, attacker, target, base_damage):

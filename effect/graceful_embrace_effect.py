@@ -6,14 +6,12 @@ class GracefulEmbraceEffect(Effect):
     def __init__(self,
                  messages,
                  duration=1,
-                 expired=False,
-                 heal_amount=0):
+                 expired=False):
         super().__init__(messages, duration, expired, False)
         self.effect_id = "graceful_embrace_effect"
-        self.heal_amount = heal_amount
 
     def description(self):
-        return f"Ready To Help: {round(self.heal_amount, 2)} HP, {self.duration} remaining"
+        return f"Ready To Help: {self.duration} remaining"
 
     def on_apply(self, venari):
         super().on_apply(venari)
@@ -31,8 +29,7 @@ class GracefulEmbraceEffect(Effect):
             'name': self.__class__.__name__,
             'description': self.description(),
             'duration': self.duration,
-            'expired': self.expired,
-            'heal_amount': self.heal_amount
+            'expired': self.expired
         }
 
     @classmethod
@@ -40,5 +37,4 @@ class GracefulEmbraceEffect(Effect):
         print(data)
         return GracefulEmbraceEffect(messages,
                                      data["duration"],
-                                     data["expired"],
-                                     data["heal_amount"])
+                                     data["expired"])

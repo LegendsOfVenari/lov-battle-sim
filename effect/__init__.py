@@ -1,5 +1,7 @@
 from .poison import Poison
 from .stagger import Stagger
+from .percent_stat_buff import PercentStatBuff
+from .static_buff import StaticBuff
 from .defence_debuff import DefenceDebuff
 from .magic_resist_debuff import MagicResistDebuff
 from .armor import Armor
