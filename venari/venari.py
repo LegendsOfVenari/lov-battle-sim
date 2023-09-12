@@ -16,6 +16,10 @@ class Venari:
         self.battle_handler = battle_handler or BattleHandler(messages)
 
     # Team Methods
+    def is_ally_point_venari(self):
+        ally_point_venari = self.get_ally_point_venari()
+        return ally_point_venari is self
+
     def get_ally_point_venari(self):
         if self.isPlayerVenari:
             return self.battle.team1[0]

@@ -9,7 +9,7 @@ class Folicri(Venari):
         # Should this only be on point/assist only?
         if self.battle.has_arena_effect("trap", self):
             self._add_stockpile()
-        elif not self.battle.has_arena_effect("heavy_trap", self):
+        elif not self.battle.has_arena_effect("heavy_trap", self) and self.is_ally_point_venari():
             # Can only place a trap down when no other trap is active
             self.battle.add_enemy_arena_effect(Trap(self.messages), self)
 
