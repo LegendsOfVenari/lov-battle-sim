@@ -163,6 +163,36 @@ laticus_base_stats = BaseStats(
     swap_description="Double the amount of Stacks that Laticus currently has."
 )
 
+togoe_base_stats = BaseStats(
+    constitution=48,
+    strength=55,
+    intellect=69,
+    defence=74,
+    magic_resist=67,
+    passive_energy_gain=3,
+    basic_attack_energy_gain=7,
+    basic_attack_frequency=3,
+    basic_attack_damage=175,
+    passive_description="Togue doubles any [AP] buffs granted to it.",
+    ability_description="Togoe smashes both its fins on the ground, causing a shockwave that [Cleaves] all opponent Venari. Does [15 AP] to each Venari.",
+    swap_description="Togoe slaps both ally and opposing Point Venari upon swapping in, [Stagger]ing both Venari for 1 tick."
+)
+
+nillet_base_stats = BaseStats(
+    constitution=64,
+    strength=51,
+    intellect=80,
+    defence=28,
+    magic_resist=72,
+    passive_energy_gain=3,
+    basic_attack_energy_gain=9,
+    basic_attack_frequency=3,
+    basic_attack_damage=175,
+    passive_description="Nillet attacks 1 tick faster each time it casts its ability, stacks up to 2 times. Lose this buff whenever this Venari returns to the Bench.",
+    ability_description="[Stagger] the opposing Point Venari and reset Nillet’s current Basic Attack timer.",
+    swap_description="Upon swap, Nillet resets the Basic Attack timer of the allied Point Venari."
+)
+
 venari_base_stats_map = {
     'Aharas': aharas_base_stats,
     'Akulaw': akulaw_base_stats,
@@ -174,7 +204,9 @@ venari_base_stats_map = {
     'Antello': antello_base_stats,
     'Folicri': folicri_base_stats,
     'Eurici': eurici_base_stats,
-    'Laticus': laticus_base_stats
+    'Laticus': laticus_base_stats,
+    'Togoe': togoe_base_stats,
+    'Nillet': nillet_base_stats
 }
 
 

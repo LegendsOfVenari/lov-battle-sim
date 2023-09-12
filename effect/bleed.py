@@ -27,9 +27,6 @@ class Bleed(StackableEffect):
         venari.deal_effect_damage(DamageType.AD, venari, total_damage)
         self.messages.append(f"{venari.name} took bleed damage!")
 
-    def stack(self):
-        super().stack()
-
     def serialize(self):
         return {
             'name': self.__class__.__name__,

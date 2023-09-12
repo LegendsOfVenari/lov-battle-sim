@@ -32,9 +32,6 @@ class Poison(StackableEffect):
     def reset_duration(self):
         self.duration = poison_duration
 
-    def stack(self):
-        super().stack()
-
     def calculate_total_remaining_damage(self, venari):
         total_damage = venari.battle_handler.calculate_ability_power(
             self.level, self.ability_power, poison_ability_damage

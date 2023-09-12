@@ -21,10 +21,10 @@ class Togoe(Venari):
                          battle_handler,
                          battle_stats)
 
-    # Implement the passive here
     def apply_effect(self, effect):
         if effect.effect_id == "ability_power_static_buff":
             effect.increase_amount *= 2
+            self.messages.append(f"Togoe's passive triggered and effect increased by {effect.increase_amount} AP")            
         super().apply_effect(effect)
 
     def use_ability(self, target):
@@ -36,3 +36,7 @@ class Togoe(Venari):
 
     def on_swap_in(self, enemy_team=None):
         super().on_swap_in()
+        self.apply_effect(Stagger(self.messages))
+        enemy_point_venari = self.get_enemy_point_venari()
+        enemy_point_venari.apply_effect(Stagger(self.messages))
+

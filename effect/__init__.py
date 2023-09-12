@@ -39,3 +39,6 @@ from .moonlight_vigor import MoonlightVigor
 
 # Laticus
 from .army_of_one import ArmyOfOne
+
+# Nillet
+from .hares_acceleration import HaresAcceleration

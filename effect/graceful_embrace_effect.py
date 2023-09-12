@@ -1,4 +1,5 @@
 from .effect import Effect
+from effect import StaticBuff
 from config import graceful_embrace_bonus_magic_resist, graceful_embrace_bonus_ability_power
 
 
@@ -17,8 +18,10 @@ class GracefulEmbraceEffect(Effect):
         super().on_apply(venari)
         # Refresh Duration
         self.duration = 1
-        venari.battle_stats.magic_resist += graceful_embrace_bonus_magic_resist
-        venari.battle_stats.ability_power += graceful_embrace_bonus_ability_power
+        # venari.battle_stats.magic_resist += graceful_embrace_bonus_magic_resist
+        venari.apply_effect(StaticBuff(self.messages, 1, graceful_embrace_bonus_magic_resist, "magic_resist"))
+        # venari.battle_stats.ability_power += graceful_embrace_bonus_ability_power
+        venari.apply_effect(StaticBuff(self.messages, 1, graceful_embrace_bonus_ability_power, "ability_power"))
 
     def on_remove(self, venari):
         venari.battle_stats.magic_resist -= graceful_embrace_bonus_magic_resist

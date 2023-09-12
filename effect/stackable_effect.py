@@ -15,15 +15,19 @@ class StackableEffect(Effect):
         self.initial_duration = initial_duration
         self.max_stacks = max_stacks
 
-    def stack(self):
+    def on_stack_applied(self, venari):
+        pass
+
+    def stack(self, venari):
         if self.max_stacks is None or self.count < self.max_stacks:
             self.count += 1
+            self.on_stack_applied(venari)
 
     def reset(self):
         self.count = 0
 
     def on_apply(self, venari):
-        self.stack()
+        self.stack(venari)
 
     def remove_stack(self, venari):
         self.count -= 1

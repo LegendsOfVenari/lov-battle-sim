@@ -38,10 +38,6 @@ class Armor(StackableEffect):
             self.remove_stack(venari)
             self.messages.append(f"{venari.name} lost an Armor stack!")
 
-    def stack(self):
-        super().stack()
-        self.messages.append(f"{self.count} Armor stacks!")
-
     def serialize(self):
         return {
             'name': self.__class__.__name__,
