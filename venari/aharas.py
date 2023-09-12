@@ -31,6 +31,8 @@ class Aharas(Venari):
             # Remove poison effects
             target.remove_effect_id("poison")
             self.messages.append(f"{self.name} used its ability on {target.name}, dealing {total_damage} poison stacks.")
+        else:
+            self.apply_poison_effect(target)
 
     def on_swap_in(self, enemy_team=None):
         """Apply 1 stack of [Poison] to Point Venari."""
