@@ -23,7 +23,7 @@ class Poison(StackableEffect):
     def on_tick(self, venari):
         super().on_tick(venari)
         total_damage = venari.battle_handler.calculate_ability_power(
-            self.level, self.ability_power, 10
+            self.level, self.ability_power, 6 * poison_duration
         )
         total_damage = total_damage / self.initial_duration
         venari.deal_effect_damage(DamageType.AP, venari, total_damage)

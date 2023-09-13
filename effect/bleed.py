@@ -22,7 +22,7 @@ class Bleed(StackableEffect):
 
     def on_tick(self, venari):
         super().on_tick(venari)
-        total_damage = venari.battle_handler.calculate_attack_damage(self.level, self.attack_damage, 10)
+        total_damage = venari.battle_handler.calculate_attack_damage(self.level, self.attack_damage, 30)
         total_damage = total_damage / self.initial_duration
         venari.deal_effect_damage(DamageType.AD, venari, total_damage)
         self.messages.append(f"{venari.name} took bleed damage!")
