@@ -14,7 +14,7 @@ class Shield(Effect):
         super().on_apply(venari)
         self.messages.append(f"{venari.name} received a shield of {self.shield_amount} strength!")
 
-    def on_damage_received(self, venari, damage):
+    def modify_damage(self, venari, damage):
         damage_to_shield = min(self.shield_amount, damage)
         self.shield_amount -= damage_to_shield
         damage -= damage_to_shield

@@ -18,9 +18,9 @@ class ArmyOfOne(StackableEffect):
         venari.battle_stats.ability_power += 1
 
     def buffed_barrage(self, venari):
-        venari.battle_stats.attack_damage += self.count
-        venari.battle_stats.ability_power += self.count
-        self.count *= 2
+        venari.battle_stats.attack_damage += self.count * 0.2
+        venari.battle_stats.ability_power += self.count * 0.2
+        self.count *= 1.2
 
     def working_colony(self, venari):
         self.count += 2

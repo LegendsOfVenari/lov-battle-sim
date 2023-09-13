@@ -18,6 +18,8 @@ class Folicri(Venari):
         self.messages.append(f"{self.name} used its ability on {target.name}!")
 
         if self.battle.has_arena_effect("trap", self):
+            heal_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 15)
+            self.heal(heal_amount)
             self.battle.remove_arena_effect("trap", self)
             self._add_stockpile()
             stockpile_effect = self.get_effect("stockpile")

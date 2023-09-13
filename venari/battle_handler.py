@@ -70,11 +70,11 @@ class BattleHandler:
             self.handle_missed_attack(attacker, target)
 
     def receive_damage(self, venari, damage):
-
-        # Check for active shield effect and absorb damage with it
-        shield_effect = venari.get_effect("shield")
-        if shield_effect:
-            damage = shield_effect.on_damage_received(venari, damage)
+        # Iterate over all active effects
+        for effect in list(self.active_effects.values()):
+            # Call the effect's damage modification method (assuming it's called modify_damage)
+            # This method should return the modified damage value
+            damage = effect.modify_damage(venari, damage)
 
         venari.battle_stats.hp = max(0, venari.battle_stats.hp - damage)
 

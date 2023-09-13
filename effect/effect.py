@@ -45,6 +45,10 @@ class Effect:
         """
         pass
 
+    def modify_damage(self, venari, damage):
+        """Modifies the damage received by a Venari. By default, does not modify the damage."""
+        return damage
+
     def on_ally_defeated(self):
         """Placeholder for actions to be taken when an ally is defeated."""
         pass

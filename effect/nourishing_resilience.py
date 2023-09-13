@@ -10,13 +10,22 @@ class NourishingResilience(Effect):
 
     def description(self):
         return "Nourishing Resilience"
+    
+    def modify_damage(self, venari, damage):
+        ally_team = venari.get_ally_team()
+
+        wounded_allies = [ally for ally in ally_team if ally.battle_stats.hp < ally.battle_stats.initial_hp and ally != venari]
+        if not wounded_allies:
+            return damage * 0.7
+        else:
+            return damage
 
     def on_damage_received(self, venari, damage):
         # Heal a random wounded ally on the allied bench for 20 AP
         ally_team = venari.get_ally_team()
 
         # Filter out the wounded allies (we'll assume wounded means HP is less than max HP)
-        wounded_allies = [ally for ally in ally_team if ally.battle_stats.hp < ally.battle_stats.initial_hp and ally != venari]
+        wounded_allies = [ally for ally in ally_team if ally.battle_stats.hp < ally.battle_stats.initial_hp and ally != venari and ally.is_alive()]
 
         if wounded_allies:
             # Choose a random wounded ally

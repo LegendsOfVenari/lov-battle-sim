@@ -34,15 +34,15 @@ class Venari:
 
     def get_ally_team(self):
         if self.isPlayerVenari:
-            return self.battle.team1
+            return [venari for venari in self.battle.team1 if venari.is_alive()]
         else:
-            return self.battle.team2
+            return [venari for venari in self.battle.team2 if venari.is_alive()]
 
     def get_enemy_team(self):
         if self.isPlayerVenari:
-            return self.battle.team2
+            return [venari for venari in self.battle.team2 if venari.is_alive()]
         else:
-            return self.battle.team1
+            return [venari for venari in self.battle.team1 if venari.is_alive()]
 
     def get_ally_bench(self):
         team = self.get_ally_team()
@@ -83,6 +83,9 @@ class Venari:
         return self.battle_handler.ready_to_attack(
             self.battle_stats.attack_speed
         )
+
+    def is_alive(self):
+        return self.battle_stats.hp > 0
 
     def receive_damage(self, damage):
         self.battle_handler.receive_damage(self, damage)
@@ -131,6 +134,8 @@ class Venari:
 
     def can_swap(self):
         """Determine if a Venari can swap based on its effects."""
+        if self.is_alive() is False:
+            return False
         for effect in self.battle_handler.active_effects.values():
             if effect.modify_swap():
                 return False

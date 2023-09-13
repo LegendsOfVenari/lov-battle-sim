@@ -19,7 +19,6 @@ class HaresAcceleration(StackableEffect):
     def on_stack_applied(self, venari):
         venari.battle_stats.attack_speed += 1
 
-
     def serialize(self):
         return {
             'name': self.__class__.__name__,

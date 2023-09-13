@@ -6,6 +6,7 @@ class ActionType(Enum):
     ABILITY = "ability"
     NEXT_TICK = "next_tick"
     NEW_GAME = "new_game"
+    HEAL = "heal"
 
 class Battle:
     def __init__(self, team1, team2, tick_count, messages, team1_arena_effects=None, team2_arena_effects=None):
@@ -81,7 +82,20 @@ class Battle:
             for venari in team:
                 for effect in venari.battle_handler.active_effects.values():
                     effect.on_ally_defeated()
-            del team[0]
+        
+            # Check if there's an assist Venari on the bench
+            for i in range(1, len(team)):
+                if team[i].battle_handler.is_assist and team[i].is_alive():
+                    # Swap the assist Venari in
+                    team[0], team[i] = team[i], team[0]
+                    break
+            else:
+                # Swap with the first bench venari that is still alive
+                for i in range(1, len(team)):
+                    if team[i].is_alive():
+                        team[0], team[i] = team[i], team[0]
+                        break
+
             self.trigger_arena_effect_swap_in(team[0], traps)
             team[0].on_swap_in(enemy_team)
 

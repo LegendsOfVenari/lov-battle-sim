@@ -109,7 +109,15 @@ def index():
                 session['game_started'] = True
                 session['team1_arena_effects'] = {}
                 session['team2_arena_effects'] = {}
+            elif action == ActionType.HEAL.value:
+                for venari in team1:
+                    venari.battle_stats.hp = venari.battle_stats.initial_hp
+                    venari.battle_handler.energy = 0
+                    venari.battle_handler.is_assist = False
+                    venari.battle_handler.assist_cooldown = 0
 
+                session['team1'], session['team2'] = serialize_teams(team1, team2)
+                print("Healed!")
             elif action == ActionType.ABILITY.value:
                 result = battle.interactive_battle_simulation(ActionType.ABILITY)
             elif "swap_" in action:

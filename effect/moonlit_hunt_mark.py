@@ -11,8 +11,8 @@ class MoonlitHuntMark(Effect):
     def description(self):
         return f"Moonlit Hunt Mark {self.duration} Duration"
 
-    def on_damage_received(self, venari, damage):
-        venari.battle_handler.receive_damage_from_effect(venari, damage * 0.1)
+    def modify_damage(self, venari, damage):
+        return damage * 1.1
 
     def serialize(self):
         return {
