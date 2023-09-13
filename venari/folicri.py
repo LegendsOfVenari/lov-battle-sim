@@ -7,9 +7,9 @@ class Folicri(Venari):
 
     def on_enemy_ability(self, enemy):
         # Should this only be on point/assist only?
-        if self.battle.has_arena_effect("trap", self):
+        if enemy.battle.has_arena_effect("trap", enemy):
             self._add_stockpile()
-        elif not self.battle.has_arena_effect("heavy_trap", self) and self.is_ally_point_venari():
+        elif not enemy.battle.has_arena_effect("heavy_trap", enemy) and self.is_ally_point_venari():
             # Can only place a trap down when no other trap is active
             self.battle.add_enemy_arena_effect(Trap(self.messages), self)
 
@@ -17,9 +17,10 @@ class Folicri(Venari):
         super().use_ability(target)
         self.messages.append(f"{self.name} used its ability on {target.name}!")
 
-        if self.battle.has_arena_effect("trap", self):
-            heal_amount = venari.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 15)
+        if target.battle.has_arena_effect("trap", target):
+            heal_amount = self.battle_handler.calculate_ability_power(self.level, self.battle_stats.ability_power, 15)
             self.heal(heal_amount)
+            self.messages.append(f"Healed Folicri for {heal_amount} health!")
             self.battle.remove_arena_effect("trap", self)
             self._add_stockpile()
             stockpile_effect = self.get_effect("stockpile")
